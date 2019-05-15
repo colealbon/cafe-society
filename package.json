@@ -1,0 +1,16 @@
+{
+  "name": "cafe-society",
+  "version": "0.0.0",
+  "description": "source code for cafe-society.news",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssb://%seAdayDfOlIAtyXFCzhtYwkSEWGQT5vaCOyJCwwmHDU=.sha256"
+  },
+  "keywords": ["blockstack", "rss", "redux"],
+  "author": "Cole Albon",
+  "license": "ISC"
+}
