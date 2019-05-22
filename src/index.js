@@ -9,11 +9,12 @@ import { createLogger } from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import { createMuiTheme } from '@material-ui/core/styles';
-
+import blue from '@material-ui/core/colors/blue';
 import { fetchAccounts } from './actions/contractActions';
 
 import messageReducer from './reducers/messageReducer'
 import accountsReducer from './reducers/accountsReducer'
+import sectionsReducer from './reducers/sectionsReducer'
 
 import App from './components/App'
 
@@ -22,25 +23,28 @@ import registerServiceWorker from './registerServiceWorker'
 const history = createBrowserHistory()
 
 const middleware = routerMiddleware(history)
-
 const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-  },
-})
+  palette: {
+    primary: blue,
+  },  typography: {
+      useNextVariants: true,
+    }
+});
+
 
 const store = createStore(
   combineReducers({
     message: messageReducer,
-    accounts: accountsReducer
+    accounts: accountsReducer,
+    sections: sectionsReducer
   }),
   composeWithDevTools(
     applyMiddleware(middleware, createLogger(), thunkMiddleware)
   )
 )
 
-store.dispatch(fetchAccounts())
-setInterval(function(){store.dispatch(fetchAccounts())}, 5000)
+setTimeout(store.dispatch(fetchAccounts()),100)
+setInterval(function(){store.dispatch(fetchAccounts())}, 60000) // 60 seconds
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,3 +1,9 @@
 node_modules
 .DS_Store
 dist
+src/components/Blog.js
+src/components/Markdown.js
+src/components/Sections.js
+src/components/blog-post.1.md
+src/components/blog-post.2.md
+src/components/blog-post.3.md

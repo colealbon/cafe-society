@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import Typography from '@material-ui/core/Typography'
 import AccountList from './AccountList'
+import Sections from './Sections'
+import SectionList from './sections/SectionList'
 
 const mapStateToProps = ({ message }) => {
   return {
@@ -16,6 +18,7 @@ export const App = ({ text }) => {
         { text }
       </Typography>
       <AccountList></AccountList>
+      <SectionList></SectionList>
     </Fragment>
   );
 };
