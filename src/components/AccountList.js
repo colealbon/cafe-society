@@ -18,7 +18,6 @@ export const AccountList = ({ accounts, ...rest}) => {
               <Typography>
               {account}
               </Typography>
-
             </Grid>
           )
         })

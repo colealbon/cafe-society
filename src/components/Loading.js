@@ -9,7 +9,7 @@ const mapStateToProps = ({ loading }) => {
   }
 }
 
-export const FriendList = ({ loading, ...rest}) => {
+export const Loading = ({ loading, ...rest}) => {
     return (
     <Fragment>
       {loading ? <IconButton><CircularProgress size={24} /></IconButton> : ""}
@@ -17,4 +17,4 @@ export const FriendList = ({ loading, ...rest}) => {
   )
 }
 
-export default connect(mapStateToProps)(FriendList);
+export default connect(mapStateToProps)(Loading);
