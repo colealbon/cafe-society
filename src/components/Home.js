@@ -65,7 +65,7 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
                       const nameToPath = (name) => {
                         return name.toLowerCase().replace(' ', '-')
                       }
-                      return <Tab value={nameToPath(section.name)} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to="/" />
+                      return <Tab value={nameToPath(section.name)} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to={`/${nameToPath(section.name)}`} />
                     })}
                     <Tab hidden disabled value="/" component={Link} to="/" />
                     <Tab hidden disabled value="/section-list" component={Link} to="/section-list" />
@@ -75,12 +75,12 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
               </Toolbar>
             </AppBar>
             <Switch>
-              <Route path='/' exact component={Content} />
+              <Route key='/' path='/' exact component={Content} />
               {sections.filter((section) => !section.muted).map((section) => {
                 const nameToPath = (name) => {
                   return name.toLowerCase().replace(' ', '-')
                 }
-                return <Route exact path={`/${nameToPath(section.name)}`} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to="/" />
+                return <Route exact key={`/${nameToPath(section.name)}`} path={`/${nameToPath(section.name)}`} component={Content} />
               })}
 
             </Switch>

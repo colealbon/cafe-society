@@ -10,7 +10,7 @@ const mapStateToProps = ({ selectedSection }) => {
 }
 
 export const Content = ({ selectedSection, ...rest}) => {
-  const title = (selectedSection.name) ? `${selectedSection.name}` : 'All Sections'
+  const title = (selectedSection.id) ? `${selectedSection.id}` : 'All Sections'
   return (
     <Fragment>
       <br />

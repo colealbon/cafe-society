@@ -27,7 +27,7 @@ export const addSection = name => {
     dispatch({
       type: SECTIONS_ADD_SECTION,
       payload: {
-        id: name,
+        id: name.toLowerCase().replace(' ', '-'),
         name: name
       }
     })
