@@ -43,7 +43,7 @@ const store = createStore(
   )
 )
 
-setTimeout(store.dispatch(fetchAccounts()),1000)
+setTimeout(store.dispatch(fetchAccounts()), 1000)
 setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
 
 ReactDOM.render(

@@ -13,7 +13,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import Content from './Content'
-import Sections from './Sections'
 import LeftDrawer from './LeftDrawer'
 import styles from '../styles'
 import { handleLeftDrawerOpen } from '../actions/leftDrawerActions'
@@ -43,6 +42,7 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
   return (
     <BrowserRouter basename="/" >
       <div className="App">
+      <Route path='/section-list' exact component={SectionList} />
       <Route
         path="/"
         render={({ location }) => (
@@ -64,13 +64,16 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
                     {sections.map((section) => {
                       return <Tab key={section.id} label={section.name} onClick={()=> handleSetSection(section)} value="/" component={Link} to="/" />
                     })}
+                    <Tab disabled value="/section-list" component={Link} to="/section-list" />
+
                     </Tabs>
+
                   </Toolbar>
                 </Typography>
               </Toolbar>
             </AppBar>
             <Switch>
-              <Route component={Content}/>
+              <Route path='/' exact component={Content} />
             </Switch>
             <LeftDrawer />
           </Fragment>

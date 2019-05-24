@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import Typography from '@material-ui/core/Typography'
-import AccountList from './AccountList'
 import Sections from './Sections'
 import Toolbar from '@material-ui/core/Toolbar'
 import SectionList from './sections/SectionList'
@@ -19,6 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MailIcon from '@material-ui/icons/Mail'
 import AppBar from '@material-ui/core/AppBar'
 import MenuIcon from '@material-ui/icons/Menu'
+import {Link} from 'react-router-dom'
 
 const mapStateToProps = ({ leftDrawer }) => {
   return {
@@ -50,10 +50,10 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
       </div>
       <Divider />
       <List>
-        {['Inbox', 'Read', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
+        {[{label: 'Add/Remove Sections', value: 'section-list'}].map((setting, index) => (
+          <ListItem button key={index} component={Link} to={`/${setting.value}`}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText primary={setting.value} />
           </ListItem>
         ))}
       </List>

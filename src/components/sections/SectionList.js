@@ -97,6 +97,11 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
   const deleteSweepSection = `delete: ${[].concat(sections).length}`
   return (
     <Fragment>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
       <IconButton title={deleteSweepSection} onClick={() => {handleClickRemoveAllSections(sections)}}>
         <DeleteSweepIcon></DeleteSweepIcon>
       </IconButton>
