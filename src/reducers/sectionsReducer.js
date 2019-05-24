@@ -17,7 +17,7 @@ const initialState = [
     switch (action.type) {
       case SECTIONS_ADD_SECTION:
         return [
-          ...state,
+          ...state.filter(section => section.id !== action.payload.id),
           action.payload
         ]
       case SECTIONS_REMOVE_SECTION:

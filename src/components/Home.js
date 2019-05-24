@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Toolbar from '@material-ui/core/Toolbar'
 import SectionList from './sections/SectionList'
+import ContactList from './contacts/ContactList'
 import IconButton from '@material-ui/core/IconButton'
 import AppBar from '@material-ui/core/AppBar'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -71,6 +72,7 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
                   <Tab hidden disabled value="/" component={Link} to="/" />
                   <Tab hidden disabled value="/section-list" component={Link} to="/section-list" />
                   <Tab hidden disabled value="/web3-account-list" component={Link} to="/web3-account-list" />
+                  <Tab hidden disabled value="/contact-list" component={Link} to="/contact-list" />
                   </Tabs>
                 </Toolbar>
               </Typography>
@@ -79,6 +81,7 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
             <Switch>
               <Route key='/' path='/' exact component={Content} />
               <Route key='/web3-account-list' path='/web3-account-list' exact component={AccountList} />
+              <Route key='/contact-list' path='/contact-list' exact component={ContactList} />
               {sections.filter((section) => !section.muted).map((section) => {
                 const nameToPath = (name) => {
                   return name.toLowerCase().replace(' ', '-')
@@ -95,6 +98,4 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
   )
 };
 
-// export default connect(mapStateToProps)(App);
-// export default withStyles(styles, { withTheme: true })(PersistentDrawerLeft);
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps, mapDispatchToProps)(Home))

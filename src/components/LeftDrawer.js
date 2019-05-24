@@ -14,7 +14,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListSubHeader from '@material-ui/core/ListSubHeader'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
+import ContactsIcon from '@material-ui/icons/Contacts'
 import ListItemText from '@material-ui/core/ListItemText'
 import EditIcon from '@material-ui/icons/Edit'
 import AppBar from '@material-ui/core/AppBar'
@@ -55,6 +55,10 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
         <ListItem onClick={() => handleDrawerClose()} button key='/section-list' component={Link} to='/section-list'>
           <ListItemIcon><EditIcon/></ListItemIcon>
           <ListItemText primary="Sections" />
+        </ListItem>
+        <ListItem onClick={() => handleDrawerClose()} button key='/contact-list' component={Link} to='/contact-list'>
+          <ListItemIcon><EditIcon/></ListItemIcon>
+          <ListItemText primary="Contacts" />
         </ListItem>
       </List>
       <Divider />
