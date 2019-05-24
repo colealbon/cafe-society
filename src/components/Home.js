@@ -60,20 +60,29 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
                 </IconButton>
                 <Typography variant="h6" color="inherit" noWrap>
                   <Toolbar variant="dense">
-                    <Tabs value={(location.pathname === '/') ? '/' : location.pathname}>
+                    <Tabs value='/'>
                     {sections.filter((section) => !section.muted).map((section) => {
-                      return <Tab key={section.id} label={section.name} onClick={()=> handleSetSection(section)} value="/" component={Link} to="/" />
+                      const nameToPath = (name) => {
+                        return name.toLowerCase().replace(' ', '-')
+                      }
+                      return <Tab value={nameToPath(section.name)} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to="/" />
                     })}
+                    <Tab hidden disabled value="/" component={Link} to="/" />
                     <Tab hidden disabled value="/section-list" component={Link} to="/section-list" />
-
                     </Tabs>
-
                   </Toolbar>
                 </Typography>
               </Toolbar>
             </AppBar>
             <Switch>
               <Route path='/' exact component={Content} />
+              {sections.filter((section) => !section.muted).map((section) => {
+                const nameToPath = (name) => {
+                  return name.toLowerCase().replace(' ', '-')
+                }
+                return <Route exact path={`/${nameToPath(section.name)}`} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to="/" />
+              })}
+
             </Switch>
             <LeftDrawer />
           </Fragment>
