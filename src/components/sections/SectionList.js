@@ -44,6 +44,7 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
     <br />
     <br />
     <br />
+    <br />
       <List subheader={<ListSubheader>Edit Sections</ListSubheader>} >
         <ListItem key='addItem'>
           <IconButton title={deleteSweepSection} onClick={() => {handleClickRemoveAllSections(sections)}}>

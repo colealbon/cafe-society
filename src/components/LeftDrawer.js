@@ -13,9 +13,10 @@ import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListSubHeader from '@material-ui/core/ListSubHeader'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import ListItemText from '@material-ui/core/ListItemText'
-import MailIcon from '@material-ui/icons/Mail'
+import EditIcon from '@material-ui/icons/Edit'
 import AppBar from '@material-ui/core/AppBar'
 import MenuIcon from '@material-ui/icons/Menu'
 import {Link} from 'react-router-dom'
@@ -49,19 +50,17 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
         </IconButton>
       </div>
       <Divider />
-      <List>
-        {[{label: 'Add/Remove Sections', value: 'section-list'}].map((setting, index) => (
-          <ListItem onClick={() => handleDrawerClose()} button key={index} component={Link} to={`/${setting.value}`}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={setting.value} />
-          </ListItem>
-        ))}
+      <List subheader={<ListSubHeader>Edit Settings</ListSubHeader>}>
+        <ListItem onClick={() => handleDrawerClose()} button key='/section-list' component={Link} to='/section-list'>
+          <ListItemIcon><EditIcon/></ListItemIcon>
+          <ListItemText primary="Sections" />
+        </ListItem>
       </List>
       <Divider />
       <List>
         {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemIcon><EditIcon /></ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}

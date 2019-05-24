@@ -66,7 +66,7 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
                         return name.toLowerCase().replace(' ', '-')
                       }
                       return <Tab value={nameToPath(section.name)} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to={`/${nameToPath(section.name)}`} />
-                    })}
+                    }).reverse()}
                     <Tab hidden disabled value="/" component={Link} to="/" />
                     <Tab hidden disabled value="/section-list" component={Link} to="/section-list" />
                     </Tabs>
