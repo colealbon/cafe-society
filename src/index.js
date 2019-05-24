@@ -20,6 +20,7 @@ import accountsReducer from './reducers/accountsReducer'
 import sectionsReducer from './reducers/sectionsReducer'
 import leftDrawerReducer from './reducers/leftDrawerReducer'
 import sectionReducer from './reducers/sectionReducer'
+import selectedSectionReducer from './reducers/selectedSectionReducer'
 
 import App from './components/App'
 
@@ -35,6 +36,7 @@ const store = createStore(
     accounts: accountsReducer,
     sections: sectionsReducer,
     section: sectionReducer,
+    selectedSection: selectedSectionReducer,
     leftDrawer: leftDrawerReducer,
     router: connectRouter(history),
   }),

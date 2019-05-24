@@ -128,7 +128,7 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
                       }}
                       title={section.muted ? 'enable' : 'diaable' }
                       >
-                      {section.name}
+                      {JSON.stringify(section)}
                     </span>
                   </Typography>
                 </CardContent>

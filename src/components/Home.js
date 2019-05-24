@@ -18,12 +18,12 @@ import styles from '../styles'
 import { handleLeftDrawerOpen } from '../actions/leftDrawerActions'
 import { selectSection } from '../actions/sectionActions'
 
-const mapStateToProps = ({ message, sections, leftDrawer, section }) => {
+const mapStateToProps = ({ message, sections, leftDrawer, selectedSection }) => {
   return {
     text: message.text,
     sections: sections,
     leftDrawer: leftDrawer,
-    section: section
+    selectedSection: selectedSection
   };
 };
 

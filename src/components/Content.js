@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid';
 
-const mapStateToProps = ({ section }) => {
+const mapStateToProps = ({ selectedSection }) => {
   return {
-    section: section
+    selectedSection: selectedSection
   }
 }
 
-export const Content = ({ section, ...rest}) => {
-  const title = (section.name) ? `${section.name}` : 'All Sections'
+export const Content = ({ selectedSection, ...rest}) => {
+  const title = (selectedSection.name) ? `${selectedSection.name}` : 'All Sections'
   return (
     <Fragment>
       <br />

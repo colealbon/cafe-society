@@ -1,13 +1,14 @@
 import {
-    SECTION_SELECT_SECTION
+  SECTION_UPDATE_SECTION
 } from '../actions/sectionActions'
 
-export default (state = {}, action) => {
+const initialState = {name: ''}
 
+export default (state = initialState, action) => {
   switch (action.type) {
-    case SECTION_SELECT_SECTION:
-      return action.payload
+    case SECTION_UPDATE_SECTION:
+        return { ...state, ...action.payload }
     default:
-      return state
+        return state
   }
 }

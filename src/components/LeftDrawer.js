@@ -51,7 +51,7 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
       <Divider />
       <List>
         {[{label: 'Add/Remove Sections', value: 'section-list'}].map((setting, index) => (
-          <ListItem button key={index} component={Link} to={`/${setting.value}`}>
+          <ListItem onClick={() => handleDrawerClose()} button key={index} component={Link} to={`/${setting.value}`}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={setting.value} />
           </ListItem>

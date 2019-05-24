@@ -17,10 +17,7 @@ const initialState = [
       case SECTIONS_ADD_SECTION:
         return [
           ...state,
-          {
-            id: action.payload.id,
-            name: action.payload.name
-          }
+          action.payload
         ]
       case SECTIONS_REMOVE_SECTION:
         return state
