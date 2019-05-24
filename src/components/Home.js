@@ -61,10 +61,10 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
                 <Typography variant="h6" color="inherit" noWrap>
                   <Toolbar variant="dense">
                     <Tabs value={(location.pathname === '/') ? '/' : location.pathname}>
-                    {sections.map((section) => {
+                    {sections.filter((section) => !section.muted).map((section) => {
                       return <Tab key={section.id} label={section.name} onClick={()=> handleSetSection(section)} value="/" component={Link} to="/" />
                     })}
-                    <Tab disabled value="/section-list" component={Link} to="/section-list" />
+                    <Tab hidden disabled value="/section-list" component={Link} to="/section-list" />
 
                     </Tabs>
 

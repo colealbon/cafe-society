@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Remove } from '@material-ui/icons';
+import { RemoveCircle } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 
 const RemoveSection = ({ onClick, name }) => (
   <IconButton title="delete section" onClick={onClick}>
-    <Remove></Remove>
+    <RemoveCircle></RemoveCircle>
   </IconButton>
 )
 
