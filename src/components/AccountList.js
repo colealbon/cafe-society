@@ -12,7 +12,12 @@ const mapStateToProps = ({ accounts }) => {
 export const AccountList = ({ accounts, ...rest}) => {
   return (
     <Fragment>
-        {accounts.map((account) => {
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      Web 3 accounts list (metamask)
+      {accounts.map((account) => {
           return (
             <Grid key={account}>
               <Typography>

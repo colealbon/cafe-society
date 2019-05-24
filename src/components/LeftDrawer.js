@@ -18,7 +18,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox'
 import ListItemText from '@material-ui/core/ListItemText'
 import EditIcon from '@material-ui/icons/Edit'
 import AppBar from '@material-ui/core/AppBar'
-import MenuIcon from '@material-ui/icons/Menu'
+
+import IdentityIcon from '@material-ui/icons/PermIdentity'
 import {Link} from 'react-router-dom'
 
 const mapStateToProps = ({ leftDrawer }) => {
@@ -57,13 +58,11 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
         </ListItem>
       </List>
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon><EditIcon /></ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+      <List subheader={<ListSubHeader>Identity</ListSubHeader>}>
+        <ListItem onClick={() => handleDrawerClose()} button key='/web3-account-list' component={Link} to='/web3-account-list'>
+          <ListItemIcon><IdentityIcon/></ListItemIcon>
+          <ListItemText primary="Web3 Provider" />
+        </ListItem>
       </List>
     </Drawer>
   );

@@ -13,6 +13,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import Content from './Content'
+import AccountList from './AccountList'
 import LeftDrawer from './LeftDrawer'
 import styles from '../styles'
 import { handleLeftDrawerOpen } from '../actions/leftDrawerActions'
@@ -50,39 +51,40 @@ export const Home = ({ text, sections, section, leftDrawer, handleDrawerOpen, ha
             <AppBar
               position="fixed"
             >
-              <Toolbar disableGutters={!open}>
-                <IconButton
-                  color="inherit"
-                  aria-label="Open drawer"
-                  onClick={handleDrawerOpen}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography variant="h6" color="inherit" noWrap>
-                  <Toolbar variant="dense">
-                    <Tabs value='/'>
-                    {sections.filter((section) => !section.muted).map((section) => {
-                      const nameToPath = (name) => {
-                        return name.toLowerCase().replace(' ', '-')
-                      }
-                      return <Tab value={nameToPath(section.name)} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to={`/${nameToPath(section.name)}`} />
-                    }).reverse()}
-                    <Tab hidden disabled value="/" component={Link} to="/" />
-                    <Tab hidden disabled value="/section-list" component={Link} to="/section-list" />
-                    </Tabs>
-                  </Toolbar>
-                </Typography>
-              </Toolbar>
-            </AppBar>
+            <Toolbar disableGutters={!open}>
+              <IconButton
+                color="inherit"
+                aria-label="Open drawer"
+                onClick={handleDrawerOpen}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" color="inherit" noWrap>
+                <Toolbar variant="dense">
+                  <Tabs value='/'>
+                  {sections.filter((section) => !section.muted).map((section) => {
+                    const nameToPath = (name) => {
+                      return name.toLowerCase().replace(' ', '-')
+                    }
+                    return <Tab value={nameToPath(section.name)} key={section.name} label={section.name} onClick={()=> handleSetSection(section)} component={Link} to={`/${nameToPath(section.name)}`} />
+                  }).reverse()}
+                  <Tab hidden disabled value="/" component={Link} to="/" />
+                  <Tab hidden disabled value="/section-list" component={Link} to="/section-list" />
+                  <Tab hidden disabled value="/web3-account-list" component={Link} to="/web3-account-list" />
+                  </Tabs>
+                </Toolbar>
+              </Typography>
+            </Toolbar>
+          </AppBar>
             <Switch>
               <Route key='/' path='/' exact component={Content} />
+              <Route key='/web3-account-list' path='/web3-account-list' exact component={AccountList} />
               {sections.filter((section) => !section.muted).map((section) => {
                 const nameToPath = (name) => {
                   return name.toLowerCase().replace(' ', '-')
                 }
                 return <Route exact key={`/${nameToPath(section.name)}`} path={`/${nameToPath(section.name)}`} component={Content} />
               })}
-
             </Switch>
             <LeftDrawer />
           </Fragment>
