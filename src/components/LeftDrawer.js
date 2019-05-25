@@ -60,6 +60,10 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
           <ListItemIcon><EditIcon/></ListItemIcon>
           <ListItemText primary="Contacts" />
         </ListItem>
+        <ListItem onClick={() => handleDrawerClose()} button key='/feed-list' component={Link} to='/feed-list'>
+          <ListItemIcon><EditIcon/></ListItemIcon>
+          <ListItemText primary="Feeds" />
+        </ListItem>
       </List>
       <Divider />
       <List subheader={<ListSubHeader>Identity</ListSubHeader>}>

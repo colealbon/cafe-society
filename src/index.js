@@ -4,7 +4,6 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux'
 import { createBrowserHistory } from 'history'
-// import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router'
 import { createLogger } from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
@@ -20,7 +19,8 @@ import accountsReducer from './reducers/accountsReducer'
 import sectionsReducer from './reducers/sectionsReducer'
 import leftDrawerReducer from './reducers/leftDrawerReducer'
 import sectionReducer from './reducers/sectionReducer'
-
+import feedsReducer from './reducers/feedsReducer'
+import feedReducer from './reducers/feedReducer'
 import contactsReducer from './reducers/contactsReducer'
 import contactReducer from './reducers/contactReducer'
 import selectedSectionReducer from './reducers/selectedSectionReducer'
@@ -41,6 +41,8 @@ const store = createStore(
     section: sectionReducer,
     contacts: contactsReducer,
     contact: contactReducer,
+    feeds: feedsReducer,
+    feed: feedReducer,
     selectedSection: selectedSectionReducer,
     leftDrawer: leftDrawerReducer,
     router: connectRouter(history),

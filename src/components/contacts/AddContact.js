@@ -37,6 +37,7 @@ const AddContact = ({ handleClickAddContact, handleInputChange, name, ...rest}) 
         id='textFieldContact'
         onChange={handleInputChange}
         value={name}
+        placeholder="cole_albon.id"
       />
     </Fragment>
   )

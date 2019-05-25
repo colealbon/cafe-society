@@ -8,9 +8,8 @@ import {
 const initialState = [
     {id:'technology', name: 'Technology', muted:false},
     {id:'culture', name: 'Culture', muted:false},
-    {id:'avant-guard', name: 'Avant Guard', muted:false},
-    {id:'opinion', name: 'Opinion',  muted:false},
-    {id:'travel', name: 'Travel', muted:false}
+    {id:'horoscope', name: 'Horoscope',  muted:true},
+    {id:'travel', name: 'Travel', muted:true}
   ]
 
   export default (state = initialState, action) => {

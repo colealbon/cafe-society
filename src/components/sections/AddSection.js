@@ -37,6 +37,7 @@ const AddSection = ({ handleClickAddSection, handleInputChange, name, ...rest}) 
         id='textFieldSection'
         onChange={handleInputChange}
         value={name}
+        placeholder="World"
       />
     </Fragment>
   )
