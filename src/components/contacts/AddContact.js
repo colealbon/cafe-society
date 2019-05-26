@@ -1,9 +1,10 @@
-import React, { Fragment } from "react"
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import TextField from '@material-ui/core/TextField';
-import { Add } from '@material-ui/icons';
+import TextField from '@material-ui/core/TextField'
+import { Add } from '@material-ui/icons'
 import { addContact, updateContact} from '../../actions/contactActions'
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@material-ui/core/IconButton'
+import PropTypes from 'prop-types'
 
 const mapStateToProps = ({contact}) => {
   if (!contact) {
@@ -14,25 +15,25 @@ const mapStateToProps = ({contact}) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     handleClickAddContact: (name) => {
       dispatch(addContact(name))
       dispatch(updateContact(''))
     },
     handleInputChange: (evt) => {
-      const name = evt.target.value;
-      dispatch(updateContact(name));
+      const name = evt.target.value
+      dispatch(updateContact(name))
     }
   }
 }
 
-const AddContact = ({ handleClickAddContact, handleInputChange, name, ...rest}) => {
+const AddContact = ({ handleClickAddContact, handleInputChange, name }) => {
   return (
     <Fragment>
-    <IconButton title="add new contact" onClick={() => handleClickAddContact(name)} >
-      <Add id='addContact' />
-    </IconButton>
+      <IconButton title="add new contact" onClick={() => handleClickAddContact(name)} >
+        <Add id='addContact' />
+      </IconButton>
       <TextField
         id='textFieldContact'
         onChange={handleInputChange}
@@ -41,6 +42,12 @@ const AddContact = ({ handleClickAddContact, handleInputChange, name, ...rest}) 
       />
     </Fragment>
   )
+}
+
+AddContact.propTypes = {
+  handleClickAddContact: PropTypes.func.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddContact)

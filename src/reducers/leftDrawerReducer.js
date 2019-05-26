@@ -1,12 +1,10 @@
 import {
-    LEFT_DRAWER_OPEN,
-    LEFT_DRAWER_CLOSE
+  LEFT_DRAWER_OPEN,
+  LEFT_DRAWER_CLOSE
 } from '../actions/leftDrawerActions'
 
 export default (state = {open: false}, action) => {
-
   switch (action.type) {
-
     case LEFT_DRAWER_OPEN:
       return {open: true}
 
@@ -14,6 +12,6 @@ export default (state = {open: false}, action) => {
       return {open: false}
 
     default:
-        return state
+      return state
   }
 }

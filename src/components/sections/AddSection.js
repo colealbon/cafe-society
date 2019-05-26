@@ -1,9 +1,9 @@
-import React, { Fragment } from "react"
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import TextField from '@material-ui/core/TextField';
-import { Add } from '@material-ui/icons';
+import TextField from '@material-ui/core/TextField'
+import { Add } from '@material-ui/icons'
 import { addSection, updateSection} from '../../actions/sectionActions'
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@material-ui/core/IconButton'
 
 const mapStateToProps = ({section}) => {
   if (!section) {
@@ -21,8 +21,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(updateSection(''))
     },
     handleInputChange: (evt) => {
-      const name = evt.target.value;
-      dispatch(updateSection(name));
+      const name = evt.target.value
+      dispatch(updateSection(name))
     }
   }
 }
@@ -30,9 +30,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const AddSection = ({ handleClickAddSection, handleInputChange, name, ...rest}) => {
   return (
     <Fragment>
-    <IconButton title="add new rss section" onClick={() => handleClickAddSection(name)} >
-      <Add id='addSection' />
-    </IconButton>
+      <IconButton title="add new rss section" onClick={() => handleClickAddSection(name)} >
+        <Add id='addSection' />
+      </IconButton>
       <TextField
         id='textFieldSection'
         onChange={handleInputChange}

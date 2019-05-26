@@ -1,10 +1,5 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import Typography from '@material-ui/core/Typography'
-import Sections from './Sections'
-import Toolbar from '@material-ui/core/Toolbar'
-import SectionList from './sections/SectionList'
-import { withStyles } from '@material-ui/core/styles'
 import { handleLeftDrawerClose } from '../actions/leftDrawerActions'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
@@ -15,9 +10,11 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListSubHeader from '@material-ui/core/ListSubHeader'
 import ContactsIcon from '@material-ui/icons/Contacts'
+import RssFeedIcon from '@material-ui/icons/RssFeed'
+import NewspaperIcon from '@material-ui/icons/ViewHeadline'
+import FilterListIcon from '@material-ui/icons/FilterList'
 import ListItemText from '@material-ui/core/ListItemText'
-import EditIcon from '@material-ui/icons/Edit'
-import AppBar from '@material-ui/core/AppBar'
+import PropTypes from 'prop-types'
 
 import IdentityIcon from '@material-ui/icons/PermIdentity'
 import {Link} from 'react-router-dom'
@@ -25,18 +22,16 @@ import {Link} from 'react-router-dom'
 const mapStateToProps = ({ leftDrawer }) => {
   return {
     leftDrawer: leftDrawer
-  };
-};
+  }
+}
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     handleDrawerClose: () => {
       dispatch(handleLeftDrawerClose())
     }
   }
 }
-
-const drawerWidth = 240;
 
 export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
   return (
@@ -53,16 +48,20 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
       <Divider />
       <List subheader={<ListSubHeader>Edit Settings</ListSubHeader>}>
         <ListItem onClick={() => handleDrawerClose()} button key='/section-list' component={Link} to='/section-list'>
-          <ListItemIcon><EditIcon/></ListItemIcon>
+          <ListItemIcon><NewspaperIcon/></ListItemIcon>
           <ListItemText primary="Sections" />
         </ListItem>
         <ListItem onClick={() => handleDrawerClose()} button key='/contact-list' component={Link} to='/contact-list'>
-          <ListItemIcon><EditIcon/></ListItemIcon>
+          <ListItemIcon><ContactsIcon/></ListItemIcon>
           <ListItemText primary="Contacts" />
         </ListItem>
         <ListItem onClick={() => handleDrawerClose()} button key='/feed-list' component={Link} to='/feed-list'>
-          <ListItemIcon><EditIcon/></ListItemIcon>
+          <ListItemIcon><RssFeedIcon/></ListItemIcon>
           <ListItemText primary="Feeds" />
+        </ListItem>
+        <ListItem onClick={() => handleDrawerClose()} button key='/filter-list' component={Link} to='/filter-list'>
+          <ListItemIcon><FilterListIcon/></ListItemIcon>
+          <ListItemText primary="Filters" />
         </ListItem>
       </List>
       <Divider />
@@ -73,7 +72,11 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
         </ListItem>
       </List>
     </Drawer>
-  );
+  )
+}
+LeftDrawer.propTypes = {
+  leftDrawer: PropTypes.object.isRequired,
+  handleDrawerClose: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeftDrawer)

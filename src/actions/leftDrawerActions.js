@@ -7,7 +7,7 @@ export const handleLeftDrawerOpen = () => {
       type: LEFT_DRAWER_OPEN
     })
   }
-};
+}
 
 export const handleLeftDrawerClose = () => {
   return (dispatch) => {
@@ -15,4 +15,4 @@ export const handleLeftDrawerClose = () => {
       type: LEFT_DRAWER_CLOSE
     })
   }
-};
+}

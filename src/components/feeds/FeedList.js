@@ -1,24 +1,27 @@
-import React, { Fragment } from "react"
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import AddFeed from './AddFeed'
 import RemoveFeed from './RemoveFeed'
 import { removeFeed, toggleFeed } from '../../actions/feedActions'
 import IconButton from '@material-ui/core/IconButton'
-import DeleteSweepIcon from 'mdi-react/DeleteSweepIcon'
+import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
-import Loading from '../Loading';
+import Chip from '@material-ui/core/Chip'
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Switch from '@material-ui/core/Switch';
+import Loading from '../Loading'
 
-const mapStateToProps = ({ feeds }) => {
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListSubheader from '@material-ui/core/ListSubheader'
+import Switch from '@material-ui/core/Switch'
+
+const mapStateToProps = ({ feeds, sections }) => {
   return {
-    feeds: feeds
+    feeds: feeds,
+    sections: sections
   }
 }
 
@@ -36,17 +39,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleClickRemoveAllFeeds, publishFeeds, feeds, ...rest}) => {
+export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleClickRemoveAllFeeds, publishFeeds, feeds, sections, ...rest}) => {
   const deleteSweepFeed = `delete: ${[].concat(feeds).length}`
   return (
     <Fragment>
-    <br />
-    <br />
-    <br />
-    <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <List subheader={<ListSubheader>Edit Feeds</ListSubheader>} >
         <ListItem key='addItem'>
-          <IconButton title={deleteSweepFeed} onClick={() => {handleClickRemoveAllFeeds(feeds)}}>
+          <IconButton title={deleteSweepFeed} onClick={() => { handleClickRemoveAllFeeds(feeds) }}>
             <DeleteSweepIcon></DeleteSweepIcon>
           </IconButton>
           <AddFeed />
@@ -67,16 +70,21 @@ export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleC
                 }}
                 title={feed.muted ? `enable ${feed.url}` : `disable ${feed.url}` }
               >
-              <Switch checked={!feed.muted}  />
+                <Switch checked={!feed.muted} />
               </span>
-              <ListItemText primary={feed.url} />
+              <ListItemText primary={feed.url}></ListItemText>
+              {sections.map((section) => {
+                return (
+                  <span key={section.id}>{section.name}&nbsp;</span>
+                )
+              })}
             </ListItem>
           )
         }).reverse()
-      }
+        }
       </List>
     </Fragment>
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedList);
+export default connect(mapStateToProps, mapDispatchToProps)(FeedList)

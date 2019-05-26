@@ -10,8 +10,8 @@ export const fetchAccounts = () => {
       type: FETCH_ACCOUNTS_REQUEST
     })
 
-    const { web3 } = window;
-    const ethAccounts = getAccounts();
+    const { web3 } = window
+    const ethAccounts = getAccounts()
 
     if (ethAccounts == undefined) {
       web3 && web3.eth && web3.eth.getAccounts((err, accounts) => {
@@ -23,7 +23,7 @@ export const fetchAccounts = () => {
         } else {
           dispatch({
             type: FETCH_ACCOUNTS_SUCCESS,
-            payload: web3.eth.accounts
+            payload: accounts
           })
         }
       })
@@ -36,11 +36,11 @@ export const fetchAccounts = () => {
   }
 }
 
-function getAccounts() {
+function getAccounts () {
   try {
-    const { web3 } = window;
-    return web3.eth.accounts;
+    const { web3 } = window
+    return web3.eth.accounts
   } catch (e) {
-    return [];
+    return []
   }
 }

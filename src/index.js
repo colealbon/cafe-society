@@ -1,7 +1,7 @@
-import React, { Component } from "react"
-import ReactDOM from "react-dom"
+import React from 'react'
+import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension'
 import { Provider } from 'react-redux'
 import { createBrowserHistory } from 'history'
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router'
@@ -14,6 +14,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { fetchAccounts } from './actions/contractActions';
 
+import App from './components/App'
+import registerServiceWorker from './registerServiceWorker'
+const history = createBrowserHistory()
+const middleware = routerMiddleware(history)
+
 import messageReducer from './reducers/messageReducer'
 import accountsReducer from './reducers/accountsReducer'
 import sectionsReducer from './reducers/sectionsReducer'
@@ -21,17 +26,11 @@ import leftDrawerReducer from './reducers/leftDrawerReducer'
 import sectionReducer from './reducers/sectionReducer'
 import feedsReducer from './reducers/feedsReducer'
 import feedReducer from './reducers/feedReducer'
+import filtersReducer from './reducers/filtersReducer'
+import filterReducer from './reducers/filterReducer'
 import contactsReducer from './reducers/contactsReducer'
 import contactReducer from './reducers/contactReducer'
 import selectedSectionReducer from './reducers/selectedSectionReducer'
-
-import App from './components/App'
-
-import registerServiceWorker from './registerServiceWorker'
-
-const history = createBrowserHistory()
-
-const middleware = routerMiddleware(history)
 
 const store = createStore(
   combineReducers({
@@ -43,6 +42,8 @@ const store = createStore(
     contact: contactReducer,
     feeds: feedsReducer,
     feed: feedReducer,
+    filter: filterReducer,
+    filters: filtersReducer,
     selectedSection: selectedSectionReducer,
     leftDrawer: leftDrawerReducer,
     router: connectRouter(history),
@@ -53,7 +54,7 @@ const store = createStore(
 )
 
 setTimeout(store.dispatch(fetchAccounts()), 1000)
-setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
+setInterval(function(){store.dispatch(fetchAccounts())}, 10 * 1000) // miliseconds
 
 ReactDOM.render(
   <Provider store={store}>

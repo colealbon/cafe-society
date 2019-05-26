@@ -1,42 +1,42 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const HtmlWebPackPlugin = require('html-webpack-plugin')
 module.exports = {
   module: {
     rules: [
-    {
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      use: {
-        loader: "babel-loader"
-      }
-    },
-    {
-      test: /\.md$/,
-      use: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.md$/,
+        use: [
           {
-              loader: "html-loader"
+            loader: 'html-loader'
           },
           {
-              loader: "markdown-loader",
-              options: {
-                  /* your options here */
-              }
+            loader: 'markdown-loader',
+            options: {
+              /* your options here */
+            }
           }
-      ]
-    },
-    {
-      test: /\.html$/,
-      use: [
-        {
-          loader: "html-loader"
-        }
-      ]
-    }
-  ]
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader'
+          }
+        ]
+      }
+    ]
   },
   plugins: [
-  new HtmlWebPackPlugin({
-    template: "./src/index.html",
-    filename: "./index.html"
-  })
+    new HtmlWebPackPlugin({
+      template: './src/index.html',
+      filename: './index.html'
+    })
   ]
-};
+}
