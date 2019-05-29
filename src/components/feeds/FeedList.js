@@ -1,19 +1,26 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import AddFeed from './AddFeed'
 import RemoveFeed from './RemoveFeed'
 import { removeFeed, toggleFeed } from '../../actions/feedActions'
+import { selectFeedSection } from '../../actions/feedSectionActions'
+
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
-import Loading from '../Loading'
-
+import Chip from '@material-ui/core/Chip'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Switch from '@material-ui/core/Switch'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const mapStateToProps = ({ feeds, sections }) => {
   return {
@@ -22,7 +29,7 @@ const mapStateToProps = ({ feeds, sections }) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     handleClickRemoveFeed: (feed) => {
       dispatch(removeFeed(feed))
@@ -32,11 +39,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     handleClickRemoveAllFeeds: (feeds) => {
       feeds.map((feed) => dispatch(removeFeed(feed)))
+    },
+    handleClickSetFeed: (feed) => {
+      dispatch(selectFeedSection(feed))
     }
   }
 }
 
-export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleClickRemoveAllFeeds, publishFeeds, feeds, sections, ...rest}) => {
+export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClickToggleFeed, handleClickRemoveAllFeeds, feeds, sections}) => {
   const deleteSweepFeed = `delete: ${[].concat(feeds).length}`
   return (
     <Fragment>
@@ -50,7 +60,6 @@ export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleC
             <DeleteSweepIcon></DeleteSweepIcon>
           </IconButton>
           <AddFeed />
-          <Loading />
         </ListItem>
         {feeds.map((feed) => {
           return (
@@ -71,12 +80,37 @@ export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleC
               >
                 <Switch checked={!feed.muted} />
               </span>
-              <ListItemText primary={feed.url}></ListItemText>
-              {sections.map((section) => {
-                return (
-                  <span key={section.id}>{section.name}&nbsp;</span>
-                )
-              })}
+              <ExpansionPanel>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  id="panel1bh-header"
+                >
+                <ListItemText primary={feed.url}></ListItemText>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                <Typography>{(!feed.muted) ? 'do not ' : ''}ignore feed</Typography>
+                </ExpansionPanelDetails>
+                <ExpansionPanelDetails>
+                <Typography>apply only to sections:</Typography>
+                </ExpansionPanelDetails>
+                <ExpansionPanelDetails>
+                  {
+                    sections.map((section) => {
+                      return (<Chip
+                        key={section.id}
+                        color={(section.id == (feed.sections || [] ).filter((feedSection) => feedSection.id === section.id)
+                          .map((feedSection) => feedSection.id)[0]) ? 'primary' : 'default'}
+                        label={section.name}
+                        onClick={() => handleClickSetFeed(Object.assign(
+                          {"section": section},
+                          feed
+                        ))}
+                      />
+                      )
+                    })
+                  }
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
             </ListItem>
           )
         }).reverse()
@@ -84,6 +118,15 @@ export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleC
       </List>
     </Fragment>
   )
+}
+
+FeedList.propTypes = {
+  handleClickSetFeed: PropTypes.func.isRequired,
+  handleClickRemoveFeed: PropTypes.func.isRequired,
+  handleClickToggleFeed: PropTypes.func.isRequired,
+  handleClickRemoveAllFeeds: PropTypes.func.isRequired,
+  feeds: PropTypes.array.isRequired,
+  sections: PropTypes.array.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedList)

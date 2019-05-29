@@ -14,7 +14,7 @@ const mapStateToProps = ({section}) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     handleClickAddSection: (name) => {
       dispatch(addSection(name))
@@ -37,7 +37,8 @@ const AddSection = ({ handleClickAddSection, handleInputChange, name, ...rest}) 
         id='textFieldSection'
         onChange={handleInputChange}
         value={name}
-        placeholder="World"
+        label="new section name"
+        placeholder="Travel"
       />
     </Fragment>
   )

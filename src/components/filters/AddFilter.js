@@ -38,10 +38,11 @@ const AddFilter = ({ handleClickAddFilter, handleInputChange, text }) => {
         <Add id='addFilter' />
       </IconButton>
       <TextField
+        label='new filter word'
         id='textFieldFilter'
         onChange={handleInputChange}
         value={text}
-        placeholder="Craig Wright"
+        placeholder="Meow Mix"
       />
     </Fragment>
   )

@@ -10,9 +10,6 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
 import Chip from '@material-ui/core/Chip'
-
-import Loading from '../Loading'
-
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -63,7 +60,6 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
             <DeleteSweepIcon></DeleteSweepIcon>
           </IconButton></ListItemIcon>
           <AddFilter />
-          <Loading />
         </ListItem>
         {filters.map((filter) => {
           return (

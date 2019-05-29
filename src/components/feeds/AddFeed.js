@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import TextField from '@material-ui/core/TextField'
 import { Add } from '@material-ui/icons'
 import { addFeed, updateFeed} from '../../actions/feedActions'
@@ -38,9 +39,16 @@ const AddFeed = ({ handleClickAddFeed, handleInputChange, url }) => {
         onChange={handleInputChange}
         value={url}
         placeholder="https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en"
+        label='enter rss feed url'
       />
     </Fragment>
   )
+}
+
+AddFeed.propTypes = {
+  handleClickAddFeed: PropTypes.func.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  url: PropTypes.string.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddFeed)
