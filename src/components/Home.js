@@ -63,7 +63,7 @@ export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
                   </IconButton>
                   <Typography variant="h6" color="inherit" noWrap>
                     <Toolbar variant="dense">
-                    <Tab value="/" label='all' component={Link} to="/" />
+                    <Tab value="/all" label='all' component={Link} to="/all" />
                       <Tabs value='/'>
                         {sections.filter((section) => !section.muted).map((section) => {
                           const nameToPath = (name) => {
@@ -84,6 +84,7 @@ export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
               </AppBar>
               <Switch>
                 <Route exact key='/' path='/' exact component={Content} />
+                <Route exact key='/all' path='/all' exact component={Content} />
                 <Route exact key='/web3-account-list' path='/web3-account-list' exact component={AccountList} />
                 <Route exact key='/contact-list' path='/contact-list' exact component={ContactList} />
                 <Route exact key='/filter-list' path='/filter-list' exact component={FilterList} />
