@@ -65,7 +65,7 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
         </ListItem>
       </List>
       <Divider />
-      <List subheader={<ListSubHeader>Identity</ListSubHeader>}>
+      <List subheader={<ListSubHeader>Identity (experimental)</ListSubHeader>}>
         <ListItem onClick={() => handleDrawerClose()} button key='/web3-account-list' component={Link} to='/web3-account-list'>
           <ListItemIcon><IdentityIcon/></ListItemIcon>
           <ListItemText primary="Web3 Provider" />

@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import TextField from '@material-ui/core/TextField'
 import { Add } from '@material-ui/icons'
 import { addContact, updateContact} from '../../actions/contactActions'
 import IconButton from '@material-ui/core/IconButton'
-import PropTypes from 'prop-types'
 
 const mapStateToProps = ({contact}) => {
   if (!contact) {
@@ -35,6 +35,7 @@ const AddContact = ({ handleClickAddContact, handleInputChange, name }) => {
         <Add id='addContact' />
       </IconButton>
       <TextField
+        label='enter blockstack id'
         id='textFieldContact'
         onChange={handleInputChange}
         value={name}
