@@ -63,6 +63,7 @@ export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
                   </IconButton>
                   <Typography variant="h6" color="inherit" noWrap>
                     <Toolbar variant="dense">
+                    <Tab value="/" label='all' component={Link} to="/" />
                       <Tabs value='/'>
                         {sections.filter((section) => !section.muted).map((section) => {
                           const nameToPath = (name) => {

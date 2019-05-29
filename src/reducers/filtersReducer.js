@@ -32,6 +32,9 @@ export default (state = initialState, action) => {
       // this logic figures out current filter sections and does what it must
       // good place to introduce jest tests and refactor
       return state.map((filter) => {
+        if (filter.id !== action.payload.id) {
+          return filter
+        }
         if (!filter.sections) {
           return Object.assign(filter, {sections: [action.payload.section]})
         }
