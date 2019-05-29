@@ -6,14 +6,11 @@ import { removeFeed, toggleFeed } from '../../actions/feedActions'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
-import Chip from '@material-ui/core/Chip'
-
 import Loading from '../Loading'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Switch from '@material-ui/core/Switch'
@@ -58,12 +55,14 @@ export const FeedList = ({ handleClickRemoveFeed, handleClickToggleFeed, handleC
         {feeds.map((feed) => {
           return (
             <ListItem key={feed.id}>
-              <RemoveFeed
-                {...feed}
-                onClick={() => {
-                  handleClickRemoveFeed(feed)
-                }}
-              />
+              <ListItemIcon>
+                <RemoveFeed
+                  {...feed}
+                  onClick={() => {
+                    handleClickRemoveFeed(feed)
+                  }}
+                />
+              </ListItemIcon>
               <span
                 onClick={() => {
                   handleClickToggleFeed(feed)

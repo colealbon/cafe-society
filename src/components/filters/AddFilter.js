@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import TextField from '@material-ui/core/TextField'
 import { Add } from '@material-ui/icons'
 import { addFilter, updateFilter} from '../../actions/filterActions'
@@ -17,7 +18,10 @@ const mapStateToProps = ({filter}) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleClickAddFilter: (text) => {
-      dispatch(addFilter(text))
+      dispatch(addFilter({
+        id: text.toLowerCase().replace(' ', '-'),
+        text: text
+      }))
       dispatch(updateFilter(''))
     },
     handleInputChange: (evt) => {
@@ -43,4 +47,9 @@ const AddFilter = ({ handleClickAddFilter, handleInputChange, text }) => {
   )
 }
 
+AddFilter.propTypes = {
+  handleClickAddFilter: PropTypes.func.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired
+}
 export default connect(mapStateToProps, mapDispatchToProps)(AddFilter)

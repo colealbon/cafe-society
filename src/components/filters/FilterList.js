@@ -1,9 +1,11 @@
 // https://material-ui.com/components/chips/
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import AddFilter from './AddFilter'
 import RemoveFilter from './RemoveFilter'
 import { removeFilter, toggleFilter } from '../../actions/filterActions'
+import { selectFilterSection } from '../../actions/filterSectionActions'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
@@ -40,18 +42,16 @@ const mapDispatchToProps = (dispatch) => {
     },
     handleClickRemoveAllFilters: (filters) => {
       filters.map((filter) => dispatch(removeFilter(filter)))
+    },
+    handleClickSetFilter: (filter) => {
+      //alert(JSON.stringify({handleClickSetFilter: {filter}}))
+      dispatch(selectFilterSection(filter))
     }
   }
 }
 
-export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, handleClickRemoveAllFilters, publishFilters, filters, sections, ...rest}) => {
+export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, handleClickRemoveAllFilters, handleClickSetFilter, filters, sections}) => {
   const deleteSweepFilter = `delete: ${[].concat(filters).length}`
-  // const classes = useStyles();
-  // const [expanded, setExpanded] = React.useState(false);
-
-  // const handleChange = panel => (event, isExpanded) => {
-  //   setExpanded(isExpanded ? panel : false);
-  // };
   return (
     <Fragment>
       <br />
@@ -69,38 +69,50 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
         {filters.map((filter) => {
           return (
             <ListItem key={filter.id}>
-                  <ExpansionPanel>
-                    <ExpansionPanelSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      id="panel1bh-header"
-                    >
-                    <RemoveFilter
-                      {...filter}
-                      onClick={() => {
-                        handleClickRemoveFilter(filter)
-                      }}
-                    />
-                    <span
-                      onClick={() => {
-                        handleClickToggleFilter(filter)
-                      }}
-                      title={filter.muted ? `enable ${filter.text}` : `disable ${filter.text}` }
-                    >
-                      <Switch checked={!filter.muted} />
-                    </span>
-                    <ListItemText primary={filter.text}></ListItemText>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      {sections.map((section) => {
-                        return (
-                          <Chip key={section.id} label={section.name}></Chip>
-                        )
-                      })}
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-
-
-
+              <RemoveFilter
+                {...filter}
+                onClick={() => {
+                  handleClickRemoveFilter(filter)
+                }}
+              />
+              <span
+                title={filter.muted ? `enable ${filter.text}` : `disable ${filter.text}` }
+              >
+                <Switch checked={!filter.muted} onClick={() => handleClickToggleFilter(filter)}/>
+              </span>
+              <ExpansionPanel>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  id="panel1bh-header"
+                >
+                <ListItemText primary={filter.text}></ListItemText>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                <Typography>block articles containing {filter.text}</Typography>
+                </ExpansionPanelDetails>
+                <ExpansionPanelDetails>
+                <Typography>enable sections:</Typography>
+                </ExpansionPanelDetails>
+                <ExpansionPanelDetails>
+                  {
+                    sections.map((section) => {
+                      //const handleClickSectionChip = (sectionId) => console.log(`${filter.text} - ${sectionId}`)
+                      //const selectedSection = (filter.sections ||  .filter((filterSection) => filterSection.id === section.id  )
+                      return (<Chip
+                        key={section.id}
+                        color={(section.id == (filter.sections || [] ).filter((filterSection) => filterSection.id === section.id)
+                          .map((filterSection) => filterSection.id)[0]) ? 'primary' : 'default'}
+                        label={section.name}
+                        onClick={() => handleClickSetFilter(Object.assign(
+                          {"section": section},
+                          filter
+                        ))}
+                      />
+                      )
+                    })
+                  }
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
             </ListItem>
           )
         }).reverse()
@@ -108,6 +120,15 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
       </List>
     </Fragment>
   )
+}
+
+FilterList.propTypes = {
+  handleClickSetFilter: PropTypes.func.isRequired,
+  handleClickRemoveFilter: PropTypes.func.isRequired,
+  handleClickToggleFilter: PropTypes.func.isRequired,
+  handleClickRemoveAllFilters: PropTypes.func.isRequired,
+  filters: PropTypes.array.isRequired,
+  sections: PropTypes.array.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterList)

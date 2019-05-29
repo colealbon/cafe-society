@@ -22,14 +22,11 @@ export const updateFilter = text => {
 
 export const FILTERS_ADD_FILTER = 'FILTERS_ADD_FILTER'
 
-export const addFilter = text => {
+export const addFilter = filter => {
   return (dispatch) => {
     dispatch({
       type: FILTERS_ADD_FILTER,
-      payload: {
-        id: text.toLowerCase().replace(' ', '-'),
-        text: text
-      }
+      payload: filter
     })
     updateFilter({text: ''})
   }

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Route, Link, BrowserRouter, Switch } from 'react-router-dom'
+import { Route, Link, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -44,7 +44,6 @@ const mapDispatchToProps = (dispatch) => {
 
 export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
   return (
-    <BrowserRouter basename="/" >
       <div className="App">
         <Route path='/section-list' exact component={SectionList} />
         <Route
@@ -83,11 +82,11 @@ export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
                 </Toolbar>
               </AppBar>
               <Switch>
-                <Route key='/' path='/' exact component={Content} />
-                <Route key='/web3-account-list' path='/web3-account-list' exact component={AccountList} />
-                <Route key='/contact-list' path='/contact-list' exact component={ContactList} />
-                <Route key='/filter-list' path='/filter-list' exact component={FilterList} />
-                <Route key='/feed-list' path='/feed-list' exact component={FeedList} />
+                <Route exact key='/' path='/' exact component={Content} />
+                <Route exact key='/web3-account-list' path='/web3-account-list' exact component={AccountList} />
+                <Route exact key='/contact-list' path='/contact-list' exact component={ContactList} />
+                <Route exact key='/filter-list' path='/filter-list' exact component={FilterList} />
+                <Route exact key='/feed-list' path='/feed-list' exact component={FeedList} />
                 {sections.filter((section) => !section.muted).map((section) => {
                   const nameToPath = (name) => {
                     return name.toLowerCase().replace(' ', '-')
@@ -100,7 +99,6 @@ export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
           )}
         />
       </div>
-    </BrowserRouter>
   )
 }
 

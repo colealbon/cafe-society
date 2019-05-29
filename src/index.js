@@ -31,6 +31,7 @@ import filterReducer from './reducers/filterReducer'
 import contactsReducer from './reducers/contactsReducer'
 import contactReducer from './reducers/contactReducer'
 import selectedSectionReducer from './reducers/selectedSectionReducer'
+import selectedFilterSectionReducer from './reducers/selectedFilterSectionReducer'
 
 const store = createStore(
   combineReducers({
@@ -46,6 +47,7 @@ const store = createStore(
     filters: filtersReducer,
     selectedSection: selectedSectionReducer,
     leftDrawer: leftDrawerReducer,
+    selectedFilterSection: selectedFilterSectionReducer,
     router: connectRouter(history),
   }),
   composeWithDevTools(
@@ -54,7 +56,7 @@ const store = createStore(
 )
 
 setTimeout(store.dispatch(fetchAccounts()), 1000)
-setInterval(function(){store.dispatch(fetchAccounts())}, 10 * 1000) // miliseconds
+setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
 
 ReactDOM.render(
   <Provider store={store}>
