@@ -44,7 +44,6 @@ const mapDispatchToProps = (dispatch) => {
       filters.map((filter) => dispatch(removeFilter(filter)))
     },
     handleClickSetFilter: (filter) => {
-      //alert(JSON.stringify({handleClickSetFilter: {filter}}))
       dispatch(selectFilterSection(filter))
     }
   }
@@ -88,16 +87,14 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
                 <ListItemText primary={filter.text}></ListItemText>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                <Typography>block articles containing {filter.text}</Typography>
+                <Typography>{(filter.muted) ? 'do not ' : ''}block articles containing {filter.text}</Typography>
                 </ExpansionPanelDetails>
                 <ExpansionPanelDetails>
-                <Typography>enable sections:</Typography>
+                <Typography>apply only to sections:</Typography>
                 </ExpansionPanelDetails>
                 <ExpansionPanelDetails>
                   {
                     sections.map((section) => {
-                      //const handleClickSectionChip = (sectionId) => console.log(`${filter.text} - ${sectionId}`)
-                      //const selectedSection = (filter.sections ||  .filter((filterSection) => filterSection.id === section.id  )
                       return (<Chip
                         key={section.id}
                         color={(section.id == (filter.sections || [] ).filter((filterSection) => filterSection.id === section.id)
