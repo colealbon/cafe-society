@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'build')
   },
   module: {
     rules: [
@@ -47,7 +47,8 @@ module.exports = {
       filename: './index.html'
     }),
     new CopyPlugin([
-      { from: './src/assets', to: 'assets' }
+      { from: './src/assets', to: 'assets' },
+      { from: './src/cors', to: '' }
     ]),
     new ManifestPlugin()
   ],
