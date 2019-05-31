@@ -1,5 +1,4 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin')
-var ManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path')
 module.exports = {
@@ -47,13 +46,12 @@ module.exports = {
       filename: './index.html'
     }),
     new CopyPlugin([
-      { from: './src/assets', to: 'assets' },
+      { from: './src/assets', to: '' },
       { from: './src/cors', to: '' }
-    ]),
-    new ManifestPlugin()
+    ])
   ],
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, ''),
     port: 8080,
     index: 'index.html',
     historyApiFallback: true,
