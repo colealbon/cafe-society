@@ -1,9 +1,40 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from 'react'
+import { UserSession } from 'blockstack'
 
-import Home from './Home'
-Home.displayName = 'home'
+import Landing from './Landing'
+import SignedIn from './SignedIn'
 
-export const App = () => <Home />
+class App extends Component {
 
-export default connect()(App)
+  constructor() {
+    super()
+    this.userSession = new UserSession()
+  }
+
+  componentDidMount() {
+    const session = this.userSession
+    if(!session.isUserSignedIn() && session.isSignInPending()) {
+      session.handlePendingSignIn()
+      .then((userData) => {
+        // if(!userData.username) {
+        //   throw new Error('This app requires a username.')
+        // }
+        window.location = `/`
+      })
+    }
+  }
+
+  render() {
+    return (
+      <main role="main">
+          {this.userSession.isUserSignedIn() ?
+            <SignedIn />
+          :
+            <Landing />
+          }
+      </main>
+    );
+  }
+}
+
+export default App

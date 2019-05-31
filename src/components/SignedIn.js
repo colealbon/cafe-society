@@ -6,14 +6,17 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Toolbar from '@material-ui/core/Toolbar'
-import SectionList from './sections/SectionList'
-import ContactList from './contacts/ContactList'
-import FeedList from './feeds/FeedList'
 import IconButton from '@material-ui/core/IconButton'
 import AppBar from '@material-ui/core/AppBar'
 import MenuIcon from '@material-ui/icons/Menu'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+// import Button from '@material-ui/core/Button';
+
+import Logout from './blockstack/Logout'
+import SectionList from './sections/SectionList'
+import ContactList from './contacts/ContactList'
+import FeedList from './feeds/FeedList'
 import FilterList from './filters/FilterList'
 import Content from './Content'
 import AccountList from './AccountList'
@@ -42,7 +45,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
+export const SignedIn = ({ sections, handleDrawerOpen, handleSetSection}) => {
   return (
       <div className="App">
         <Route path='/section-list' exact component={SectionList} />
@@ -77,18 +80,20 @@ export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
                         <Tab hidden disabled value="/contact-list" component={Link} to="/contact-list" />
                         <Tab hidden disabled value="/feed-list" component={Link} to="/feed-list" />
                         <Tab hidden disabled value="/filter-list" component={Link} to="/filter-list" />
+                        <Tab variant="outlined"value="/logout" label='Log Out' component={Link} to="/logout" />
                       </Tabs>
                     </Toolbar>
                   </Typography>
                 </Toolbar>
               </AppBar>
               <Switch>
-                <Route exact key='/' path='/' exact component={Content} />
-                <Route exact key='/all' path='/all' exact component={Content} />
-                <Route exact key='/web3-account-list' path='/web3-account-list' exact component={AccountList} />
-                <Route exact key='/contact-list' path='/contact-list' exact component={ContactList} />
-                <Route exact key='/filter-list' path='/filter-list' exact component={FilterList} />
-                <Route exact key='/feed-list' path='/feed-list' exact component={FeedList} />
+                <Route exact key='/' path='/' component={Content} />
+                <Route exact key='/all' path='/all' component={Content} />
+                <Route exact key='/web3-account-list' path='/web3-account-list' component={AccountList} />
+                <Route exact key='/contact-list' path='/contact-list' component={ContactList} />
+                <Route exact key='/filter-list' path='/filter-list' component={FilterList} />
+                <Route exact key='/feed-list' path='/feed-list' component={FeedList} />
+                <Route path='/logout' exact component={Logout} />
                 {sections.filter((section) => !section.muted).map((section) => {
                   const nameToPath = (name) => {
                     return name.toLowerCase().replace(' ', '-')
@@ -104,10 +109,10 @@ export const Home = ({ sections, handleDrawerOpen, handleSetSection}) => {
   )
 }
 
-Home.propTypes = {
+SignedIn.propTypes = {
   sections: PropTypes.array.isRequired,
   handleDrawerOpen: PropTypes.func.isRequired,
   handleSetSection: PropTypes.func.isRequired
 }
 
-export default withStyles(styles, { withTheme: true })(connect(mapStateToProps, mapDispatchToProps)(Home))
+export default withStyles(styles, { withTheme: true })(connect(mapStateToProps, mapDispatchToProps)(SignedIn))

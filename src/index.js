@@ -19,6 +19,8 @@ import registerServiceWorker from './registerServiceWorker'
 const history = createBrowserHistory()
 const middleware = routerMiddleware(history)
 
+import { fetchUserData } from './actions/blockstackUserActions'
+
 import messageReducer from './reducers/messageReducer'
 import accountsReducer from './reducers/accountsReducer'
 import sectionsReducer from './reducers/sectionsReducer'
@@ -31,6 +33,7 @@ import filterReducer from './reducers/filterReducer'
 import contactsReducer from './reducers/contactsReducer'
 import contactReducer from './reducers/contactReducer'
 import selectedSectionReducer from './reducers/selectedSectionReducer'
+import blockstackUserReducer from './reducers/blockstackUserReducer'
 import selectedFilterSectionReducer from './reducers/selectedFilterSectionReducer'
 
 const store = createStore(
@@ -48,6 +51,7 @@ const store = createStore(
     selectedSection: selectedSectionReducer,
     leftDrawer: leftDrawerReducer,
     selectedFilterSection: selectedFilterSectionReducer,
+    blockstackUser: blockstackUserReducer,
     router: connectRouter(history),
   }),
   composeWithDevTools(
@@ -57,6 +61,8 @@ const store = createStore(
 
 setTimeout(store.dispatch(fetchAccounts()), 1000)
 setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
+store.dispatch(fetchUserData())
+
 
 ReactDOM.render(
   <Provider store={store}>
