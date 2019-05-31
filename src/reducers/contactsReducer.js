@@ -1,7 +1,8 @@
 import {
   CONTACTS_ADD_CONTACT,
   CONTACTS_REMOVE_CONTACT,
-  CONTACTS_TOGGLE_CONTACT
+  CONTACTS_TOGGLE_CONTACT,
+  FETCH_CONTACTS_SUCCESS,
 } from '../actions/contactActions'
 
 const initialState = [
@@ -22,6 +23,8 @@ export default (state = initialState, action) => {
     case CONTACTS_TOGGLE_CONTACT:
       return state.map(contact => contact.id === action.payload.id ? { ...contact, muted: !contact.muted || false } : contact)
 
+    case FETCH_CONTACTS_SUCCESS:
+        return action.payload
     default:
       return state
   }

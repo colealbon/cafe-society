@@ -6,6 +6,7 @@ import AddContact from './AddContact'
 import RemoveContact from './RemoveContact'
 import Loading from '../Loading'
 import { removeContact, toggleContact } from '../../actions/contactActions'
+import PublishToBlockstack from '../PublishToBlockstack'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -45,7 +46,8 @@ export const ContactList = ({ handleClickRemoveContact, handleClickToggleContact
       <br />
       <br />
       <br />
-      <List subheader={<ListSubheader>Edit Contacts</ListSubheader>} >
+
+      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Contacts</ListSubheader>} >
         <ListItem key='addItem'>
           <IconButton title={deleteSweepContact} onClick={() => { handleClickRemoveAllContacts(contacts) }}>
             <DeleteSweepIcon></DeleteSweepIcon>

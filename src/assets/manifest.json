@@ -14,5 +14,8 @@
   "icons": [{
     "src": "appicon.png",
     "type": "image/png"
+  },{
+    "src":"favicon.ico",
+    "type": "image/ico"
   }]
 }

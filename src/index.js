@@ -20,6 +20,7 @@ const history = createBrowserHistory()
 const middleware = routerMiddleware(history)
 
 import { fetchUserData } from './actions/blockstackUserActions'
+import { fetchBlockstackContacts } from './actions/contactActions'
 
 import messageReducer from './reducers/messageReducer'
 import accountsReducer from './reducers/accountsReducer'
@@ -62,6 +63,7 @@ const store = createStore(
 setTimeout(store.dispatch(fetchAccounts()), 1000)
 setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
 store.dispatch(fetchUserData())
+store.dispatch(fetchBlockstackContacts())
 
 
 ReactDOM.render(

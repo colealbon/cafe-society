@@ -11,7 +11,6 @@ import AppBar from '@material-ui/core/AppBar'
 import MenuIcon from '@material-ui/icons/Menu'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-// import Button from '@material-ui/core/Button';
 
 import Logout from './blockstack/Logout'
 import SectionList from './sections/SectionList'
