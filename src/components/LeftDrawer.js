@@ -11,6 +11,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListSubHeader from '@material-ui/core/ListSubHeader'
 import ContactsIcon from '@material-ui/icons/Contacts'
 import RssFeedIcon from '@material-ui/icons/RssFeed'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import NewspaperIcon from '@material-ui/icons/ViewHeadline'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -66,6 +67,10 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
       </List>
       <Divider />
       <List subheader={<ListSubHeader>Identity (experimental)</ListSubHeader>}>
+      <ListItem onClick={() => handleDrawerClose()} button key='logout' component={Link} to='/logout'>
+        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
+        <ListItemText primary="Log Out Blockstack" />
+      </ListItem>
         <ListItem onClick={() => handleDrawerClose()} button key='/web3-account-list' component={Link} to='/web3-account-list'>
           <ListItemIcon><IdentityIcon/></ListItemIcon>
           <ListItemText primary="Web3 Provider" />

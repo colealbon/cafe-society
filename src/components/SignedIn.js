@@ -80,7 +80,6 @@ export const SignedIn = ({ sections, handleDrawerOpen, handleSetSection}) => {
                         <Tab hidden disabled value="/contact-list" component={Link} to="/contact-list" />
                         <Tab hidden disabled value="/feed-list" component={Link} to="/feed-list" />
                         <Tab hidden disabled value="/filter-list" component={Link} to="/filter-list" />
-                        <Tab variant="outlined"value="/logout" label='Log Out' component={Link} to="/logout" />
                       </Tabs>
                     </Toolbar>
                   </Typography>
