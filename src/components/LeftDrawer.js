@@ -20,9 +20,10 @@ import PropTypes from 'prop-types'
 import IdentityIcon from '@material-ui/icons/PermIdentity'
 import {Link} from 'react-router-dom'
 
-const mapStateToProps = ({ leftDrawer }) => {
+const mapStateToProps = ({ leftDrawer, blockstackUser }) => {
   return {
-    leftDrawer: leftDrawer
+    leftDrawer: leftDrawer,
+    blockstackUser: blockstackUser
   }
 }
 
@@ -34,7 +35,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
+export const LeftDrawer = ({ leftDrawer, blockstackUser, handleDrawerClose }) => {
   return (
     <Drawer
       variant="persistent"
@@ -69,7 +70,7 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
       <List subheader={<ListSubHeader>Identity (experimental)</ListSubHeader>}>
       <ListItem onClick={() => handleDrawerClose()} button key='logout' component={Link} to='/logout'>
         <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-        <ListItemText primary="Log Out Blockstack" />
+        <ListItemText primary={`log out ${blockstackUser.profile.username}`} />
       </ListItem>
         <ListItem onClick={() => handleDrawerClose()} button key='/web3-account-list' component={Link} to='/web3-account-list'>
           <ListItemIcon><IdentityIcon/></ListItemIcon>
@@ -81,6 +82,7 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
 }
 LeftDrawer.propTypes = {
   leftDrawer: PropTypes.object.isRequired,
+  blockstackUser: PropTypes.object.isRequired,
   handleDrawerClose: PropTypes.func.isRequired
 };
 

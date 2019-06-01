@@ -5,10 +5,10 @@ import AddFeed from './AddFeed'
 import RemoveFeed from './RemoveFeed'
 import { removeFeed, toggleFeed } from '../../actions/feedActions'
 import { selectFeedSection } from '../../actions/feedSectionActions'
+import PublishToBlockstack from '../PublishToBlockstack'
 
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
-
 import Chip from '@material-ui/core/Chip'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -16,11 +16,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Switch from '@material-ui/core/Switch'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import Typography from '@material-ui/core/Typography'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 const mapStateToProps = ({ feeds, sections }) => {
   return {
@@ -54,7 +54,7 @@ export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClic
       <br />
       <br />
       <br />
-      <List subheader={<ListSubheader>Edit Feeds</ListSubheader>} >
+      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Feeds</ListSubheader>} >
         <ListItem key='addItem'>
           <IconButton title={deleteSweepFeed} onClick={() => { handleClickRemoveAllFeeds(feeds) }}>
             <DeleteSweepIcon></DeleteSweepIcon>

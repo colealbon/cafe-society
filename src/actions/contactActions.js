@@ -1,5 +1,5 @@
 import * as blockstack from 'blockstack'
-// import { fetchBlockstackFeeds } from './feedActions'
+import { fetchBlockstackFeeds } from './feedActions'
 // import { fetchBlockstackFilters } from './filterActions'
 var memoize = require("memoizee");
 
@@ -87,14 +87,14 @@ export const fetchBlockstackContacts = () => {
             type: FETCH_CONTACTS_SUCCESS,
             payload: contacts
           })
-          // dispatch(fetchBlockstackFeeds(contacts))
+          dispatch(fetchBlockstackFeeds(contacts))
           // dispatch(fetchBlockstackFilters(contacts))
         } else {
-          // dispatch({
-          //   type: FETCH_CONTACTS_SUCCESS,
-          //   payload: defaultContacts
-          // })
-          // dispatch(fetchBlockstackFeeds(defaultContacts))
+          dispatch({
+            type: FETCH_CONTACTS_SUCCESS,
+            payload: defaultContacts
+          })
+          dispatch(fetchBlockstackFeeds(defaultContacts))
           // dispatch(fetchBlockstackFilters(defaultContacts))
         }
       })
@@ -103,7 +103,7 @@ export const fetchBlockstackContacts = () => {
           type: FETCH_CONTACTS_SUCCESS,
           payload: defaultContacts
         })
-        // dispatch(fetchBlockstackFeeds(defaultContacts))
+        dispatch(fetchBlockstackFeeds(defaultContacts))
         // dispatch(fetchBlockstackFilters(defaultContacts))
       })
     }

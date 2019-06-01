@@ -1,7 +1,8 @@
 import {
   FEEDS_ADD_FEED,
   FEEDS_REMOVE_FEED,
-  FEEDS_TOGGLE_FEED
+  FEEDS_TOGGLE_FEED,
+  FETCH_FEEDS_SUCCESS
 } from '../actions/feedActions'
 
 import {
@@ -10,7 +11,7 @@ import {
 
 
 const initialState = [
-  {id: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en', url: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en', muted: true}
+  {id: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en', url: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en', muted: false}
 ]
 
 export default (state = initialState, action) => {
@@ -34,7 +35,7 @@ export default (state = initialState, action) => {
       // good place to introduce jest tests and refactor
       return state.map((feed) => {
         if (feed.id !== action.payload.id) {
-          return filter
+          return feed
         }
         if (!feed.sections) {
           return Object.assign(feed, {sections: [action.payload.section]})
@@ -53,6 +54,10 @@ export default (state = initialState, action) => {
         }))
         return feed
         })
+
+    case FETCH_FEEDS_SUCCESS:
+      return action.payload
+
     default:
       return state
   }
