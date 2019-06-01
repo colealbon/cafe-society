@@ -105,7 +105,7 @@ export const fetchBlockstackFeeds = (contacts) => {
           .catch(() => {
             return
             //alert(`${contact.name} feed ${(error) ? error.message : ''}`)
-            //resolve(error)
+            //reject(error)
           })
         }))
       })

@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 const mapStateToProps = ({blockstackUser}) => {
   return {
@@ -10,10 +11,13 @@ const mapStateToProps = ({blockstackUser}) => {
 export const Profile = () => {
   return (
     <Fragment>
-    profile
+    JSON.stringify(blockstackUser.profile)
     </Fragment>
   )
 }
 
+Profile.propTypes = {
+  blockstackUser: PropTypes.object.isRequired
+}
 
 export default connect(mapStateToProps)(Profile)

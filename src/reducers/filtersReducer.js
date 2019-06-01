@@ -2,6 +2,7 @@ import {
   FILTERS_ADD_FILTER,
   FILTERS_REMOVE_FILTER,
   FILTERS_TOGGLE_FILTER,
+  FETCH_FILTERS_SUCCESS
 } from '../actions/filterActions'
 
 import {
@@ -9,7 +10,7 @@ import {
 } from '../actions/filterSectionActions'
 
 const initialState = [
-  {id: 'Meow Mix', text: 'Meow Mix', muted: true}
+  {id: 'Meow Mix', text: 'Meow Mix', muted: false}
 ]
 
 export default (state = initialState, action) => {
@@ -26,6 +27,8 @@ export default (state = initialState, action) => {
     case FILTERS_TOGGLE_FILTER:
       return state.map(filter => filter.id === action.payload.id ? { ...filter, muted: !filter.muted || false } : filter)
 
+    case FETCH_FILTERS_SUCCESS:
+      return action.payload
     case FILTER_SECTION_SELECT_SECTION:
       // each filter has an optional list of sections
       // clicking on a section inside a filter will turn the section on or off

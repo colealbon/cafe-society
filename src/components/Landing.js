@@ -17,16 +17,9 @@ class Landing extends Component {
 
   render() {
     return (
-      <Fragment style={{justifyContent: 'center'}}>
+      <Fragment>
         <br />
         <br />
-        <Typography>
-          &nbsp;
-          &nbsp;
-          &nbsp;
-          &nbsp;
-          Welcome to cafe-society.news
-        </ Typography>
         <br />
         <br />
         &nbsp;

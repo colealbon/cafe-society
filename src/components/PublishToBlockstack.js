@@ -7,38 +7,35 @@ import PropTypes from 'prop-types'
 // import { publishArticles } from '../actions/articleActions'
 import { publishContacts } from '../actions/contactActions'
 import { publishFeeds } from '../actions/feedActions'
-// import { publishFilters } from '../actions/filterActions'
+import { publishFilters } from '../actions/filterActions'
 
-const mapStateToProps = ({ contacts, feeds }) => {
+const mapStateToProps = ({ contacts, feeds, filters }) => {
 
-  //articles, surpressLinks, surpressTitles, feeds, filters}) => {
+  //articles }) => {
   return {
     contacts: contacts,
     // articles: articles,
-    // surpressLinks: surpressLinks,
-    // surpressTitles: surpressTitles,
-    // friends: friends,
-    feeds: feeds
-    // filters: filters
+    feeds: feeds,
+    filters: filters
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handlePublishToBlockstack: ( contacts, feeds ) => {
+    handlePublishToBlockstack: ( contacts, feeds, filters ) => {
       //articles, surpressLinks, surpressTitles, friends, feeds, filters) => {
       //dispatch(publishArticles(articles))
       dispatch(publishContacts(contacts))
       dispatch(publishFeeds(feeds))
-      //dispatch(publishFilters(filters, articles))
+      dispatch(publishFilters(filters))
     }
   }
 }
 
-const PublishToBlockstack = ({ contacts, feeds, handlePublishToBlockstack}) => {
-  // articles, surpressLinks, surpressTitles, friends, feeds, filters, handlePublishToBlockstack}) => {
+const PublishToBlockstack = ({ contacts, feeds, filters, handlePublishToBlockstack}) => {
+  // articles, surpressLinks, surpressTitles}) => {
   return (
-    <IconButton title="publish to blockstack" onClick={() => handlePublishToBlockstack( contacts, feeds )}>
+    <IconButton title="publish to blockstack" onClick={() => handlePublishToBlockstack( contacts, feeds, filters )}>
       <Save></Save>
     </IconButton>
   )
@@ -47,6 +44,7 @@ const PublishToBlockstack = ({ contacts, feeds, handlePublishToBlockstack}) => {
 PublishToBlockstack.propTypes = {
   contacts: PropTypes.array.isRequired,
   feeds:  PropTypes.array.isRequired,
+  filters:  PropTypes.array.isRequired,
   handlePublishToBlockstack: PropTypes.func.isRequired,
 }
 

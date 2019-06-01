@@ -6,8 +6,7 @@ import AddFilter from './AddFilter'
 import RemoveFilter from './RemoveFilter'
 import { removeFilter, toggleFilter } from '../../actions/filterActions'
 import { selectFilterSection } from '../../actions/filterSectionActions'
-import IconButton from '@material-ui/core/IconButton'
-import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
+import PublishToBlockstack from '../PublishToBlockstack'
 
 import Chip from '@material-ui/core/Chip'
 import List from '@material-ui/core/List'
@@ -21,6 +20,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton'
+import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
 const mapStateToProps = ({ filters, sections }) => {
   return {
@@ -54,7 +55,7 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
       <br />
       <br />
       <br />
-      <List subheader={<ListSubheader>Edit Filters</ListSubheader>} >
+      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Filters</ListSubheader>} >
         <ListItem key='addItem'>
           <ListItemIcon><IconButton title={deleteSweepFilter} onClick={() => { handleClickRemoveAllFilters(filters) }}>
             <DeleteSweepIcon></DeleteSweepIcon>
