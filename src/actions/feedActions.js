@@ -70,30 +70,40 @@ export const FETCH_FEEDS_SUCCESS = 'FETCH_FEEDS_SUCCESS'
 export const FETCH_FEEDS_ERROR = 'FETCH_FEEDS_ERROR'
 
 const slowBlockstackGetFile = (filename, options) => {
-
   return blockstack.getFile(filename, options)
 }
-const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
+const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 1000 })
 
 export const fetchBlockstackFeeds = (contacts) => {
   return (dispatch) => {
-    dispatch({ type: FETCH_FEEDS_REQUEST })
+    dispatch({
+      type: FETCH_FEEDS_REQUEST,
+      payload: contacts
+    })
     const fetchFeedFileQueue = []
     fetchFeedFileQueue.push(new Promise((resolve, reject) => {
       blockstackGetFile('feeds.json', {
         decrypt: false
       })
-      .then((fileContents) => resolve((JSON.parse(fileContents))))
+      .then((fileContents) => {
+        resolve((JSON.parse(fileContents)))
+      })
       .catch((error) => reject(error))
     }))
-    if (contacts.length > 0) {
+    if (contacts && contacts.length > 0) {
       contacts.filter((contact) => !contact.muted).map((contact) => {
-        return fetchFeedFileQueue.push(new Promise((resolve) => {
+        fetchFeedFileQueue.push(new Promise((resolve, reject) => {
+          // resolve([{
+          //   id: "https://www.findyourfate.com/rss/horoscope-astrology.php",
+          //   url: "https://www.findyourfate.com/rss/horoscope-astrology.php",
+          //   muted: false
+          // }])
           blockstackGetFile('feeds.json', {
             decrypt: false,
             username: contact.name
           })
           .then((fileContents) => {
+            alert(JSON.stringify(contact))
             resolve(
               JSON.parse(fileContents)
               .map((feed) => {
@@ -102,13 +112,13 @@ export const fetchBlockstackFeeds = (contacts) => {
               })
             )
           })
-          .catch(() => {
-            return []
-            //alert(`${contact.name} feed ${(error) ? error.message : ''}`)
-            //reject(error)
+          .catch((error) => {
+            reject(error)
           })
         }))
+        return
       })
+
     }
     Promise.all(fetchFeedFileQueue)
     .then((fetchedFeeds) => {
@@ -155,7 +165,7 @@ export const publishFeeds = (feeds) => {
         dispatch({
           type: PUBLISH_FEEDS_SUCCESS
         })
-        // dispatch(fetchBlockstackFeeds())
+        dispatch(fetchBlockstackFeeds())
       }
     )
   }

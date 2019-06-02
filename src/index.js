@@ -62,8 +62,8 @@ const store = createStore(
   )
 )
 
-setTimeout(store.dispatch(fetchAccounts()), 1000)
-setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
+setTimeout(store.dispatch(fetchAccounts()), 5000)
+// setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
 store.dispatch(fetchUserData())
 store.dispatch(fetchBlockstackContacts())
 
