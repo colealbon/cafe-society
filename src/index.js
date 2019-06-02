@@ -22,6 +22,7 @@ const middleware = routerMiddleware(history)
 import { fetchUserData } from './actions/blockstackUserActions'
 import { fetchBlockstackContacts } from './actions/contactActions'
 
+import articlesReducer from './reducers/articlesReducer'
 import messageReducer from './reducers/messageReducer'
 import accountsReducer from './reducers/accountsReducer'
 import sectionsReducer from './reducers/sectionsReducer'
@@ -39,6 +40,7 @@ import selectedFilterSectionReducer from './reducers/selectedFilterSectionReduce
 
 const store = createStore(
   combineReducers({
+    articles: articlesReducer,
     message: messageReducer,
     accounts: accountsReducer,
     sections: sectionsReducer,

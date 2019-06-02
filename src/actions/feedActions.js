@@ -1,5 +1,5 @@
 import * as blockstack from 'blockstack'
-// import { fetchBlockstackArticles } from './articleActions'
+import { fetchBlockstackArticles } from './articleActions'
 
 var memoize = require("memoizee");
 
@@ -103,7 +103,7 @@ export const fetchBlockstackFeeds = (contacts) => {
             )
           })
           .catch(() => {
-            return
+            return []
             //alert(`${contact.name} feed ${(error) ? error.message : ''}`)
             //reject(error)
           })
@@ -137,7 +137,7 @@ export const fetchBlockstackFeeds = (contacts) => {
           type: FETCH_FEEDS_SUCCESS,
           payload: uniqueFeeds
         })
-        //dispatch(fetchBlockstackArticles(uniqueFeeds))
+        dispatch(fetchBlockstackArticles(uniqueFeeds))
       }
     })
   }

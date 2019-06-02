@@ -18,6 +18,7 @@ import ContactList from './contacts/ContactList'
 import FeedList from './feeds/FeedList'
 import FilterList from './filters/FilterList'
 import Content from './Content'
+import ArticleList from './articles/ArticleList'
 import AccountList from './AccountList'
 import LeftDrawer from './LeftDrawer'
 import styles from '../styles'
@@ -85,8 +86,8 @@ export const SignedIn = ({ sections, handleDrawerOpen, handleSetSection}) => {
                 </Toolbar>
               </AppBar>
               <Switch>
-                <Route exact key='/' path='/' component={Content} />
-                <Route exact key='/all' path='/all' component={Content} />
+                <Route exact key='/' path='/' component={ArticleList} />
+                <Route exact key='/all' path='/all' component={ArticleList} />
                 <Route exact key='/web3-account-list' path='/web3-account-list' component={AccountList} />
                 <Route exact key='/contact-list' path='/contact-list' component={ContactList} />
                 <Route exact key='/filter-list' path='/filter-list' component={FilterList} />
