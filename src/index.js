@@ -36,7 +36,9 @@ import contactsReducer from './reducers/contactsReducer'
 import contactReducer from './reducers/contactReducer'
 import selectedSectionReducer from './reducers/selectedSectionReducer'
 import blockstackUserReducer from './reducers/blockstackUserReducer'
+import fieldsReducer from './reducers/fieldsReducer'
 import selectedFilterSectionReducer from './reducers/selectedFilterSectionReducer'
+import selectedFilterFieldReducer from './reducers/selectedFilterFieldReducer'
 
 const store = createStore(
   combineReducers({
@@ -52,9 +54,11 @@ const store = createStore(
     filter: filterReducer,
     filters: filtersReducer,
     selectedSection: selectedSectionReducer,
+    selectedFilterField: selectedFilterFieldReducer,
     leftDrawer: leftDrawerReducer,
     selectedFilterSection: selectedFilterSectionReducer,
     blockstackUser: blockstackUserReducer,
+    fields: fieldsReducer,
     router: connectRouter(history),
   }),
   composeWithDevTools(

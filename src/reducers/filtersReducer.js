@@ -9,6 +9,11 @@ import {
   FILTER_SECTION_SELECT_SECTION
 } from '../actions/filterSectionActions'
 
+import {
+  FILTER_FIELD_SELECT_FIELD
+} from '../actions/filterFieldActions'
+
+
 const initialState = [
   {id: 'Meow Mix', text: 'Meow Mix', muted: false}
 ]
@@ -55,6 +60,35 @@ export default (state = initialState, action) => {
         }))
         return filter
       })
+
+      case FILTER_FIELD_SELECT_FIELD:
+        // each filter has an optional list of fields
+        // clicking on a field inside a filter will turn the field on or off
+        // this logic figures out current filter fields and does what it must
+        // good place to introduce jest tests and refactor
+        return state.map((filter) => {
+          // alert(JSON.stringify(action.payload))
+          // {"filterField":{"id":"title","name":"title","muted":false},"id":"Meow Mix","text":"Meow Mix","muted":false}
+          if (filter.id !== action.payload.id) {
+            return filter
+          }
+          if (!filter.fields) {
+            return Object.assign(filter, {fields: [action.payload.field]})
+          }
+          if (filter.fields == []) {
+            return Object.assign(filter, {fields: [action.payload.field]})
+          }
+          const deleteField = filter.fields.filter((field) => {
+            return action.payload.field.id == field.id
+          })
+          if (deleteField.length < 1) {
+            return Object.assign(filter, {fields: filter.fields.concat(action.payload.field)})
+          }
+          filter.fields = Object.assign(filter.fields.filter((field) => {
+            return (action.payload.field.id !== field.id)
+          }))
+          return filter
+        })
     default:
       return state
   }

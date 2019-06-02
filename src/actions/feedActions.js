@@ -103,7 +103,6 @@ export const fetchBlockstackFeeds = (contacts) => {
             username: contact.name
           })
           .then((fileContents) => {
-            alert(JSON.stringify(contact))
             resolve(
               JSON.parse(fileContents)
               .map((feed) => {
