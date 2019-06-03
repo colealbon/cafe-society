@@ -82,7 +82,7 @@ export const fetchBlockstackArticles = (feeds) => {
           resolve(feedContent.items.map((article) => {
             article.muted = false
             article.contentSnippet = !article.contentSnippet ? '' : article.contentSnippet.replace(/&amp;nbsp;/g," ").replace(/&nbsp;/g," ")
-            return(Object.assign({id: article.link, feedUrl: feed.url}, article))
+            return(Object.assign({id: article.link, feed: feed}, article))
           }))
         })
         .catch(() => {
@@ -91,7 +91,7 @@ export const fetchBlockstackArticles = (feeds) => {
           .then((feedContent) => {
             resolve(feedContent.items.map((article) => {
               article.muted = false
-              article.feedUrl = feed.url
+              article.feed = feed
               article.contentSnippet = !article.contentSnippet ? '' : article.contentSnippet.replace(/&amp;nbsp;/g," ").replace(/&nbsp;/g," ")
               return(Object.assign({id: article.link}, article))
             }))

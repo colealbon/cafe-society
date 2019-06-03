@@ -17,7 +17,7 @@ import SectionList from './sections/SectionList'
 import ContactList from './contacts/ContactList'
 import FeedList from './feeds/FeedList'
 import FilterList from './filters/FilterList'
-import Content from './Content'
+import SectionPage from './articles/SectionPage'
 import HomePage from './articles/HomePage'
 import AccountList from './AccountList'
 import LeftDrawer from './LeftDrawer'
@@ -97,7 +97,7 @@ export const SignedIn = ({ sections, handleDrawerOpen, handleSetSection}) => {
                   const nameToPath = (name) => {
                     return name.toLowerCase().replace(' ', '-')
                   }
-                  return <Route exact key={`/${nameToPath(section.name)}`} path={`/${nameToPath(section.name)}`} component={Content} />
+                  return <Route exact key={`/${nameToPath(section.name)}`} path={`/${nameToPath(section.name)}`} component={SectionPage} />
                 })}
               </Switch>
               <LeftDrawer />
