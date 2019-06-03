@@ -10,15 +10,32 @@ import {
 } from '../actions/feedSectionActions'
 
 
-const initialState = [{
-  id: "https://www.findyourfate.com/rss/horoscope-astrology.php",
-  url: "https://www.findyourfate.com/rss/horoscope-astrology.php",
-  muted: false
-},{
-  id: "https://www.democracynow.org/democracynow.rss",
-  url: "https://www.democracynow.org/democracynow.rss",
-  muted: false
-}]
+const initialState = [
+  {
+    id:'https://www.democracynow.org/democracynow.rss',
+    url: 'https://www.democracynow.org/democracynow.rss',
+    muted: false ,
+    sections: [
+      {
+        id:'politics',
+        name: 'politics',
+        muted: false
+      }
+    ]
+  },
+  {
+    id:'https://findyourfate.com/rss/horoscope-astrology.php',
+    url: 'https://findyourfate.com/rss/horoscope-astrology.php',
+    muted: false,
+    sections: [
+      {
+        id:'horoscope',
+        name: 'horoscope',
+        muted: false
+      }
+    ]
+  }
+]
 
 export default (state = initialState, action) => {
   switch (action.type) {

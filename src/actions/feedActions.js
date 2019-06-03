@@ -122,13 +122,27 @@ export const fetchBlockstackFeeds = (contacts) => {
           {
             id:'https://www.democracynow.org/democracynow.rss',
             url: 'https://www.democracynow.org/democracynow.rss',
-            muted: false
+            muted: false ,
+            sections: [
+              {
+                id:'politics',
+                name: 'politics',
+                muted: false
+              }
+            ]
           },
           {
             id:'https://findyourfate.com/rss/horoscope-astrology.php',
             url: 'https://findyourfate.com/rss/horoscope-astrology.php',
-            muted: false
-          },
+            muted: false,
+            sections: [
+              {
+                id:'horoscope',
+                name: 'horoscope',
+                muted: false
+              }
+            ]
+          }
         ]
         dispatch(fetchBlockstackArticles(theUniqueFeeds.filter((feed) => !feed.muted)))
         dispatch({

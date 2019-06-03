@@ -16,41 +16,31 @@ import PropTypes from 'prop-types'
 const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
     selectedSection: selectedSection,
+    filters: filters.filter((filter) => !filter.muted),
     visibleArticles: articles.filter((article) => {
       if ((article.feed || []).length < 1) {
         return false
       }
-      let matchedSession = false
-      article.feed.sections
-      .filter((feedSection) => !feedSection.muted)
+      return ((article.feed.sections || [])
       .filter((feedSection) => feedSection.id === selectedSection.id)
-      .map(() => matchedSession = true)
-      return matchedSession
-    }).filter((article) => !article.muted)
-    .filter((article) => {
-      // MOVE THIS SECTION TO ARTICLES REDUCER - COLE ALBON
-      let matchedFilter = false
-      filters.filter((filter) => !filter.muted).map((filter) => {
-        if ( matchedFilter === true ) {
-          return 'o'
-        }
-        (filter.fields || []).map((field) => {
-          if ( matchedFilter === true ) {
-            return 'o'
-          }
-          if (article[field.name] === undefined) {
-            return 'o'
-          }
-          if (article[field.name].indexOf(filter.text) !== -1) {
-              matchedFilter = true
-          }
-          return 'o'
-        })
-        return 'o'
-      })
-      return !matchedFilter
-    }) || [{id: 'noarticles', title: 'no articles', feed: {sections: [`${selectedSection}`]}}],
-    filters: filters
+      .filter((article) => !article.muted)
+      || []).length > 0
+    })
+    // .filter((article) => {
+    //   // MOVE THIS SECTION TO ARTICLES REDUCER ? - COLE ALBON
+    //   let matchedFilter = false
+    //   filters.map((filter) => {
+    //     // matchedFilter = true
+    //     (filter.fields || []).map((field) => {
+    //       if (article[field.name] !== undefined) {
+    //         if (article[field.name].indexOf(filter.text) !== -1) {
+    //           matchedFilter = true
+    //         }
+    //       }
+    //     })
+    //     return !matchedFilter
+    //   })
+    // })
   }
 }
 
@@ -87,7 +77,30 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
       <br />
       <Typography variant="h2" >{sectionTitle}</Typography>
       <p />
-      {visibleArticles.map((article) => {
+      {visibleArticles
+        .filter((article) => {
+          let matchedFilter = false
+          filters.filter((filter) => !filter.muted).map((filter) => {
+            if ( matchedFilter === true ) {
+              return 'o'
+            }
+            (filter.fields || []).map((field) => {
+              if ( matchedFilter === true ) {
+                return 'o'
+              }
+              if (article[field.name] === undefined) {
+                return 'o'
+              }
+              if (article[field.name].indexOf(filter.text) !== -1) {
+                  matchedFilter = true
+              }
+              return 'o'
+            })
+            return 'o'
+          })
+          return !matchedFilter
+        })
+        .map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
         return (
           <Grid item xs={12} key={article.id}>
