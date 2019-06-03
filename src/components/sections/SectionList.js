@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import AddSection from './AddSection'
 import RemoveSection from './RemoveSection'
 import { removeSection, toggleSection } from '../../actions/sectionActions'
+import PublishToBlockstack from '../PublishToBlockstack'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
-import Loading from '../Loading'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -43,7 +44,7 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
       <br />
       <br />
       <br />
-      <List subheader={<ListSubheader>Edit Sections</ListSubheader>} >
+      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Sections</ListSubheader>} >
         <ListItem key='addItem'>
           <ListItemIcon>
             <IconButton title={deleteSweepSection} onClick={() => { handleClickRemoveAllSections(sections) }}>
@@ -51,7 +52,6 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
             </IconButton>
           </ ListItemIcon>
           <AddSection />
-          <Loading />
         </ListItem>
         {sections.map((section) => {
           return (
@@ -82,5 +82,11 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
 
 // handleClickRemoveSection, handleClickToggleSection, handleClickRemoveAllSections, sections
 
+SectionList.propTypes = {
+  handleClickRemoveSection: PropTypes.func.isRequired,
+  handleClickToggleSection: PropTypes.func.isRequired,
+  handleClickRemoveAllSections: PropTypes.func.isRequired,
+  sections: PropTypes.array.isRequired,
+}
 export default connect(mapStateToProps, mapDispatchToProps)(SectionList)
 // export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SectionList));

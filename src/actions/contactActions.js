@@ -1,6 +1,7 @@
 import * as blockstack from 'blockstack'
 import { fetchBlockstackFeeds } from './feedActions'
 import { fetchBlockstackFilters } from './filterActions'
+import { fetchBlockstackSections } from './sectionActions'
 var memoize = require("memoizee");
 
 export const CONTACT_SELECT_CONTACT = 'CONTACT_SELECT_CONTACT'
@@ -33,7 +34,8 @@ export const addContact = name => {
       type: CONTACTS_ADD_CONTACT,
       payload: {
         id: name.toLowerCase().replace(' ', '-'),
-        name: name
+        name: name,
+        muted: false
       }
     })
     updateContact({name: ''})
@@ -89,6 +91,7 @@ export const fetchBlockstackContacts = () => {
           })
           dispatch(fetchBlockstackFeeds(contacts))
           dispatch(fetchBlockstackFilters(contacts))
+          dispatch(fetchBlockstackSections(contacts))
         } else {
           dispatch({
             type: FETCH_CONTACTS_SUCCESS,
@@ -96,6 +99,7 @@ export const fetchBlockstackContacts = () => {
           })
           dispatch(fetchBlockstackFeeds(defaultContacts))
           dispatch(fetchBlockstackFilters(defaultContacts))
+          dispatch(fetchBlockstackSections(defaultContacts))
         }
       })
       .catch(() => {
@@ -105,6 +109,7 @@ export const fetchBlockstackContacts = () => {
         })
         dispatch(fetchBlockstackFeeds(defaultContacts))
         dispatch(fetchBlockstackFilters(defaultContacts))
+        dispatch(fetchBlockstackSections(defaultContacts))
       })
     }
   }

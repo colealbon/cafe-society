@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 
 import AddContact from './AddContact'
 import RemoveContact from './RemoveContact'
-import Loading from '../Loading'
 import { removeContact, toggleContact } from '../../actions/contactActions'
 import PublishToBlockstack from '../PublishToBlockstack'
 
@@ -53,7 +52,6 @@ export const ContactList = ({ handleClickRemoveContact, handleClickToggleContact
             <DeleteSweepIcon></DeleteSweepIcon>
           </IconButton>
           <AddContact />
-          <Loading />
         </ListItem>
         {contacts.map((contact) => {
           return (

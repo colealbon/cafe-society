@@ -88,7 +88,7 @@ export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClic
                 <ListItemText primary={feed.url}></ListItemText>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                <Typography>{(!feed.muted) ? 'do not ' : ''}ignore feed</Typography>
+                <Typography>{(!feed.muted) ? 'do not ignore feed' : 'ignore feed'}</Typography>
                 </ExpansionPanelDetails>
                 <ExpansionPanelDetails>
                 <Typography>apply only to sections:</Typography>

@@ -110,10 +110,16 @@ export const fetchBlockstackFilters = (contacts) => {
       const flattenedFilters = fetchedFilters.reduce((a, b) => !a ? b : a.concat(b))
       const uniqueFilters = []
       let dedup = {}
-      if (flattenedFilters === null) {
+
+        if ((flattenedFilters || []).length < 1) {
         dispatch({
           type: FETCH_FILTERS_SUCCESS,
-          payload: []
+          payload: [{
+            id: 'measles',
+            text: 'measles',
+            fields: [{id:'title', name:'title', muted: false}],
+            sections: [{id:'politics', name:'politics'}]
+          }]
         })
       } else {
         flattenedFilters.filter((filter) => {

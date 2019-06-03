@@ -70,7 +70,7 @@ export const LeftDrawer = ({ leftDrawer, blockstackUser, handleDrawerClose }) =>
       <List subheader={<ListSubHeader>Identity (experimental)</ListSubHeader>}>
       <ListItem onClick={() => handleDrawerClose()} button key='logout' component={Link} to='/logout'>
         <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-        <ListItemText primary={`log out ${blockstackUser.profile.username}`} />
+        <ListItemText primary={`log out ${blockstackUser.profile.username || blockstackUser.profile.identityAddress}`} />
       </ListItem>
         <ListItem onClick={() => handleDrawerClose()} button key='/web3-account-list' component={Link} to='/web3-account-list'>
           <ListItemIcon><IdentityIcon/></ListItemIcon>

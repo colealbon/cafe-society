@@ -20,23 +20,23 @@ export const updateFeed = text => {
   return (dispatch) => {
     dispatch({
       type: FEED_UPDATE_FEED,
-      payload: {url: text}
+      payload: {name: text}
     })
   }
 }
 
 export const FEEDS_ADD_FEED = 'FEEDS_ADD_FEED'
 
-export const addFeed = url => {
+export const addFeed = name => {
   return (dispatch) => {
     dispatch({
       type: FEEDS_ADD_FEED,
       payload: {
-        id: url.toLowerCase().replace(' ', '-'),
-        url: url
+        id: name.toLowerCase().replace(' ', '-'),
+        name: name
       }
     })
-    updateFeed({url: ''})
+    updateFeed({name: ''})
   }
 }
 
@@ -72,66 +72,68 @@ export const FETCH_FEEDS_ERROR = 'FETCH_FEEDS_ERROR'
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
 }
-const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 1000 })
+const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 
 export const fetchBlockstackFeeds = (contacts) => {
   return (dispatch) => {
-    dispatch({
-      type: FETCH_FEEDS_REQUEST,
-      payload: contacts
-    })
+    dispatch({ type: FETCH_FEEDS_REQUEST })
     const fetchFeedFileQueue = []
     fetchFeedFileQueue.push(new Promise((resolve, reject) => {
       blockstackGetFile('feeds.json', {
         decrypt: false
       })
-      .then((fileContents) => {
-        resolve((JSON.parse(fileContents)))
-      })
+      .then((fileContents) => resolve((JSON.parse(fileContents))))
       .catch((error) => reject(error))
     }))
-    if (contacts && contacts.length > 0) {
+    if (!!contacts && contacts.length > 0) {
       contacts.filter((contact) => !contact.muted).map((contact) => {
-        fetchFeedFileQueue.push(new Promise((resolve, reject) => {
-          // resolve([{
-          //   id: "https://www.findyourfate.com/rss/horoscope-astrology.php",
-          //   url: "https://www.findyourfate.com/rss/horoscope-astrology.php",
-          //   muted: false
-          // }])
-          blockstackGetFile('feeds.json', {
-            decrypt: false,
-            username: contact.name
-          })
-          .then((fileContents) => {
-            resolve(
-              JSON.parse(fileContents)
-              .map((feed) => {
-                feed.muted = false
-                return(feed)
-              })
-            )
-          })
-          .catch((error) => {
-            reject(error)
-          })
+        return fetchFeedFileQueue.push(new Promise((resolve) => {
+            blockstackGetFile('feeds.json', {
+              decrypt: false,
+              username: contact.name
+            })
+            .then((fileContents) => {
+              if (fileContents === null) {
+                resolve([])
+              } else {
+                resolve(
+                  JSON.parse(fileContents)
+                  .map((feed) => {
+                    feed.muted = false
+                    return(feed)
+                  })
+                )
+              }
+            })
+            .catch(() => {
+              resolve([])
+            })
         }))
-        return
       })
-
     }
+
     Promise.all(fetchFeedFileQueue)
     .then((fetchedFeeds) => {
       const flattenedFeeds = fetchedFeeds.reduce((a, b) => !a ? b : a.concat(b))
       const uniqueFeeds = []
       let dedup = {}
-      if (flattenedFeeds === null) {
+      if ((flattenedFeeds || []).length < 1) {
+        const theUniqueFeeds = [
+          {
+            id:'https://www.democracynow.org/democracynow.rss',
+            url: 'https://www.democracynow.org/democracynow.rss',
+            muted: false
+          },
+          {
+            id:'https://findyourfate.com/rss/horoscope-astrology.php',
+            url: 'https://findyourfate.com/rss/horoscope-astrology.php',
+            muted: false
+          },
+        ]
+        dispatch(fetchBlockstackArticles(theUniqueFeeds.filter((feed) => !feed.muted)))
         dispatch({
           type: FETCH_FEEDS_SUCCESS,
-          payload: [{
-            id: "https://www.findyourfate.com/rss/horoscope-astrology.php",
-            url: "https://www.findyourfate.com/rss/horoscope-astrology.php",
-            muted: false
-          }]
+          payload: theUniqueFeeds
         })
       } else {
         flattenedFeeds.filter((feed) => {
@@ -146,7 +148,7 @@ export const fetchBlockstackFeeds = (contacts) => {
           type: FETCH_FEEDS_SUCCESS,
           payload: uniqueFeeds
         })
-        dispatch(fetchBlockstackArticles(uniqueFeeds))
+        dispatch(fetchBlockstackArticles(uniqueFeeds.filter((feed) => !feed.muted)))
       }
     })
   }
@@ -164,7 +166,6 @@ export const publishFeeds = (feeds) => {
         dispatch({
           type: PUBLISH_FEEDS_SUCCESS
         })
-        dispatch(fetchBlockstackFeeds())
       }
     )
   }

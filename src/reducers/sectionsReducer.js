@@ -1,17 +1,11 @@
 import {
   SECTIONS_ADD_SECTION,
   SECTIONS_REMOVE_SECTION,
-  SECTIONS_TOGGLE_SECTION
+  SECTIONS_TOGGLE_SECTION,
+  FETCH_SECTIONS_SUCCESS
 } from '../actions/sectionActions'
 
-const initialState = [
-  {id: 'technology', name: 'Technology', muted: false},
-  {id: 'culture', name: 'Culture', muted: false},
-  {id: 'horoscope', name: 'Horoscope', muted: true},
-  {id: 'travel', name: 'Travel', muted: true}
-]
-
-export default (state = initialState, action) => {
+export default (state = [], action) => {
   switch (action.type) {
     case SECTIONS_ADD_SECTION:
       return [
@@ -24,6 +18,9 @@ export default (state = initialState, action) => {
 
     case SECTIONS_TOGGLE_SECTION:
       return state.map(section => section.id === action.payload.id ? { ...section, muted: !section.muted || false } : section)
+
+    case FETCH_SECTIONS_SUCCESS:
+      return action.payload
 
     default:
       return state

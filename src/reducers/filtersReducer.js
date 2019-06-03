@@ -34,6 +34,7 @@ export default (state = initialState, action) => {
 
     case FETCH_FILTERS_SUCCESS:
       return action.payload
+      
     case FILTER_SECTION_SELECT_SECTION:
       // each filter has an optional list of sections
       // clicking on a section inside a filter will turn the section on or off

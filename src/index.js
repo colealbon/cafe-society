@@ -32,6 +32,7 @@ import feedsReducer from './reducers/feedsReducer'
 import feedReducer from './reducers/feedReducer'
 import filtersReducer from './reducers/filtersReducer'
 import filterReducer from './reducers/filterReducer'
+import loadingReducer from './reducers/loadingReducer'
 import contactsReducer from './reducers/contactsReducer'
 import contactReducer from './reducers/contactReducer'
 import selectedSectionReducer from './reducers/selectedSectionReducer'
@@ -42,6 +43,7 @@ import selectedFilterFieldReducer from './reducers/selectedFilterFieldReducer'
 
 const store = createStore(
   combineReducers({
+    loading: loadingReducer,
     articles: articlesReducer,
     message: messageReducer,
     accounts: accountsReducer,
@@ -70,7 +72,6 @@ setTimeout(store.dispatch(fetchAccounts()), 5000)
 // setInterval(function(){store.dispatch(fetchAccounts())}, 60 * 1000) // miliseconds
 store.dispatch(fetchUserData())
 store.dispatch(fetchBlockstackContacts())
-
 
 ReactDOM.render(
   <Provider store={store}>

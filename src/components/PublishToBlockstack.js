@@ -8,31 +8,34 @@ import { publishArticles } from '../actions/articleActions'
 import { publishContacts } from '../actions/contactActions'
 import { publishFeeds } from '../actions/feedActions'
 import { publishFilters } from '../actions/filterActions'
+import { publishSections } from '../actions/sectionActions'
 
-const mapStateToProps = ({ contacts, feeds, filters, articles }) => {
+const mapStateToProps = ({ contacts, feeds, filters, articles, sections }) => {
 
   return {
     contacts: contacts,
     articles: articles,
     feeds: feeds,
-    filters: filters
+    filters: filters,
+    sections: sections
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handlePublishToBlockstack: ( contacts, feeds, filters, articles ) => {
+    handlePublishToBlockstack: ( contacts, feeds, filters, articles, sections ) => {
       dispatch(publishContacts(contacts))
       dispatch(publishFeeds(feeds))
       dispatch(publishFilters(filters))
       dispatch(publishArticles(articles))
+      dispatch(publishSections(sections))
     }
   }
 }
 
-const PublishToBlockstack = ({ contacts, feeds, filters, articles, handlePublishToBlockstack}) => {
+const PublishToBlockstack = ({ contacts, feeds, filters, articles, sections, handlePublishToBlockstack}) => {
   return (
-    <IconButton title="publish to blockstack" onClick={() => handlePublishToBlockstack( contacts, feeds, filters, articles )}>
+    <IconButton title="publish to blockstack" onClick={() => handlePublishToBlockstack( contacts, feeds, filters, articles, sections )}>
       <Save></Save>
     </IconButton>
   )
@@ -43,6 +46,7 @@ PublishToBlockstack.propTypes = {
   feeds:  PropTypes.array.isRequired,
   filters:  PropTypes.array.isRequired,
   articles: PropTypes.array.isRequired,
+  sections: PropTypes.array.isRequired,
   handlePublishToBlockstack: PropTypes.func.isRequired,
 }
 

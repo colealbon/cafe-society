@@ -18,7 +18,7 @@ import ContactList from './contacts/ContactList'
 import FeedList from './feeds/FeedList'
 import FilterList from './filters/FilterList'
 import Content from './Content'
-import ArticleList from './articles/ArticleList'
+import HomePage from './articles/HomePage'
 import AccountList from './AccountList'
 import LeftDrawer from './LeftDrawer'
 import styles from '../styles'
@@ -66,7 +66,7 @@ export const SignedIn = ({ sections, handleDrawerOpen, handleSetSection}) => {
                   </IconButton>
                   <Typography variant="h6" color="inherit" noWrap>
                     <Toolbar variant="dense">
-                    <Tab value="/all" label='all' component={Link} to="/all" />
+                    <Tab value="/home" label='home' component={Link} to="/home" />
                       <Tabs value='/'>
                         {sections.filter((section) => !section.muted).map((section) => {
                           const nameToPath = (name) => {
@@ -86,8 +86,8 @@ export const SignedIn = ({ sections, handleDrawerOpen, handleSetSection}) => {
                 </Toolbar>
               </AppBar>
               <Switch>
-                <Route exact key='/' path='/' component={ArticleList} />
-                <Route exact key='/all' path='/all' component={ArticleList} />
+                <Route exact key='/' path='/' component={HomePage} />
+                <Route exact key='/home' path='/home' component={HomePage} />
                 <Route exact key='/web3-account-list' path='/web3-account-list' component={AccountList} />
                 <Route exact key='/contact-list' path='/contact-list' component={ContactList} />
                 <Route exact key='/filter-list' path='/filter-list' component={FilterList} />
