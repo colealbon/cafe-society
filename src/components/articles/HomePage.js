@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from 'react-redux'
 import PublishToBlockstack from '../PublishToBlockstack'
-import { Check, PlaylistAddCheck, VoiceOverOff } from '@material-ui/icons';
+import { Check, PlaylistAddCheck, VoiceOverOff, DeleteSweep } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { removeArticle, toggleArticle } from '../../actions/articleActions'
@@ -38,15 +38,22 @@ const mapDispatchToProps = (dispatch) => {
         }
         return 'o'
       })
-    }
+    },
+    handleClickRemoveAllArticles: (articles) => {
+      articles.map((article) => dispatch(removeArticle(article)))
+    },
   }
 }
 
-export const HomePage = ({ handleClickShadowBanDomain, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, sections, filters, ...rest}) => {
+export const HomePage = ({ handleClickShadowBanDomain, handleClickRemoveArticle, handleClickRemoveAllArticles, handleClickMarkAllRead, handleClickToggleArticle, articles, sections, filters, ...rest}) => {
   const readTitle = `mark ${articles.filter((article) => article.muted === false).length} articles as read`
+  const deleteSweepTitle = `delete: ${articles.length}`
   return (
     <Fragment><br/><br/><br/><br/>
       <PublishToBlockstack />
+      <IconButton title={deleteSweepTitle} onClick={() => {handleClickRemoveAllArticles(articles)}}>
+        <DeleteSweep></DeleteSweep>
+      </IconButton>
       <IconButton title={readTitle} onClick={() => {handleClickMarkAllRead(articles)}} >
         <PlaylistAddCheck></PlaylistAddCheck>
       </IconButton>

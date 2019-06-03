@@ -26,21 +26,6 @@ const mapStateToProps = ({ selectedSection, articles, filters }) => {
       .filter((article) => !article.muted)
       || []).length > 0
     })
-    // .filter((article) => {
-    //   // MOVE THIS SECTION TO ARTICLES REDUCER ? - COLE ALBON
-    //   let matchedFilter = false
-    //   filters.map((filter) => {
-    //     // matchedFilter = true
-    //     (filter.fields || []).map((field) => {
-    //       if (article[field.name] !== undefined) {
-    //         if (article[field.name].indexOf(filter.text) !== -1) {
-    //           matchedFilter = true
-    //         }
-    //       }
-    //     })
-    //     return !matchedFilter
-    //   })
-    // })
   }
 }
 
