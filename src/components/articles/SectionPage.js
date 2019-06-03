@@ -26,6 +26,28 @@ const mapStateToProps = ({ selectedSection, articles, filters }) => {
       .filter((feedSection) => feedSection.id === selectedSection.id)
       .map(() => matchedSession = true)
       return matchedSession
+    }).filter((article) => {
+      // MOVE THIS SECTION TO ARTICLES REDUCER - COLE ALBON
+      let matchedFilter = false
+      filters.filter((filter) => !filter.muted).map((filter) => {
+        if ( matchedFilter === true ) {
+          return 'o'
+        }
+        (filter.fields || []).map((field) => {
+          if ( matchedFilter === true ) {
+            return 'o'
+          }
+          if (article[field.name] === undefined) {
+            return 'o'
+          }
+          if (article[field.name].indexOf(filter.text) !== -1) {
+              matchedFilter = true
+          }
+          return 'o'
+        })
+        return 'o'
+      })
+      return !matchedFilter
     }) || [{id: 'noarticles', title: 'no articles', feed: {sections: [`${selectedSection}`]}}],
     filters: filters
   }
@@ -55,7 +77,30 @@ const mapDispatchToProps = (dispatch) => {
 
 export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, visibleArticles, sections, filters, selectedSection}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'All Sections'
-
+  const unReadArticleCount = visibleArticles.filter((article) => {
+    // MOVE THIS SECTION TO ARTICLES REDUCER - COLE ALBON
+    let matchedFilter = false
+    filters.filter((filter) => !filter.muted).map((filter) => {
+      if ( matchedFilter === true ) {
+        return 'o'
+      }
+      (filter.fields || []).map((field) => {
+        if ( matchedFilter === true ) {
+          return 'o'
+        }
+        if (article[field.name] === undefined) {
+          return 'o'
+        }
+        if (article[field.name].indexOf(filter.text) !== -1) {
+            matchedFilter = true
+        }
+        return 'o'
+      })
+      return 'o'
+    })
+    return !matchedFilter
+  }).length
+  // ) || []).filter((article) => !article.muted).length}
 
   return (
     <Fragment>
@@ -63,7 +108,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
       <br />
       <br />
       <br />
-      {sectionTitle}
+      <Typography>{sectionTitle}</Typography>
       <p />
       {visibleArticles.map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
