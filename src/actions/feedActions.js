@@ -16,27 +16,27 @@ export const selectFeed = feed => {
 
 export const FEED_UPDATE_FEED = 'FEED_UPDATE_FEED'
 
-export const updateFeed = text => {
+export const updateFeed = url => {
   return (dispatch) => {
     dispatch({
       type: FEED_UPDATE_FEED,
-      payload: {name: text}
+      payload: {url: url}
     })
   }
 }
 
 export const FEEDS_ADD_FEED = 'FEEDS_ADD_FEED'
 
-export const addFeed = name => {
+export const addFeed = url => {
   return (dispatch) => {
     dispatch({
       type: FEEDS_ADD_FEED,
       payload: {
-        id: name.toLowerCase().replace(' ', '-'),
-        name: name
+        id: url,
+        url: url
       }
     })
-    updateFeed({name: ''})
+    updateFeed({url: ''})
   }
 }
 

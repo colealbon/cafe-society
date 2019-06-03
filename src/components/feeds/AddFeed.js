@@ -35,11 +35,11 @@ const AddFeed = ({ handleClickAddFeed, handleInputChange, url }) => {
         <Add id='addFeed' />
       </IconButton>
       <TextField
+        label='enter feed url'
         id='textFieldFeed'
         onChange={handleInputChange}
         value={url}
-        placeholder="https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en"
-        label='enter rss feed url'
+        placeholder="https://theintercept.com/feed/?rss"
       />
     </Fragment>
   )
