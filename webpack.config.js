@@ -2,11 +2,15 @@ const HtmlWebPackPlugin = require('html-webpack-plugin')
 require('babel-polyfill')
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path')
+const WebpackAssetsManifest = require('webpack-assets-manifest');
+
 module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'build')
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    chunkFilename: '[id]-[chunkhash].js',
+    publicPath: "https://cafe-society.news/"
   },
   module: {
     rules: [
@@ -38,7 +42,11 @@ module.exports = {
             loader: 'html-loader'
           }
         ]
-      }
+      },
+      {
+        test: /\.css$/i,
+        use: ['to-string-loader', 'css-loader'],
+      },
     ]
   },
   plugins: [
@@ -49,10 +57,13 @@ module.exports = {
     new CopyPlugin([
       { from: './src/assets', to: '' },
       { from: './src/cors', to: '' }
-    ])
+    ]),
+    new WebpackAssetsManifest({
+      publicPath: '//cafe-society.news',
+    })
   ],
   devServer: {
-    contentBase: path.join(__dirname, ''),
+    contentBase: path.join(__dirname, '/static/js'),
     port: 8080,
     index: 'index.html',
     historyApiFallback: true,
