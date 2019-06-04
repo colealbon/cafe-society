@@ -1,10 +1,4 @@
 {
-  "main.js": "main.js",
-  "./index.html": "./index.html",
-  "_headers": "_headers",
-  "_redirects": "_redirects",
-  "appicon.png": "appicon.png",
-  "favicon.ico": "favicon.ico",
   "short_name": "cafe-society",
   "name": "cafe society",
   "display": "standalone",
@@ -14,8 +8,5 @@
   "icons": [{
     "src": "appicon.png",
     "type": "image/png"
-  },{
-    "src":"favicon.ico",
-    "type": "image/ico"
   }]
 }

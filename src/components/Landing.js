@@ -1,7 +1,6 @@
 import React, { Component, Fragment  } from 'react'
 import { UserSession } from 'blockstack'
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 
 class Landing extends Component {
 

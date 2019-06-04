@@ -63,6 +63,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
       <Typography variant="h2" >{sectionTitle}</Typography>
       <p />
       {visibleArticles
+        .filter((article) => !article.muted)
         .filter((article) => {
           let matchedFilter = false
           filters.filter((filter) => !filter.muted).map((filter) => {
