@@ -5,7 +5,6 @@ import AddFeed from './AddFeed'
 import RemoveFeed from './RemoveFeed'
 import { removeFeed, toggleFeed } from '../../actions/feedActions'
 import { selectFeedSection } from '../../actions/feedSectionActions'
-import PublishToBlockstack from '../PublishToBlockstack'
 
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
@@ -34,8 +33,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickRemoveFeed: (feed) => {
       dispatch(removeFeed(feed))
     },
-    handleClickToggleFeed: (feed) => {
-      dispatch(toggleFeed(feed))
+    handleClickToggleFeed: (feed, feeds) => {
+      dispatch(toggleFeed(feed, feeds))
     },
     handleClickRemoveAllFeeds: (feeds) => {
       feeds.map((feed) => dispatch(removeFeed(feed)))
@@ -54,7 +53,7 @@ export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClic
       <br />
       <br />
       <br />
-      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Feeds</ListSubheader>} >
+      <List subheader={<ListSubheader>Edit/Save Feeds</ListSubheader>} >
         <ListItem key='addItem'>
           <IconButton title={deleteSweepFeed} onClick={() => { handleClickRemoveAllFeeds(feeds) }}>
             <DeleteSweepIcon></DeleteSweepIcon>
@@ -74,7 +73,7 @@ export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClic
               </ListItemIcon>
               <span
                 onClick={() => {
-                  handleClickToggleFeed(feed)
+                  handleClickToggleFeed(feed, feeds)
                 }}
                 title={feed.muted ? `enable ${feed.url}` : `disable ${feed.url}` }
               >

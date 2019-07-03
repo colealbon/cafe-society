@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import AddFilter from './AddFilter'
 import RemoveFilter from './RemoveFilter'
+import VerticalSpace from '../VerticalSpace'
 import { removeFilter, toggleFilter } from '../../actions/filterActions'
 import { selectFilterSection } from '../../actions/filterSectionActions'
 import { selectFilterField } from '../../actions/filterFieldActions'
-import PublishToBlockstack from '../PublishToBlockstack'
 
 import Chip from '@material-ui/core/Chip'
 import List from '@material-ui/core/List'
@@ -36,8 +36,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickRemoveFilter: (filter) => {
       dispatch(removeFilter(filter))
     },
-    handleClickToggleFilter: (filter) => {
-      dispatch(toggleFilter(filter))
+    handleClickToggleFilter: (filter, filters) => {
+      dispatch(toggleFilter(filter, filters))
     },
     handleClickRemoveAllFilters: (filters) => {
       filters.map((filter) => dispatch(removeFilter(filter)))
@@ -55,11 +55,8 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
   const deleteSweepFilter = `delete: ${[].concat(filters).length}`
   return (
     <Fragment>
-      <br />
-      <br />
-      <br />
-      <br />
-      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Filters</ListSubheader>} >
+      <VerticalSpace/>
+      <List subheader={<ListSubheader>Edit/Save Filters</ListSubheader>} >
         <ListItem key='addItem'>
           <ListItemIcon><IconButton title={deleteSweepFilter} onClick={() => { handleClickRemoveAllFilters(filters) }}>
             <DeleteSweepIcon></DeleteSweepIcon>
@@ -78,7 +75,7 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
               <span
                 title={filter.muted ? `enable ${filter.text}` : `disable ${filter.text}` }
               >
-                <Switch checked={!filter.muted} onClick={() => handleClickToggleFilter(filter)}/>
+                <Switch checked={!filter.muted} onClick={() => handleClickToggleFilter(filter, filters)}/>
               </span>
               <ExpansionPanel>
                 <ExpansionPanelSummary

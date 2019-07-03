@@ -1,55 +1,41 @@
 import {
   FEEDS_ADD_FEED,
+  FEEDS_UPSERT_FEED,
   FEEDS_REMOVE_FEED,
   FEEDS_TOGGLE_FEED,
   FETCH_FEEDS_SUCCESS
 } from '../actions/feedActions'
-
+  
 import {
   FEED_SECTION_SELECT_SECTION
 } from '../actions/feedSectionActions'
 
-
-const initialState = [
-  {
-    id:'https://www.democracynow.org/democracynow.rss',
-    url: 'https://www.democracynow.org/democracynow.rss',
-    muted: false ,
-    sections: [
-      {
-        id:'politics',
-        name: 'politics',
-        muted: false
-      }
-    ]
-  },
-  {
-    id:'https://findyourfate.com/rss/horoscope-astrology.php',
-    url: 'https://findyourfate.com/rss/horoscope-astrology.php',
-    muted: false,
-    sections: [
-      {
-        id:'horoscope',
-        name: 'horoscope',
-        muted: false
-      }
-    ]
-  }
-]
-
 export default (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_FEEDS_SUCCESS:
+      const newFeeds = action.payload.filter((newFeed) => {
+        const feedExists = state.filter((stateFeed) => stateFeed.id === newFeed.id).length !== 0
+        return !feedExists
+      })
+      return state.concat(newFeeds)
+
     case FEEDS_ADD_FEED:
       return [
         ...state.filter(feed => feed.id !== action.payload.id),
         action.payload
       ]
+
+    case FEEDS_UPSERT_FEED:
+      // thys says don't overwrite - keep old feed source info
+      const feedExists = state.filter(feed => feed.id !== action.payload.id).length > 0
+      return (!feedExists) ? state : state.concat(action.payload)
+
     case FEEDS_REMOVE_FEED:
       return state
         .filter(feed => feed.id !== action.payload.id)
 
     case FEEDS_TOGGLE_FEED:
-      return state.map(feed => feed.id === action.payload.id ? { ...feed, muted: !feed.muted || false } : feed)
+      return state.map(feed => feed.id === action.payload.feed.id ? { ...feed, muted: !feed.muted || false } : feed)
 
     case FEED_SECTION_SELECT_SECTION:
       // each feed has an optional list of sections
@@ -77,11 +63,260 @@ export default (state = initialState, action) => {
         }))
         return feed
         })
-
-    case FETCH_FEEDS_SUCCESS:
-      return action.payload
-
     default:
       return state
   }
 }
+const initialState = [
+  {
+    id: 'https://darkstarastrology.com/feed/',
+    url: 'https://darkstarastrology.com/feed/',
+    muted: false,
+    sections: [
+      {
+        id: 'horoscope',
+        name: 'horoscope',
+        muted: false
+      }
+    ]
+  },
+  {
+    id: '1b6f5c25-e3a0-437f-ac80-70e77151ed19',
+    url: 'https://bend.craigslist.org/search/jjj?format=rss',
+    muted: true,
+    sections: [
+      {
+        id: 'classifieds',
+        name: 'classifieds'
+      }
+    ]
+  },
+  {
+    id: 'https://portland.craigslist.org/search/sof?format=rss',
+    url: 'https://portland.craigslist.org/search/sof?format=rss',
+    muted: true,
+    sections: [
+      {
+        id: 'classifieds',
+        name: 'classifieds'
+      }
+    ]
+  },
+  {
+    id: 'https://phoenix.craigslist.org/search/sof?format=rss',
+    url: 'https://phoenix.craigslist.org/search/sof?format=rss',
+    muted: true,
+    sections: [
+      {
+        id: 'classifieds',
+        name: 'classifieds'
+      }
+    ]
+  },
+  {
+    id: 'https://seattle.craigslist.org/search/sof?format=rss',
+    url: 'https://seattle.craigslist.org/search/sof?format=rss',
+    muted: true,
+    sections: [
+      {
+        id: 'classifieds',
+        name: 'classifieds'
+      }
+    ]
+  },
+  {
+    id: 'https://newyork.craigslist.org/search/sof?format=rss',
+    url: 'https://newyork.craigslist.org/search/sof?format=rss',
+    muted: true,
+    sections: [
+      {
+        id: 'classifieds',
+        name: 'classifieds'
+      }
+    ]
+  },
+  {
+    id: 'https://sanantonio.craigslist.org/search/sof?format=rss',
+    url: 'https://sanantonio.craigslist.org/search/sof?format=rss',
+    muted: true,
+    sections: [
+      {
+        id: 'classifieds',
+        name: 'classifieds'
+      }
+    ]
+  },
+  {
+    id: 'https://bend.craigslist.org/search/sof?format=rss',
+    url: 'https://bend.craigslist.org/search/sof?format=rss',
+    muted: true,
+    sections: [
+      {
+        id: 'classifieds',
+        name: 'classifieds'
+      }
+    ]
+  },
+  {
+    id: 'foreignpolicy.com/feed',
+    url: 'foreignpolicy.com/feed',
+    muted: true
+  },
+  {
+    id: 'https://consortiumnews.com/feed/',
+    url: 'https://consortiumnews.com/feed/',
+    muted: true,
+    sections: [
+      {
+        id: 'politics',
+        name: 'politics'
+      }
+    ]
+  },
+  {
+    id: 'http://original.antiwar.com/feed/',
+    url: 'http://original.antiwar.com/feed/',
+    sections: [
+      {
+        id: 'politics',
+        name: 'politics',
+        muted: true
+      }
+    ]
+  },
+  {
+    id: 'https://www.blackagendareport.com/feeds-story',
+    url: 'https://www.blackagendareport.com/feeds-story',
+    sections: [
+      {
+        id: 'politics',
+        name: 'politics',
+        muted: true
+      }
+    ]
+  },
+  {
+    id: 'https://www.coindesk.com/feed',
+    url: 'https://www.coindesk.com/feed',
+    sections: [
+      {
+        id: 'business',
+        name: 'business'
+      }
+    ],
+    muted: false
+  },
+  {
+    id: 'https://www.scmp.com/rss/5/feed',
+    url: 'https://www.scmp.com/rss/5/feed',
+    sections: [
+      {
+        id: 'world',
+        name: 'world'
+      }
+    ],
+    muted: false
+  },
+  {
+    id: 'https://www.scmp.com/rss/91/feed',
+    url: 'https://www.scmp.com/rss/91/feed',
+    sections: [
+      {
+        id: 'world',
+        name: 'world'
+      }
+    ],
+    muted: true
+  },
+  {
+    id: 'https://www.ft.com/?format=rss',
+    url: 'https://www.ft.com/?format=rss',
+    sections: [
+      {
+        id: 'business',
+        name: 'business'
+      }
+    ],
+    muted: true
+  },
+  {
+    id: 'https://www.rt.com/rss/',
+    url: 'https://www.rt.com/rss/',
+    sections: [
+      {
+        id: 'world',
+        name: 'world'
+      }
+    ],
+    muted: true
+  },
+  {
+    id: 'http://feeds.bbci.co.uk/news/world/rss.xml',
+    url: 'http://feeds.bbci.co.uk/news/world/rss.xml',
+    sections: [
+      {
+        id: 'world',
+        name: 'world'
+      }
+    ],
+    muted: false
+  },
+  {
+    id: 'http://www.thesmartestcontract.com/rss',
+    url: 'http://www.thesmartestcontract.com/rss',
+    muted: true
+  },
+  {
+    id: 'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/us/rss.xml',
+    url: 'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/us/rss.xml'
+  },
+  {
+    id: 'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml',
+    url: 'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml',
+    sections: [
+      {
+        id: 'world',
+        name: 'world'
+      }
+    ],
+    muted: true
+  },
+  {
+    id: 'https://theintercept.com/feed/?lang=en',
+    url: 'https://theintercept.com/feed/?lang=en',
+    sections: [
+      {
+        id: 'politics',
+        name: 'politics',
+        muted: true
+      }
+    ],
+    muted: true
+  },
+  {
+    id: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+    url: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en'
+  },
+  {
+    id: 'https://www.statnews.com/feed/',
+    url: 'https://www.statnews.com/feed/',
+    sections: [
+      {
+        id: 'technology',
+        name: 'technology'
+      }
+    ],
+    muted: false
+  },
+  {
+    id: 'https://lifehacker.com/rss',
+    url: 'https://lifehacker.com/rss',
+    sections: [
+      {
+        id: 'variety',
+        name: 'variety'
+      }
+    ],
+    muted: false
+  }
+]

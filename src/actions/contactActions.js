@@ -1,9 +1,5 @@
 import * as blockstack from 'blockstack'
-import { fetchBlockstackFeeds } from './feedActions'
-import { fetchBlockstackFilters } from './filterActions'
-import { fetchBlockstackSections } from './sectionActions'
-var memoize = require("memoizee");
-
+var memoize = require("memoizee")
 export const CONTACT_SELECT_CONTACT = 'CONTACT_SELECT_CONTACT'
 
 export const selectContact = contact => {
@@ -55,79 +51,140 @@ export const removeContact = contact => {
 
 export const CONTACTS_TOGGLE_CONTACT = 'CONTACTS_TOGGLE_CONTACT'
 
-export const toggleContact = contact => {
+export const toggleContact = (contact, contacts) => {
   return (dispatch) => {
     dispatch({
       type: CONTACTS_TOGGLE_CONTACT,
       payload: contact
     })
+    const newContacts = Object.assign(contacts.filter((filterContact) => filterContact.id !== contact.id).concat({ ...contact, muted: !contact.muted || false }))
+    dispatch(publishContacts(newContacts))
   }
 }
 
 export const PUBLISH_CONTACTS_REQUEST = 'PUBLISH_CONTACTS_REQUEST'
 export const PUBLISH_CONTACTS_SUCCESS = 'PUBLISH_CONTACTS_SUCCESS'
 export const PUBLISH_CONTACTS_ERROR = 'PUBLISH_CONTACTS_ERROR'
-export const FETCH_CONTACTS_REQUEST = 'FETCH_CONTACTS_REQUEST'
-export const FETCH_CONTACTS_SUCCESS = 'FETCH_CONTACTS_SUCCESS'
-export const FETCH_CONTACTS_ERROR = 'FETCH_CONTACTS_ERROR'
 
-const slowBlockstackGetFile = (filename, options) => blockstack.getFile(filename, options)
-const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
-
-export const fetchBlockstackContacts = () => {
-  return (dispatch) => {
-    dispatch({ type: FETCH_CONTACTS_REQUEST })
-    const defaultContacts = [
-      {id: "astrologer.id", name:"astrologer.id"}
-    ]
-    if (blockstack.isUserSignedIn()) {
-      return blockstackGetFile('contacts.json', {decrypt: true})
-      .then( fileContent => {
-        if (JSON.parse(fileContent).length > 0) {
-          const contacts = JSON.parse(fileContent)
-          dispatch({
-            type: FETCH_CONTACTS_SUCCESS,
-            payload: contacts
-          })
-          dispatch(fetchBlockstackFeeds(contacts))
-          dispatch(fetchBlockstackFilters(contacts))
-          dispatch(fetchBlockstackSections(contacts))
-        } else {
-          dispatch({
-            type: FETCH_CONTACTS_SUCCESS,
-            payload: defaultContacts
-          })
-          dispatch(fetchBlockstackFeeds(defaultContacts))
-          dispatch(fetchBlockstackFilters(defaultContacts))
-          dispatch(fetchBlockstackSections(defaultContacts))
-        }
+export const publishContacts = (contacts) => {
+  if (!!contacts) {
+    return (dispatch) => {
+      dispatch({
+        type: PUBLISH_CONTACTS_REQUEST,
+        payload: contacts
       })
-      .catch(() => {
-        dispatch({
-          type: FETCH_CONTACTS_SUCCESS,
-          payload: defaultContacts
+      const fileContent = JSON.stringify(contacts)
+      return blockstack.putFile('contacts.json', fileContent, {encrypt: false})
+        .then((response) => {
+          dispatch({
+            type: PUBLISH_CONTACTS_SUCCESS,
+            payload: {
+              response: response,
+              contacts: contacts
+            }
+          })
         })
-        dispatch(fetchBlockstackFeeds(defaultContacts))
-        dispatch(fetchBlockstackFilters(defaultContacts))
-        dispatch(fetchBlockstackSections(defaultContacts))
-      })
+        .catch((error) => {
+          dispatch({
+            type: PUBLISH_CONTACTS_ERROR,
+            payload: {
+              error: error
+            }
+          })
+        })
     }
   }
 }
 
-export const publishContacts = (contacts) => {
+export const FETCH_CONTACTS_REQUEST = 'FETCH_CONTACTS_REQUEST'
+export const FETCH_CONTACTS_SUCCESS = 'FETCH_CONTACTS_SUCCESS'
+export const FETCH_CONTACTS_ERROR = 'FETCH_CONTACTS_ERROR'
+
+const slowBlockstackGetFile = (filename, options) => {
+  return blockstack.getFile(filename, options)
+}
+const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
+
+export const fetchBlockstackContacts = (contacts) => {
   return (dispatch) => {
-    dispatch({
-      type: PUBLISH_CONTACTS_REQUEST,
-      payload: contacts
-    })
-    const fileContent = JSON.stringify(contacts)
-    return blockstack.putFile('contacts.json', fileContent, {encrypt: true})
-      .then(() => {
+    dispatch({ 
+      type: FETCH_CONTACTS_REQUEST,
+      payload: {contacts: contacts}
+     })
+    const fetchContactFileQueue = []
+    fetchContactFileQueue.push(new Promise((resolve) => {
+      blockstackGetFile('contacts.json', {
+        decrypt: false,
+      })
+      .then((fileContents) => {
+        if (fileContents === null) {
+          resolve([])
+        } else {
+          resolve(
+            JSON.parse(fileContents)
+            .map((contact) => {
+              return(contact)
+            }).concat(contacts)
+          )
+        }
+      })
+      .catch(() => {
+        resolve([])
+      })
+    }))
+    if (!!contacts && contacts.length > 0) {
+      contacts.filter((contact) => !contact.muted).map((contact) => {
+        return fetchContactFileQueue.push(new Promise((resolve) => {
+          blockstackGetFile('contacts.json', {
+            decrypt: false,
+            username: contact.name
+          })
+          .then((fileContents) => {
+            if (fileContents === null) {
+              resolve([])
+            } else {
+              resolve(
+                JSON.parse(fileContents)
+                .map((fetchedContact) => {
+                  fetchedContact.source_contact = Object.assign(contact)
+                  fetchedContact.muted = true
+                  return(fetchedContact)
+                }).concat(contacts)
+              )
+            }
+          })
+          .catch(() => {
+            resolve([])
+          })
+        }))
+      })
+    }
+
+    Promise.all(fetchContactFileQueue)
+    .then((fetchedContacts) => {
+      const flattenedContacts = fetchedContacts.reduce((a, b) => !a ? b : [].concat(a).concat(b))
+      let dedup = {}
+      const uniqueContacts = []
+      if ((flattenedContacts || []).length !== 0) {
+        flattenedContacts.filter((contact) => {
+          if (dedup[contact.id] === undefined) {
+            dedup[contact.id] = {}
+            uniqueContacts.push(contact)
+            return true
+          }
+          return false
+        })
         dispatch({
-          type: PUBLISH_CONTACTS_SUCCESS
+          type: FETCH_CONTACTS_SUCCESS,
+          payload: uniqueContacts
+        })
+        dispatch(publishContacts(uniqueContacts))
+      } else {
+        dispatch({
+          type: 'FETCH_CONTACT_FAILURE',
+          payload: 'no contacts found'
         })
       }
-    )
+    })
   }
 }

@@ -10,6 +10,7 @@ const mapStateToProps = ({ loading }) => {
 }
 
 export const Loading = ({ loading, ...rest}) => {
+
   return (
     <Fragment>
       {loading ? <IconButton><CircularProgress size={24} /></IconButton> : ''}

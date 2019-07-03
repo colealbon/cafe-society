@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { UserSession } from 'blockstack'
-
-import Landing from './Landing'
-import SignedIn from './SignedIn'
+import FrontPage from './FrontPage'
 
 class App extends Component {
 
@@ -11,15 +9,16 @@ class App extends Component {
     this.userSession = new UserSession()
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const session = this.userSession
     if(!session.isUserSignedIn() && session.isSignInPending()) {
       session.handlePendingSignIn()
       .then((userData) => {
-        // if(!userData.username) {
-        //   throw new Error('This app requires a username.')
-        // }
-        window.location = `/`
+        if(!userData.username) {
+          throw new Error('This app requires a username.')
+        }
+        // window.location = `/kingdom/${userData.username}`
+        window.location = '/'
       })
     }
   }
@@ -27,11 +26,7 @@ class App extends Component {
   render() {
     return (
       <main role="main">
-          {this.userSession.isUserSignedIn() ?
-            <SignedIn />
-          :
-            <Landing />
-          }
+        <FrontPage />
       </main>
     );
   }

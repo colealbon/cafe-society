@@ -5,6 +5,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
+import VerticalSpace from './VerticalSpace'
 
 const mapStateToProps = ({ accounts }) => {
   return {
@@ -15,10 +16,7 @@ const mapStateToProps = ({ accounts }) => {
 export const AccountList = ({ accounts }) => {
   return (
     <Fragment>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
+      <VerticalSpace />
       <List subheader={<ListSubheader>{(accounts.length > 0) ? 'Web 3 accounts' : 'log in with metamask to view account'}</ListSubheader>} >
         {accounts.map((account) => {
           return (

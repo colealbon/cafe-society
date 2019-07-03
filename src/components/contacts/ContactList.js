@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
+import VerticalSpace from '../VerticalSpace'
 import AddContact from './AddContact'
 import RemoveContact from './RemoveContact'
 import { removeContact, toggleContact } from '../../actions/contactActions'
-import PublishToBlockstack from '../PublishToBlockstack'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -28,8 +27,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickRemoveContact: (contact) => {
       dispatch(removeContact(contact))
     },
-    handleClickToggleContact: (contact) => {
-      dispatch(toggleContact(contact))
+    handleClickToggleContact: (contact, contacts) => {
+      dispatch(toggleContact(contact, contacts))
     },
     handleClickRemoveAllContacts: (contacts) => {
       contacts.map((contact) => dispatch(removeContact(contact)))
@@ -41,12 +40,8 @@ export const ContactList = ({ handleClickRemoveContact, handleClickToggleContact
   const deleteSweepContact = `delete: ${[].concat(contacts).length}`
   return (
     <Fragment>
-      <br />
-      <br />
-      <br />
-      <br />
-
-      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Contacts</ListSubheader>} >
+      <VerticalSpace/>
+      <List subheader={<ListSubheader>Edit Contacts</ListSubheader>} >
         <ListItem key='addItem'>
           <IconButton title={deleteSweepContact} onClick={() => { handleClickRemoveAllContacts(contacts) }}>
             <DeleteSweepIcon></DeleteSweepIcon>
@@ -66,7 +61,7 @@ export const ContactList = ({ handleClickRemoveContact, handleClickToggleContact
               </ListItemIcon>
               <span
                 onClick={() => {
-                  handleClickToggleContact(contact)
+                  handleClickToggleContact(contact, contacts)
                 }}
                 title={contact.muted ? `enable ${contact.name}` : `disable ${contact.name}` }
               >

@@ -1,7 +1,7 @@
 import {
   LEFT_DRAWER_OPEN,
   LEFT_DRAWER_CLOSE
-} from '../actions/leftDrawerActions'
+} from '../actions/sideDrawerActions'
 
 export default (state = {open: false}, action) => {
   switch (action.type) {

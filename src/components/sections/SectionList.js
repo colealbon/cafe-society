@@ -4,10 +4,8 @@ import PropTypes from 'prop-types'
 import AddSection from './AddSection'
 import RemoveSection from './RemoveSection'
 import { removeSection, toggleSection } from '../../actions/sectionActions'
-import PublishToBlockstack from '../PublishToBlockstack'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
-
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -44,7 +42,7 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
       <br />
       <br />
       <br />
-      <List subheader={<ListSubheader><PublishToBlockstack></PublishToBlockstack>Edit/Save Sections</ListSubheader>} >
+      <List subheader={<ListSubheader>Edit/Save Sections</ListSubheader>} >
         <ListItem key='addItem'>
           <ListItemIcon>
             <IconButton title={deleteSweepSection} onClick={() => { handleClickRemoveAllSections(sections) }}>

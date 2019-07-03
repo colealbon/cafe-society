@@ -9,38 +9,20 @@ export const fetchAccounts = () => {
     dispatch({
       type: FETCH_ACCOUNTS_REQUEST
     })
-
-    const { web3 } = window
-    const ethAccounts = getAccounts()
-
-    if (ethAccounts == undefined) {
-      web3 && web3.eth && web3.eth.getAccounts((err, accounts) => {
-        if (err) {
-          dispatch({
-            type: FETCH_ACCOUNTS_ERROR,
-            payload: err
-          })
-        } else {
-          dispatch({
-            type: FETCH_ACCOUNTS_SUCCESS,
-            payload: accounts
-          })
-        }
-      })
-    } else {
-      dispatch({
-        type: FETCH_ACCOUNTS_SUCCESS,
-        payload: ethAccounts
+    if (window.ethereum) {
+      window.web3 = new Web3(ethereum)
+      ethereum.enable()
+      .then(() => {
+        dispatch({
+          type: FETCH_ACCOUNTS_SUCCESS,
+          payload: web3.eth.accounts
+        })
+      }).catch((error) => {
+        dispatch({
+          type: FETCH_ACCOUNTS_ERROR,
+          payload: error
+        })
       })
     }
-  }
-}
-
-function getAccounts () {
-  try {
-    const { web3 } = window
-    return web3.eth.accounts
-  } catch (e) {
-    return []
   }
 }

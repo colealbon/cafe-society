@@ -1,17 +1,6 @@
 import * as blockstack from 'blockstack'
 var memoize = require("memoizee");
 
-export const FILTER_SELECT_FILTER = 'FILTER_SELECT_FILTER'
-
-export const selectFilter = filter => {
-  return (dispatch) => {
-    dispatch({
-      type: FILTER_SELECT_FILTER,
-      payload: filter
-    })
-  }
-}
-
 export const FILTER_UPDATE_FILTER = 'FILTER_UPDATE_FILTER'
 
 export const updateFilter = text => {
@@ -19,6 +8,17 @@ export const updateFilter = text => {
     dispatch({
       type: FILTER_UPDATE_FILTER,
       payload: {text: text}
+    })
+  }
+}
+
+export const FILTERS_UPDATE_FILTERS = 'FILTERS_UPDATE_FILTERS'
+
+export const updateFilters = filters => {
+  return (dispatch) => {
+    dispatch({
+      type: FILTERS_UPDATE_FILTERS,
+      payload: filters
     })
   }
 }
@@ -46,20 +46,46 @@ export const removeFilter = filter => {
   }
 }
 
+// dispatch(publishFeeds(newFeeds))
+export const PUBLISH_FILTERS_REQUEST = 'PUBLISH_FILTERS_REQUEST'
+export const PUBLISH_FILTERS_SUCCESS = 'PUBLISH_FILTERS_SUCCESS'
+export const PUBLISH_FILTERS_ERROR = 'PUBLISH_FILTERS_ERROR'
+
+export const publishFilters = (filters) => {
+  return (dispatch) => {
+    dispatch({
+      type: PUBLISH_FILTERS_REQUEST,
+      payload: filters
+    })
+    const fileContent = JSON.stringify(filters)
+    return blockstack.putFile('filters.json', fileContent, {encrypt: false})
+      .then((response) => {
+        dispatch({
+          type: PUBLISH_FILTERS_SUCCESS,
+          payload: {
+            response: response,
+            filters: filters
+          }
+        })
+      }
+    )
+  }
+}
+
 export const FILTERS_TOGGLE_FILTER = 'FILTERS_TOGGLE_FILTER'
 
-export const toggleFilter = filter => {
+export const toggleFilter = (filter, filters) => {
   return (dispatch) => {
     dispatch({
       type: FILTERS_TOGGLE_FILTER,
       payload: filter
     })
+    const newFilters = filters.filter((mapFilter) => mapFilter.id !== filter.id).concat({ ...filter, muted: !filter.muted || false })
+    //alert(JSON.stringify(feeds))
+    dispatch(publishFilters(newFilters))
   }
 }
 
-export const PUBLISH_FILTERS_REQUEST = 'PUBLISH_FILTERS_REQUEST'
-export const PUBLISH_FILTERS_SUCCESS = 'PUBLISH_FILTERS_SUCCESS'
-export const PUBLISH_FILTERS_ERROR = 'PUBLISH_FILTERS_ERROR'
 export const FETCH_FILTERS_REQUEST = 'FETCH_FILTERS_REQUEST'
 export const FETCH_FILTERS_SUCCESS = 'FETCH_FILTERS_SUCCESS'
 export const FETCH_FILTERS_ERROR = 'FETCH_FILTERS_ERROR'
@@ -110,7 +136,6 @@ export const fetchBlockstackFilters = (contacts) => {
       const flattenedFilters = fetchedFilters.reduce((a, b) => !a ? b : a.concat(b))
       const uniqueFilters = []
       let dedup = {}
-
         if ((flattenedFilters || []).length < 1) {
         dispatch({
           type: FETCH_FILTERS_SUCCESS,
@@ -134,52 +159,8 @@ export const fetchBlockstackFilters = (contacts) => {
           type: FETCH_FILTERS_SUCCESS,
           payload: uniqueFilters
         })
+        dispatch(publishFilters(uniqueFilters))
       }
     })
-  }
-}
-
-export const publishFilters = (filters) => {
-  const timestampedFilters = filters.map((filter) => {
-    let timestampedFilter = Object.assign(filter)
-  //   if (timestampedFilter.fields.indexOf('title') !== -1) {
-  //     articles.map((article) => {
-  //       if (article.title.indexOf(timestampedFilter.text) !== -1) {
-  //         timestampedFilter.lastUsed = new Date().getTime()
-  //       }
-  //       return 'o'
-  //     })
-  //   }
-  //   if (timestampedFilter.fields.indexOf('link') !== -1) {
-  //     articles.map((article) => {
-  //       if (article.link.indexOf(timestampedFilter.text) !== -1) {
-  //         timestampedFilter.lastUsed = new Date().getTime()
-  //       }
-  //       return 'o'
-  //     })
-  //   }
-  //   if (timestampedFilter.fields.indexOf('contentSnippet') !== -1) {
-  //     articles.map((article) => {
-  //       if (article.contentSnippet.indexOf(timestampedFilter.text) !== -1) {
-  //         timestampedFilter.lastUsed = new Date().getTime()
-  //       }
-  //       return 'o'
-  //     })
-  //   }
-    return timestampedFilter
-  })
-  return (dispatch) => {
-    dispatch({
-      type: PUBLISH_FILTERS_REQUEST,
-      payload: timestampedFilters
-    })
-    const fileContent = JSON.stringify(filters)
-    return blockstack.putFile('filters.json', fileContent, {encrypt: false})
-      .then(() => {
-        dispatch({
-          type: PUBLISH_FILTERS_SUCCESS
-        })
-      }
-    )
   }
 }

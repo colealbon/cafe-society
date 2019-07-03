@@ -1,7 +1,6 @@
 import * as blockstack from 'blockstack'
-import { fetchBlockstackArticles } from './articleActions'
-
-var memoize = require("memoizee");
+var memoize = require("memoizee")
+import { fetchArticles } from './articleActions'
 
 export const FEED_SELECT_FEED = 'FEED_SELECT_FEED'
 
@@ -40,6 +39,18 @@ export const addFeed = url => {
   }
 }
 
+export const FEEDS_UPSERT_FEED = 'FEEDS_UPSERT_FEED'
+
+export const upsertFeed = feed => {
+  return (dispatch) => {
+    dispatch({
+      type: FEEDS_UPSERT_FEED,
+      payload: feed
+    })
+    updateFeed({url: ''})
+  }
+}
+
 export const FEEDS_REMOVE_FEED = 'FEEDS_REMOVE_FEED'
 
 export const removeFeed = feed => {
@@ -51,20 +62,50 @@ export const removeFeed = feed => {
   }
 }
 
-export const FEEDS_TOGGLE_FEED = 'FEEDS_TOGGLE_FEED'
-
-export const toggleFeed = feed => {
-  return (dispatch) => {
-    dispatch({
-      type: FEEDS_TOGGLE_FEED,
-      payload: feed
-    })
-  }
-}
-
 export const PUBLISH_FEEDS_REQUEST = 'PUBLISH_FEEDS_REQUEST'
 export const PUBLISH_FEEDS_SUCCESS = 'PUBLISH_FEEDS_SUCCESS'
 export const PUBLISH_FEEDS_ERROR = 'PUBLISH_FEEDS_ERROR'
+
+export const publishFeeds = (feeds) => {
+  if (!!feeds) {
+    return (dispatch) => {
+      dispatch({
+        type: PUBLISH_FEEDS_REQUEST,
+        payload: feeds
+      })
+      const fileContent = JSON.stringify(feeds)
+      return blockstack.putFile('feeds.json', fileContent, {encrypt: false})
+        .then((response) => {
+          dispatch({
+            type: PUBLISH_FEEDS_SUCCESS,
+            payload: {
+              response: response,
+              feeds: feeds
+            }
+          })
+        }
+      )
+    }
+  }
+}
+
+export const FEEDS_TOGGLE_FEED = 'FEEDS_TOGGLE_FEED'
+
+export const toggleFeed = (feed, feeds) => {
+  return (dispatch) => {
+    dispatch({
+      type: FEEDS_TOGGLE_FEED,
+      payload: {
+        feed: feed,
+        feeds: feeds
+      }
+    })
+    const newFeeds = feeds.filter((filterFeed) => filterFeed.id !== feed.id).concat({ ...feed, muted: !feed.muted || false })
+    //alert(JSON.stringify(feeds))
+    dispatch(publishFeeds(newFeeds))
+  }
+}
+
 export const FETCH_FEEDS_REQUEST = 'FETCH_FEEDS_REQUEST'
 export const FETCH_FEEDS_SUCCESS = 'FETCH_FEEDS_SUCCESS'
 export const FETCH_FEEDS_ERROR = 'FETCH_FEEDS_ERROR'
@@ -74,54 +115,73 @@ const slowBlockstackGetFile = (filename, options) => {
 }
 const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 
-export const fetchBlockstackFeeds = (contacts) => {
+export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
   return (dispatch) => {
     dispatch({ type: FETCH_FEEDS_REQUEST })
     const fetchFeedFileQueue = []
-    fetchFeedFileQueue.push(new Promise((resolve, reject) => {
+    fetchFeedFileQueue.push(new Promise((resolve) => {
       blockstackGetFile('feeds.json', {
-        decrypt: false
+        decrypt: false,
       })
-      .then((fileContents) => resolve((JSON.parse(fileContents))))
-      .catch((error) => reject(error))
+      .then((fileContents) => {
+        if (fileContents === null) {
+          resolve([])
+        } else {
+          resolve(
+            JSON.parse(fileContents)
+            .map((feed) => {
+              return(feed)
+            }).concat(feeds)
+          )
+        }
+      })
+      .catch(() => {
+        resolve([])
+      })
     }))
     if (!!contacts && contacts.length > 0) {
       contacts.filter((contact) => !contact.muted).map((contact) => {
         return fetchFeedFileQueue.push(new Promise((resolve) => {
-            blockstackGetFile('feeds.json', {
-              decrypt: false,
-              username: contact.name
-            })
-            .then((fileContents) => {
-              if (fileContents === null) {
-                resolve([])
-              } else {
-                resolve(
-                  JSON.parse(fileContents)
-                  .map((feed) => {
-                    feed.muted = false
-                    return(feed)
-                  })
-                )
-              }
-            })
-            .catch(() => {
+          blockstackGetFile('feeds.json', {
+            decrypt: false,
+            username: contact.name
+          })
+          .then((fileContents) => {
+            if (fileContents === null) {
               resolve([])
-            })
+            } else {
+              resolve(
+                JSON.parse(fileContents)
+                .map((feed) => {
+                  feed.source_contact = Object.assign(contact)
+                  feed.muted = true
+                  return(feed)
+                }).concat(feeds)
+              )
+            }
+          })
+          .catch(() => {
+            resolve([])
+          })
         }))
       })
     }
 
     Promise.all(fetchFeedFileQueue)
     .then((fetchedFeeds) => {
-      const flattenedFeeds = fetchedFeeds.reduce((a, b) => !a ? b : a.concat(b))
+      const flattenedFeeds = fetchedFeeds.reduce((a, b) => !a ? b : [].concat(a).concat(b))
       const uniqueFeeds = []
       let dedup = {}
       if ((flattenedFeeds || []).length < 1) {
         const theUniqueFeeds = [
           {
-            id:'https://www.democracynow.org/democracynow.rss',
-            url: 'https://www.democracynow.org/democracynow.rss',
+            id:'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+            url: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+            muted: false 
+          },
+          {
+            id:'https://lifehacker.com/rss',
+            url: 'lifehacker.com/rss',
             muted: false ,
             sections: [
               {
@@ -132,19 +192,21 @@ export const fetchBlockstackFeeds = (contacts) => {
             ]
           },
           {
-            id:'https://findyourfate.com/rss/horoscope-astrology.php',
-            url: 'https://findyourfate.com/rss/horoscope-astrology.php',
-            muted: false,
+            id:'https://www.democracynow.org/democracynow.rss',
+            url: 'https://www.democracynow.org/democracynow.rss',
+            muted: true ,
             sections: [
               {
-                id:'horoscope',
-                name: 'horoscope',
+                id:'politics',
+                name: 'politics',
                 muted: false
               }
             ]
           }
         ]
-        dispatch(fetchBlockstackArticles(theUniqueFeeds.filter((feed) => !feed.muted)))
+        dispatch(fetchArticles(theUniqueFeeds, filters))
+        //fetchArticles(theUniqueFeeds, filters)
+        dispatch(publishFeeds(theUniqueFeeds))
         dispatch({
           type: FETCH_FEEDS_SUCCESS,
           payload: theUniqueFeeds
@@ -162,25 +224,9 @@ export const fetchBlockstackFeeds = (contacts) => {
           type: FETCH_FEEDS_SUCCESS,
           payload: uniqueFeeds
         })
-        dispatch(fetchBlockstackArticles(uniqueFeeds.filter((feed) => !feed.muted)))
+        dispatch(publishFeeds(uniqueFeeds))
+        dispatch(fetchArticles(uniqueFeeds, filters))
       }
     })
-  }
-}
-
-export const publishFeeds = (feeds) => {
-  return (dispatch) => {
-    dispatch({
-      type: PUBLISH_FEEDS_REQUEST,
-      payload: feeds
-    })
-    const fileContent = JSON.stringify(feeds)
-    return blockstack.putFile('feeds.json', fileContent, {encrypt: false})
-      .then(() => {
-        dispatch({
-          type: PUBLISH_FEEDS_SUCCESS
-        })
-      }
-    )
   }
 }

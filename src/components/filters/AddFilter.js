@@ -19,8 +19,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleClickAddFilter: (text) => {
       dispatch(addFilter({
-        id: text.toLowerCase().replace(' ', '-'),
-        text: text
+        id: text,
+        text: text,
+        fields: [{id: "title", name: "title", muted: false}]
       }))
       dispatch(updateFilter(''))
     },

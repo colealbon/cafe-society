@@ -1,8 +1,8 @@
 import React from 'react'
-import Landing from '../Landing'
-import { userLogout } from '../../actions/blockstackUserActions'
+import SectionContent from './articles/SectionContent'
+import { userLogout } from '../actions/blockstackUserActions'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { push } from 'connected-react-router'
 
 const mapStateToProps = ({blockstackUser}) => {
   return {
@@ -13,23 +13,19 @@ const mapStateToProps = ({blockstackUser}) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleLogout: () => {
-      dispatch(userLogout())
+      dispatch(userLogout()),
+      dispatch(push('/'))
     }
   }
 }
 
 const Logout = ({blockstackUser, handleLogout}) => {
-  if (blockstackUser.isAuthenticated) {
+  if (blockstackUser.isAuthenticated === true) {
     handleLogout()
   }
   return (
-      <Landing></Landing>
+    <SectionContent />
   )
-}
-
-Logout.propTypes = {
-  blockstackUser: PropTypes.object.isRequired,
-  handleLogout: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Logout)
