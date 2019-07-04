@@ -76,7 +76,7 @@ let persistedRootReducer = persistReducer(rootPersistIndexedDbConfig, rootReduce
 const store = createStore(
   persistedRootReducer,
   composeWithDevTools(
-    applyMiddleware(middleware, createLogger(), thunkMiddleware)
+    applyMiddleware(middleware, createLogger({predicate: (getState, action) => ! conf.production}), thunkMiddleware)
   )
 )
 
