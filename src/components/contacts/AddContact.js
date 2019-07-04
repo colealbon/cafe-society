@@ -6,19 +6,20 @@ import { Add } from '@material-ui/icons'
 import { addContact, updateContact} from '../../actions/contactActions'
 import IconButton from '@material-ui/core/IconButton'
 
-const mapStateToProps = ({contact}) => {
+const mapStateToProps = ({contact, contacts}) => {
   if (!contact) {
     return {name: ''}
   }
   return {
-    name: contact.name
+    name: contact.name,
+    contacts: contacts
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickAddContact: (name) => {
-      dispatch(addContact(name))
+    handleClickAddContact: (name, contacts) => {
+      dispatch(addContact(name, contacts))
       dispatch(updateContact(''))
     },
     handleInputChange: (evt) => {
@@ -28,10 +29,10 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const AddContact = ({ handleClickAddContact, handleInputChange, name }) => {
+const AddContact = ({ handleClickAddContact, handleInputChange, name, contacts }) => {
   return (
     <Fragment>
-      <IconButton title="add new contact" onClick={() => handleClickAddContact(name)} >
+      <IconButton title="add new contact" onClick={() => handleClickAddContact(name, contacts)} >
         <Add id='addContact' />
       </IconButton>
       <TextField

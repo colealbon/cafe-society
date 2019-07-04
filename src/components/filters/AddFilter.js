@@ -3,27 +3,28 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import TextField from '@material-ui/core/TextField'
 import { Add } from '@material-ui/icons'
-import { addFilter, updateFilter} from '../../actions/filterActions'
+import { addFilter, updateFilter, publishFilters} from '../../actions/filterActions'
 import IconButton from '@material-ui/core/IconButton'
 
-const mapStateToProps = ({filter}) => {
-  if (!filter) {
-    return {text: ''}
-  }
+const mapStateToProps = ({filter, filters}) => {
   return {
-    text: filter.text
+    text: (!filter) ? '' : filter.text,
+    filters: filters
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickAddFilter: (text) => {
-      dispatch(addFilter({
+    handleClickAddFilter: (text, filters) => {
+      const newFilter = {
         id: text,
         text: text,
         fields: [{id: "title", name: "title", muted: false}]
-      }))
+      }
+      dispatch(addFilter(newFilter, filters))
       dispatch(updateFilter(''))
+      const newFilters = Object.assign(filters.filter((filterItem) => filterItem.id !== newFilter.id).concat(newFilter))
+      dispatch(publishFilters(newFilters))
     },
     handleInputChange: (evt) => {
       const text = evt.target.value
@@ -32,10 +33,10 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const AddFilter = ({ handleClickAddFilter, handleInputChange, text }) => {
+const AddFilter = ({ handleClickAddFilter, handleInputChange, text, filters }) => {
   return (
     <Fragment>
-      <IconButton title="add new filter" onClick={() => handleClickAddFilter(text)} >
+      <IconButton title="add new filter" onClick={() => handleClickAddFilter(text, filters)} >
         <Add id='addFilter' />
       </IconButton>
       <TextField

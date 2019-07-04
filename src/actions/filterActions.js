@@ -25,13 +25,17 @@ export const updateFilters = filters => {
 
 export const FILTERS_ADD_FILTER = 'FILTERS_ADD_FILTER'
 
-export const addFilter = filter => {
+export const addFilter = (filter, filters) => {
   return (dispatch) => {
     dispatch({
       type: FILTERS_ADD_FILTER,
       payload: filter
     })
     updateFilter({text: ''})
+    publishFilters([
+      ...filters.filter(filterItem => filterItem.id !== filter.id),
+      filter
+    ])
   }
 }
 

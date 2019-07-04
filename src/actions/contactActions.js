@@ -24,7 +24,7 @@ export const updateContact = text => {
 
 export const CONTACTS_ADD_CONTACT = 'CONTACTS_ADD_CONTACT'
 
-export const addContact = name => {
+export const addContact = (name, contacts) => {
   return (dispatch) => {
     dispatch({
       type: CONTACTS_ADD_CONTACT,
@@ -35,6 +35,8 @@ export const addContact = name => {
       }
     })
     updateContact({name: ''})
+    const newContacts = Object.assign(contacts.filter((filterContact) => filterContact.id !== contact.id).concat({ ...contact, muted: !contact.muted || false }))
+    dispatch(publishContacts(newContacts))
   }
 }
 
@@ -46,6 +48,8 @@ export const removeContact = contact => {
       type: CONTACTS_REMOVE_CONTACT,
       payload: contact
     })
+    const newContacts = Object.assign(contacts.filter((filterContact) => filterContact.id !== contact.id))
+    dispatch(publishContacts(newContacts))
   }
 }
 
