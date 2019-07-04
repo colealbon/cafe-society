@@ -31,11 +31,11 @@ export const addFilter = (filter, filters) => {
       type: FILTERS_ADD_FILTER,
       payload: filter
     })
-    updateFilter({text: ''})
-    publishFilters([
+    dispatch(updateFilter({text: ''}))
+    dispatch(publishFilters([
       ...filters.filter(filterItem => filterItem.id !== filter.id),
       filter
-    ])
+    ]))
   }
 }
 
@@ -84,9 +84,7 @@ export const toggleFilter = (filter, filters) => {
       type: FILTERS_TOGGLE_FILTER,
       payload: filter
     })
-    const newFilters = filters.filter((mapFilter) => mapFilter.id !== filter.id).concat({ ...filter, muted: !filter.muted || false })
-    //alert(JSON.stringify(feeds))
-    dispatch(publishFilters(newFilters))
+    dispatch(publishFilters(filters.filter((mapFilter) => mapFilter.id !== filter.id).concat({ ...filter, muted: !filter.muted || false })))
   }
 }
 
@@ -100,71 +98,73 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 export const fetchBlockstackFilters = (contacts) => {
   return (dispatch) => {
     dispatch({ type: FETCH_FILTERS_REQUEST })
-    const fetchFilterFileQueue = []
-    fetchFilterFileQueue.push(new Promise((resolve, reject) => {
-      blockstackGetFile('filters.json', {
-        decrypt: false
-      })
-      .then((fileContents) => resolve((JSON.parse(fileContents))))
-      .catch((error) => reject(error))
-    }))
-    if (contacts.length > 0) {
-      contacts.filter((contact) => !contact.muted).map((contact) => {
-        return fetchFilterFileQueue.push(new Promise((resolve) => {
-            blockstackGetFile('filters.json', {
-              decrypt: false,
-              username: contact.name
-            })
-            .then((fileContents) => {
-              if (fileContents === null) {
+    dispatch(() => {
+      const fetchFilterFileQueue = []
+      fetchFilterFileQueue.push(new Promise((resolve, reject) => {
+        blockstackGetFile('filters.json', {
+          decrypt: false
+        })
+        .then((fileContents) => resolve((JSON.parse(fileContents))))
+        .catch((error) => reject(error))
+      }))
+      if (contacts.length > 0) {
+        contacts.filter((contact) => !contact.muted).map((contact) => {
+          return fetchFilterFileQueue.push(new Promise((resolve) => {
+              blockstackGetFile('filters.json', {
+                decrypt: false,
+                username: contact.name
+              })
+              .then((fileContents) => {
+                if (fileContents === null) {
+                  resolve([])
+                } else {
+                  resolve(
+                    JSON.parse(fileContents)
+                    .map((filter) => {
+                      filter.muted = false
+                      return(filter)
+                    })
+                  )
+                }
+              })
+              .catch(() => {
                 resolve([])
-              } else {
-                resolve(
-                  JSON.parse(fileContents)
-                  .map((filter) => {
-                    filter.muted = false
-                    return(filter)
-                  })
-                )
-              }
-            })
-            .catch(() => {
-              resolve([])
-            })
-        }))
-      })
-    }
-
-    Promise.all(fetchFilterFileQueue)
-    .then((fetchedFilters) => {
-      const flattenedFilters = fetchedFilters.reduce((a, b) => !a ? b : a.concat(b))
-      const uniqueFilters = []
-      let dedup = {}
-        if ((flattenedFilters || []).length < 1) {
-        dispatch({
-          type: FETCH_FILTERS_SUCCESS,
-          payload: [{
-            id: 'measles',
-            text: 'measles',
-            fields: [{id:'title', name:'title', muted: false}],
-            sections: [{id:'politics', name:'politics'}]
-          }]
+              })
+          }))
         })
-      } else {
-        flattenedFilters.filter((filter) => {
-          if (dedup[filter.id] === undefined) {
-            dedup[filter.id] = {}
-            uniqueFilters.push(filter)
-            return true
-          }
-          return false
-        })
-        dispatch({
-          type: FETCH_FILTERS_SUCCESS,
-          payload: uniqueFilters
-        })
-        dispatch(publishFilters(uniqueFilters))
       }
+  
+      Promise.all(fetchFilterFileQueue)
+      .then((fetchedFilters) => {
+        const flattenedFilters = fetchedFilters.reduce((a, b) => !a ? b : a.concat(b))
+        const uniqueFilters = []
+        let dedup = {}
+          if ((flattenedFilters || []).length < 1) {
+          dispatch({
+            type: FETCH_FILTERS_SUCCESS,
+            payload: [{
+              id: 'measles',
+              text: 'measles',
+              fields: [{id:'title', name:'title', muted: false}],
+              sections: [{id:'politics', name:'politics'}]
+            }]
+          })
+        } else {
+          flattenedFilters.filter((filter) => {
+            if (dedup[filter.id] === undefined) {
+              dedup[filter.id] = {}
+              uniqueFilters.push(filter)
+              return true
+            }
+            return false
+          })
+          dispatch({
+            type: FETCH_FILTERS_SUCCESS,
+            payload: uniqueFilters
+          })
+          dispatch(publishFilters(uniqueFilters))
+        }
+      })
     })
   }
 }

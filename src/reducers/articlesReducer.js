@@ -22,6 +22,7 @@ import {
 import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
+import { stringify } from 'querystring';
 
 export default (state = [], action) => {
   switch (action.type) {
@@ -214,12 +215,27 @@ export default (state = [], action) => {
           return true
         }
       }).filter((filterMatched) => filterMatched === true).length > 0)
-
+      if (article.blockReasons) {
+        if (!!article.blockReasons.blockReasons) {
+          //we'd like for this if statement (next 6 lines) to go away
+          return (
+            (matchedFilter) ?
+            {...article, muted: true, blockReasons: article.blockReasons.blockReasons.filter((blockReason) => blockReason.id !== action.payload.id).concat(action.payload) } :
+            article
+          )
+        }
+        return (
+          (matchedFilter) ?
+          {...article, muted: true, blockReasons: article.blockReasons.filter((blockReason) => blockReason.id !== action.payload.id).concat(action.payload) } :
+          article
+        )
+      }
       return (
         (matchedFilter) ?
-        {...article, muted: true, blockReasons: (article.blockReasons || []).filter((blockReason) => blockReason.id !== action.payload.id).concat(action.payload)} :
+        {...article, muted: true, blockReasons: [action.payload] } :
         article
       )
+
   })  
 
   default:

@@ -12,18 +12,19 @@ import {parse} from 'tldjs';
 import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
 
-const mapStateToProps = ({ selectedSection, articles }) => {
+const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
     selectedSection: selectedSection,
     articles: articles.filter(article => !article.muted).filter(article => article.visible).filter(article => (article.blockReasons || []).length < 1),
-    allArticles: articles
+    allArticles: articles,
+    filters: filters
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickShadowBanDomain: (link, selectedSection) => {
-      dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }))
+    handleClickShadowBanDomain: (link, selectedSection, filters) => {
+      dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
     handleClickRemoveArticle: (article) => {
       dispatch(removeArticle(article))
@@ -42,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection}) => {
+export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection, filters}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'home'
   const readTitle = `mark ${articles.filter((article) => article.muted === false).length} articles as read`
   return (
@@ -70,7 +71,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
                     />
                   </IconButton>
                   <a href={article.link} target="newsfeed-demo-article">{article.title.replace(/&apos;/g, "\'").replace(/&amp;/g, "&")}</a>
-                  <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection)} >
+                  <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
                 </Typography>
