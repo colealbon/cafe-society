@@ -75,7 +75,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
                   </IconButton>
                 </Typography>
                 <br/>
-                <Typography>{article.contentSnippet}</Typography>
+                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "\'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
                 <p/>
               </CardContent>
             </Card>
