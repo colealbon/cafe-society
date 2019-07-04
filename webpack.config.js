@@ -4,6 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 const publicPath = '/'
 module.exports = {
+  mode: 'production',
   module: {
     rules: [
       {
