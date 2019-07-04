@@ -10,3 +10,12 @@ cafe-society.news is an RSS reader with customizable filters.   Articles can be 
 - create a community curated newspaper with an agenda resistant pledge drive style business plan
 - better understand the toolkit needed to create and operate a robust decentralized business.  This application will answer questions like "how do people connect with each other instead of only to corporate?  Why would they do that?  What is best in class security in practice?  What are the interchangeable/swappable components required to remain future proof? (ex storage, cpu, bandwidth)"  
 - toolkit that is capable of supporting "composable" man/machine curators who can collaborate to achieve real time highly personalized quality censorship resistant, sybil attack resistant news feeds.
+
+## hackathon
+- add author field with bitcoin address to filter editor
+- add author info to filtered items
+- write a report about filters used
+
+## contact  
+cole.albon@gmail.com  
+cole_albon.id  

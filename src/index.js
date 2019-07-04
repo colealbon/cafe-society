@@ -111,6 +111,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 )
-setTimeout(store.dispatch(fetchAccounts()), 5000)
-//setInterval(function(){store.dispatch(fetchAccounts())}, 10 * 1000) // miliseconds
+setTimeout(store.dispatch(fetchAccounts()), 4000)
 store.dispatch(fetchUserData())
