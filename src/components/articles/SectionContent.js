@@ -48,10 +48,12 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
   return (
     <Fragment>
       <VerticalSpace/>
-      <Typography variant="h4" >{sectionTitle}</Typography>
-      <IconButton title={readTitle} onClick={() => {handleClickMarkAllRead(articles, allArticles)}} >
-        <PlaylistAddCheck></PlaylistAddCheck>
-      </IconButton>
+      <Typography variant="h4" >
+        <IconButton title={readTitle} onClick={() => {handleClickMarkAllRead(articles, allArticles)}} >
+          <PlaylistAddCheck></PlaylistAddCheck>
+        </IconButton>
+        {sectionTitle}
+      </Typography>
       <p />
       {articles
         .map((article) => {
