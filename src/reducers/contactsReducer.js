@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
         .filter(contact => contact.id !== action.payload.id)
 
     case CONTACTS_TOGGLE_CONTACT:
-      return state.map(contact => contact.id === action.payload.id ? { ...contact, muted: !contact.muted || false } : contact)
+      return state.map(contactItem => contactItem.id == action.payload.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)
 
     default:
       return state

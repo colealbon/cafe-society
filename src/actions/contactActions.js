@@ -59,12 +59,9 @@ export const toggleContact = (contact, contacts) => {
   return (dispatch) => {
     dispatch({
       type: CONTACTS_TOGGLE_CONTACT,
-      payload: {
-        contact: contact,
-        contacts: contacts
-      }
+      payload: contact
     })
-    const newContacts = contacts.filter((contactItem) => contactItem.id !== contact.id).concat({ ...contact , muted: !contact.muted || false })
+    const newContacts = contacts.map((contactItem) => (contactItem.id === contact.id) ? { ...contactItem , muted: !contactItem.muted } : contactItem)
     dispatch(publishContacts(newContacts))
   }
 }
