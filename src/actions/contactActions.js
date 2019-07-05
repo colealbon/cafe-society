@@ -42,14 +42,13 @@ export const addContact = (contact, contacts) => {
 
 export const CONTACTS_REMOVE_CONTACT = 'CONTACTS_REMOVE_CONTACT'
 
-export const removeContact = contact => {
+export const removeContact = (contact, contacts) => {
   return (dispatch) => {
     dispatch({
       type: CONTACTS_REMOVE_CONTACT,
       payload: contact
     })
-    const newContacts = Object.assign(contacts.filter((filterContact) => filterContact.id !== contact.id))
-    dispatch(publishContacts(newContacts))
+    dispatch(publishContacts(contacts.filter((filterContact) => filterContact.id !== contact.id)))
   }
 }
 
@@ -61,8 +60,7 @@ export const toggleContact = (contact, contacts) => {
       type: CONTACTS_TOGGLE_CONTACT,
       payload: contact
     })
-    const newContacts = contacts.map((contactItem) => (contactItem.id === contact.id) ? { ...contactItem , muted: !contactItem.muted } : contactItem)
-    dispatch(publishContacts(newContacts))
+    dispatch(publishContacts(contacts.map(contactItem => contactItem.id == contact.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)))
   }
 }
 
