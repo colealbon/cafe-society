@@ -101,7 +101,6 @@ export const toggleFeed = (feed, feeds) => {
       }
     })
     const newFeeds = feeds.filter((filterFeed) => filterFeed.id !== feed.id).concat({ ...feed, muted: !feed.muted || false })
-    //alert(JSON.stringify(feeds))
     dispatch(publishFeeds(newFeeds))
   }
 }

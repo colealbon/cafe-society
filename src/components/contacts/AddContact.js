@@ -7,39 +7,36 @@ import { addContact, updateContact} from '../../actions/contactActions'
 import IconButton from '@material-ui/core/IconButton'
 
 const mapStateToProps = ({contact, contacts}) => {
-  if (!contact) {
-    return {name: ''}
-  }
   return {
-    name: contact.name,
+    contact: contact,
     contacts: contacts
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickAddContact: (name, contacts) => {
-      dispatch(addContact(name, contacts))
+    handleClickAddContact: (contact, contacts) => {
+      dispatch(addContact(contact, contacts))
       dispatch(updateContact(''))
     },
     handleInputChange: (evt) => {
-      const name = evt.target.value
-      dispatch(updateContact(name))
+      const contact = evt.target.value
+      dispatch(updateContact(contact))
     }
   }
 }
 
-const AddContact = ({ handleClickAddContact, handleInputChange, name, contacts }) => {
+const AddContact = ({ handleClickAddContact, handleInputChange, contact, contacts }) => {
   return (
     <Fragment>
-      <IconButton title="add new contact" onClick={() => handleClickAddContact(name, contacts)} >
+      <IconButton title="add new contact" onClick={() => handleClickAddContact(contact, contacts)} >
         <Add id='addContact' />
       </IconButton>
       <TextField
         label='enter blockstack id'
         id='textFieldContact'
         onChange={handleInputChange}
-        value={name}
+        value={contact}
         placeholder="cole_albon.id"
       />
     </Fragment>
@@ -49,7 +46,7 @@ const AddContact = ({ handleClickAddContact, handleInputChange, name, contacts }
 AddContact.propTypes = {
   handleClickAddContact: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired
+  contact: PropTypes.string.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddContact)

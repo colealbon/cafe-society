@@ -13,29 +13,29 @@ export const selectContact = contact => {
 
 export const CONTACT_UPDATE_CONTACT = 'CONTACT_UPDATE_CONTACT'
 
-export const updateContact = text => {
+export const updateContact = contact => {
   return (dispatch) => {
     dispatch({
       type: CONTACT_UPDATE_CONTACT,
-      payload: {name: text}
+      payload: contact
     })
   }
 }
 
 export const CONTACTS_ADD_CONTACT = 'CONTACTS_ADD_CONTACT'
 
-export const addContact = (name, contacts) => {
+export const addContact = (contact, contacts) => {
   return (dispatch) => {
     dispatch({
       type: CONTACTS_ADD_CONTACT,
       payload: {
-        id: name.toLowerCase().replace(' ', '-'),
-        name: name,
+        id: contact,
+        name: contact,
         muted: false
       }
     })
-    updateContact({name: ''})
-    const newContacts = Object.assign(contacts.filter((filterContact) => filterContact.id !== contact.id).concat({ ...contact, muted: !contact.muted || false }))
+    dispatch(updateContact(''))
+    const newContacts = Object.assign(contacts.filter((contactItem) => contactItem.id !== name).concat({ id: contact, name: contact,  muted: false }))
     dispatch(publishContacts(newContacts))
   }
 }
@@ -59,9 +59,12 @@ export const toggleContact = (contact, contacts) => {
   return (dispatch) => {
     dispatch({
       type: CONTACTS_TOGGLE_CONTACT,
-      payload: contact
+      payload: {
+        contact: contact,
+        contacts: contacts
+      }
     })
-    const newContacts = Object.assign(contacts.filter((filterContact) => filterContact.id !== contact.id).concat({ ...contact, muted: !contact.muted || false }))
+    const newContacts = contacts.filter((contactItem) => contactItem.id !== contact.id).concat({ ...contact , muted: !contact.muted || false })
     dispatch(publishContacts(newContacts))
   }
 }
@@ -137,11 +140,11 @@ export const fetchBlockstackContacts = (contacts) => {
       })
     }))
     if (!!contacts && contacts.length > 0) {
-      contacts.filter((contact) => !contact.muted).map((contact) => {
+      contacts.filter((contactItem) => !contactItem.muted).map((contactItem) => {
         return fetchContactFileQueue.push(new Promise((resolve) => {
           blockstackGetFile('contacts.json', {
             decrypt: false,
-            username: contact.name
+            username: contactItem.name
           })
           .then((fileContents) => {
             if (fileContents === null) {
@@ -150,7 +153,7 @@ export const fetchBlockstackContacts = (contacts) => {
               resolve(
                 JSON.parse(fileContents)
                 .map((fetchedContact) => {
-                  fetchedContact.source_contact = Object.assign(contact)
+                  fetchedContact.source_contact = Object.assign(contactItem)
                   fetchedContact.muted = true
                   return(fetchedContact)
                 }).concat(contacts)
