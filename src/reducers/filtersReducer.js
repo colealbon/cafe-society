@@ -12,7 +12,6 @@ import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
 
-
 export default (state = initialState, action) => {
   switch (action.type) {
     case FILTERS_ADD_FILTER:

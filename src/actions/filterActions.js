@@ -41,16 +41,15 @@ export const addFilter = (filter, filters) => {
 
 export const FILTERS_REMOVE_FILTER = 'FILTERS_REMOVE_FILTER'
 
-export const removeFilter = filter => {
+export const removeFilter = (filter, filters) => {
   return (dispatch) => {
     dispatch({
       type: FILTERS_REMOVE_FILTER,
       payload: filter
     })
+    dispatch(publishFilters(filters.filter((filterItem) => filterItem.id !== filter.id)))
   }
 }
-
-// dispatch(publishFeeds(newFeeds))
 export const PUBLISH_FILTERS_REQUEST = 'PUBLISH_FILTERS_REQUEST'
 export const PUBLISH_FILTERS_SUCCESS = 'PUBLISH_FILTERS_SUCCESS'
 export const PUBLISH_FILTERS_ERROR = 'PUBLISH_FILTERS_ERROR'

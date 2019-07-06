@@ -31,14 +31,14 @@ const mapStateToProps = ({ feeds, sections }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickRemoveFeed: (feed) => {
-      dispatch(removeFeed(feed))
+    handleClickRemoveFeed: (feed, feeds) => {
+      dispatch(removeFeed(feed, feeds))
     },
     handleClickToggleFeed: (feed, feeds) => {
       dispatch(toggleFeed(feed, feeds))
     },
     handleClickRemoveAllFeeds: (feeds) => {
-      feeds.map((feed) => dispatch(removeFeed(feed)))
+      removeFeed(feeds, feeds)
     },
     handleClickSetFeed: (feed) => {
       dispatch(selectFeedSection(feed))

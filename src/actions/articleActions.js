@@ -31,8 +31,35 @@ export const removeArticle = article => {
       type: ARTICLES_REMOVE_ARTICLE,
       payload: article
     })
+    dispatch({
+      type: ARTICLES_REMOVE_ARTICLE,
+      payload: article
+    })
   }
 }
+
+export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
+
+export const markArticleRead = (articles, allArticles) => {
+  return (dispatch) => {
+    dispatch({
+      type: ARTICLES_MARK_READ,
+      payload: articles
+    })
+    const newArticles = allArticles.map((allArticlesItem) => {
+      let articleMatched = false
+      articles = [].concat(articles)
+      articles.map((articlesItem) => {
+        if (articlesItem.id === allArticlesItem.id) {
+          articleMatched = true
+        }
+      })
+      return (articleMatched === true ) ? { muted: true, ...allArticlesItem} : stateArticle
+    })
+    dispatch(publishArticles(newArticles))
+  }
+}
+
 
 export const ARTICLES_TOGGLE_ARTICLE = 'ARTICLES_TOGGLE_ARTICLE'
 

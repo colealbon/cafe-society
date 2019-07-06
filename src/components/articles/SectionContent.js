@@ -32,13 +32,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickToggleArticle: (article, articles) => {
       dispatch(toggleArticle(article, articles))
     },
-    handleClickMarkAllRead: (articles, allArticles) => {
-      articles.map((article) => {
-        if (article.muted === false) {
-          dispatch(toggleArticle(article, allArticles))
-        }
-        return 'o'
-      })
+    handleClickMarkAllRead: (articles) => {
+      dispatch(markArticleRead(articles))
     }
   }
 }

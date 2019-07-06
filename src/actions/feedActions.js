@@ -29,34 +29,34 @@ export const PUBLISH_FEEDS_SUCCESS = 'PUBLISH_FEEDS_SUCCESS'
 export const PUBLISH_FEEDS_ERROR = 'PUBLISH_FEEDS_ERROR'
 
 export const publishFeeds = (feeds) => {
-  if (!!feeds) {
-    return (dispatch) => {
+  // if (!!feeds) {
+  return (dispatch) => {
+    dispatch({
+      type: PUBLISH_FEEDS_REQUEST,
+      payload: feeds
+    })
+    const fileContent = JSON.stringify(feeds)
+    blockstack.putFile('feeds.json', fileContent, {encrypt: false})
+    .then((response) => {
       dispatch({
-        type: PUBLISH_FEEDS_REQUEST,
-        payload: feeds
+        type: PUBLISH_FEEDS_SUCCESS,
+        payload: {
+          response: response,
+          feeds: feeds
+        }
       })
-      const fileContent = JSON.stringify(feeds)
-      blockstack.putFile('feeds.json', fileContent, {encrypt: false})
-      .then((response) => {
-        dispatch({
-          type: PUBLISH_FEEDS_SUCCESS,
-          payload: {
-            response: response,
-            feeds: feeds
-          }
-        })
+    })
+    .catch((error) => {
+      dispatch({
+        type: PUBLISH_FEEDS_ERROR,
+        payload: {
+          error: error
+        }
       })
-      .catch((error) => {
-        dispatch({
-          type: PUBLISH_FEEDS_ERROR,
-          payload: {
-            error: error
-          }
-        })
-      })
-    }
+    })
   }
 }
+// }
 
 export const FEEDS_ADD_FEED = 'FEEDS_ADD_FEED'
 
@@ -82,7 +82,11 @@ export const removeFeed = (feed, feeds) => {
       type: FEEDS_REMOVE_FEED,
       payload: feed
     })
-    dispatch(publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed.id)))
+    if (feed === feeds) {
+      dispatch(publishFeeds([]))
+    } else {
+      dispatch(publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed.id)))
+    }
   }
 }
 
@@ -207,7 +211,6 @@ export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
           }
         ]
         dispatch(fetchArticles(theUniqueFeeds, filters))
-        //fetchArticles(theUniqueFeeds, filters)
         dispatch(publishFeeds(theUniqueFeeds))
         dispatch({
           type: FETCH_FEEDS_SUCCESS,
@@ -215,6 +218,7 @@ export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
         })
       } else {
         flattenedFeeds.filter((feedItem) => !!feedItem)
+        .filter((feedItem) => !Array.isArray(feedItem))
         .filter((feed) => {
           if (dedup[feed.id] === undefined) {
             dedup[feed.id] = {}

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Check, PlaylistAddCheck, VoiceOverOff, DeleteSweep } from '@material-ui/icons';
+import { Check, VoiceOverOff, DeleteSweep } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { removeArticle, toggleArticle } from '../../actions/articleActions'
@@ -17,30 +17,26 @@ const mapStateToProps = ({ selectedSection, articles }) => {
   return {
     selectedSection: selectedSection,
     articles: articles,
+    filters: filters
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickShadowBanDomain: (link, selectedSection) => {
-      dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }))
+    handleClickShadowBanDomain: (link, selectedSection, filters) => {
+      dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
     handleClickRemoveArticle: (article) => {
       dispatch(removeArticle(article))
     },
-    handleClickToggleArticle: (article) => {
-      dispatch(toggleArticle(article))
+    handleClickToggleArticle: (article, articles) => {
+      dispatch(toggleArticle(article, articles))
     },
     handleClickMarkAllRead: (articles) => {
-      articles.map((article) => {
-        if (article.muted === false) {
-          dispatch(toggleArticle(article))
-        }
-        return 'o'
-      })
+      dispatch(markArticleRead(articles))
     },
     handleClickRemoveAllArticles: (articles) => {
-      articles.map((article) => dispatch(removeArticle(article)))
+      dispatch(removeArticle(articles))
     }
   }
 }

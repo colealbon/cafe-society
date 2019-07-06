@@ -33,20 +33,20 @@ const mapStateToProps = ({ filters, sections, fields }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickRemoveFilter: (filter) => {
-      dispatch(removeFilter(filter))
+    handleClickRemoveFilter: (filter, filters) => {
+      dispatch(removeFilter(filter, filters))
     },
     handleClickToggleFilter: (filter, filters) => {
       dispatch(toggleFilter(filter, filters))
     },
     handleClickRemoveAllFilters: (filters) => {
-      filters.map((filter) => dispatch(removeFilter(filter)))
+      dispatch(removeFilter(filter, filters))
     },
-    handleClickSetFilterSection: (filter) => {
-      dispatch(selectFilterSection(filter))
+    handleClickSetFilterSection: (filter, filters) => {
+      dispatch(selectFilterSection(filter, filters))
     },
-    handleClickSetFilterField: (filter) => {
-      dispatch(selectFilterField(filter))
+    handleClickSetFilterField: (filter, filters) => {
+      dispatch(selectFilterField(filter, filters))
     }
   }
 }
@@ -69,7 +69,7 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
               <RemoveFilter
                 {...filter}
                 onClick={() => {
-                  handleClickRemoveFilter(filter)
+                  handleClickRemoveFilter(filter, filters)
                 }}
               />
               <span
@@ -101,7 +101,7 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
                         onClick={() => handleClickSetFilterSection(Object.assign(
                           {"section": section},
                           filter
-                        ))}
+                        ), filters)}
                       />
                       )
                     })
