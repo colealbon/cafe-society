@@ -1,7 +1,8 @@
 import {
   FILTERS_ADD_FILTER,
   FILTERS_REMOVE_FILTER,
-  FILTERS_TOGGLE_FILTER
+  FILTERS_TOGGLE_FILTER,
+  FETCH_FILTERS_SUCCESS
 } from '../actions/filterActions'
 
 import {
@@ -14,6 +15,21 @@ import {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_FILTERS_SUCCESS:
+      let dedup = {}
+      let uniqueFilters = []
+      action.payload.map((payloadItem) => {
+        if (!dedupe[payloadItem.id]) {
+          uniqueFilters.push(payloadItem)
+        }
+      })
+      state.map((stateItem) => {
+        if (!dedup[stateItem.id]) {
+          uniqueFilters.push(stateItem)
+        }
+      })
+      return uniqueFilters.filter((filterItem) => !Array.isArray(filterItem))
+
     case FILTERS_ADD_FILTER:
       return [
         ...state.filter(filter => filter.id !== action.payload.id),
