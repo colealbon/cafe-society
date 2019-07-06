@@ -15,50 +15,40 @@ export const selectFeed = feed => {
 
 export const FEED_UPDATE_FEED = 'FEED_UPDATE_FEED'
 
-export const updateFeed = url => {
+export const updateFeed = feed => {
   return (dispatch) => {
     dispatch({
       type: FEED_UPDATE_FEED,
-      payload: {url: url}
+      payload: feed
     })
   }
 }
 
 export const FEEDS_ADD_FEED = 'FEEDS_ADD_FEED'
 
-export const addFeed = url => {
+export const addFeed = (feed, feeds) => {
   return (dispatch) => {
     dispatch({
       type: FEEDS_ADD_FEED,
       payload: {
-        id: url,
-        url: url
+        id: feed,
+        url: feed
       }
     })
-    updateFeed({url: ''})
-  }
-}
-
-export const FEEDS_UPSERT_FEED = 'FEEDS_UPSERT_FEED'
-
-export const upsertFeed = feed => {
-  return (dispatch) => {
-    dispatch({
-      type: FEEDS_UPSERT_FEED,
-      payload: feed
-    })
-    updateFeed({url: ''})
+    dispatch(updateFeed(''))
+    dispatch(publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed).concat({id: feed, url: feed, muted: false})))
   }
 }
 
 export const FEEDS_REMOVE_FEED = 'FEEDS_REMOVE_FEED'
 
-export const removeFeed = feed => {
+export const removeFeed = (feed, feeds) => {
   return (dispatch) => {
     dispatch({
       type: FEEDS_REMOVE_FEED,
       payload: feed
     })
+    publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed.id))
   }
 }
 
@@ -74,7 +64,7 @@ export const publishFeeds = (feeds) => {
         payload: feeds
       })
       const fileContent = JSON.stringify(feeds)
-      return blockstack.putFile('feeds.json', fileContent, {encrypt: false})
+      blockstack.putFile('feeds.json', fileContent, {encrypt: false})
         .then((response) => {
           dispatch({
             type: PUBLISH_FEEDS_SUCCESS,
@@ -211,7 +201,8 @@ export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
           payload: theUniqueFeeds
         })
       } else {
-        flattenedFeeds.filter((feed) => {
+        flattenedFeeds.filter((feedItem) => !!feedItem)
+        .filter((feed) => {
           if (dedup[feed.id] === undefined) {
             dedup[feed.id] = {}
             uniqueFeeds.push(feed)

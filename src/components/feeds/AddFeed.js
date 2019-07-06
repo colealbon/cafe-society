@@ -6,39 +6,37 @@ import { Add } from '@material-ui/icons'
 import { addFeed, updateFeed} from '../../actions/feedActions'
 import IconButton from '@material-ui/core/IconButton'
 
-const mapStateToProps = ({feed}) => {
-  if (!feed) {
-    return {url: ''}
-  }
+const mapStateToProps = ({feed, feeds}) => {
   return {
-    url: feed.url
+    feed: feed,
+    feeds: feeds
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickAddFeed: (url) => {
-      dispatch(addFeed(url))
+    handleClickAddFeed: (feed, feeds) => {
+      dispatch(addFeed(feed, feeds))
       dispatch(updateFeed(''))
     },
     handleInputChange: (evt) => {
-      const url = evt.target.value
-      dispatch(updateFeed(url))
+      const feed = evt.target.value
+      dispatch(updateFeed(feed))
     }
   }
 }
 
-const AddFeed = ({ handleClickAddFeed, handleInputChange, url }) => {
+const AddFeed = ({ handleClickAddFeed, handleInputChange, feed, feeds }) => {
   return (
     <Fragment>
-      <IconButton title="add new feed" onClick={() => handleClickAddFeed(url)} >
+      <IconButton title="add new feed" onClick={() => handleClickAddFeed(feed, feeds)} >
         <Add id='addFeed' />
       </IconButton>
       <TextField
         label='enter feed url'
         id='textFieldFeed'
         onChange={handleInputChange}
-        value={url}
+        value={feed}
         placeholder="https://theintercept.com/feed/?rss"
       />
     </Fragment>
@@ -48,7 +46,8 @@ const AddFeed = ({ handleClickAddFeed, handleInputChange, url }) => {
 AddFeed.propTypes = {
   handleClickAddFeed: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  url: PropTypes.string.isRequired
+  feed: PropTypes.string.isRequired,
+  feeds: PropTypes.array.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddFeed)

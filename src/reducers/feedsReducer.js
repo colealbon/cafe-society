@@ -14,21 +14,21 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_FEEDS_SUCCESS:
       const newFeeds = action.payload.filter((newFeed) => {
-        const feedExists = state.filter((stateFeed) => stateFeed.id === newFeed.id).length !== 0
-        return !feedExists
+        const feedExists = state.filter((feedItem) => !!feedItem)
+          .filter((stateFeed) => stateFeed.id === newFeed.id).length !== 0
+        return !(feedExists === false)
       })
-      return state.concat(newFeeds)
+      const stateFeeds = state.map((stateFeedItem) => {
+        //alert(JSON.stringify(action.payload.filter((feedItem) => !!feedItem).filter((payloadFeedItem) => stateFeedItem.id === payloadFeedItem.id)))
+        return action.payload.filter((payloadFeedItem) => stateFeedItem.id === payloadFeedItem.id) || stateFeedItem
+      }).concat(newFeeds)
 
     case FEEDS_ADD_FEED:
       return [
-        ...state.filter(feed => feed.id !== action.payload.id),
+        ...state
+        .filter((stateItem) => !Array.isArray(stateItem)).filter(feed => feed.id !== action.payload.id),
         action.payload
       ]
-
-    case FEEDS_UPSERT_FEED:
-      // thys says don't overwrite - keep old feed source info
-      const feedExists = state.filter(feed => feed.id !== action.payload.id).length > 0
-      return (!feedExists) ? state : state.concat(action.payload)
 
     case FEEDS_REMOVE_FEED:
       return state

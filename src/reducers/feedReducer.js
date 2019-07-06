@@ -2,12 +2,10 @@ import {
     FEED_UPDATE_FEED,
   } from '../actions/feedActions'
   
-  const initialState = {url: ''}
-  
-  export default (state = initialState, action) => {
+  export default (state = '', action) => {
     switch (action.type) {
       case FEED_UPDATE_FEED:
-        return { ...state, ...action.payload }
+        return action.payload
       default:
         return state
     }

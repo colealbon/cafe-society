@@ -6,6 +6,7 @@ import RemoveFeed from './RemoveFeed'
 import { removeFeed, toggleFeed } from '../../actions/feedActions'
 import { selectFeedSection } from '../../actions/feedSectionActions'
 
+import VerticalSpace from '../VerticalSpace'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 import Chip from '@material-ui/core/Chip'
@@ -49,10 +50,7 @@ export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClic
   const deleteSweepFeed = `delete: ${[].concat(feeds).length}`
   return (
     <Fragment>
-      <br />
-      <br />
-      <br />
-      <br />
+      <VerticalSpace/>
       <List subheader={<ListSubheader>Edit/Save Feeds</ListSubheader>} >
         <ListItem key='addItem'>
           <IconButton title={deleteSweepFeed} onClick={() => { handleClickRemoveAllFeeds(feeds) }}>
@@ -60,14 +58,14 @@ export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClic
           </IconButton>
           <AddFeed />
         </ListItem>
-        {feeds.map((feed) => {
+        {feeds.filter(feedItem => !!feedItem.url).map((feed) => {
           return (
             <ListItem key={feed.id}>
               <ListItemIcon>
                 <RemoveFeed
                   {...feed}
                   onClick={() => {
-                    handleClickRemoveFeed(feed)
+                    handleClickRemoveFeed(feed, feeds)
                   }}
                 />
               </ListItemIcon>

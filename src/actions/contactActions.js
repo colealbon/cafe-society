@@ -48,7 +48,9 @@ export const removeContact = (contact, contacts) => {
       type: CONTACTS_REMOVE_CONTACT,
       payload: contact
     })
-    dispatch(publishContacts(contacts.filter((filterContact) => filterContact.id !== contact.id)))
+    if (!!contacts) {
+      dispatch(publishContacts(contacts.filter((filterContact) => filterContact.id !== contact.id)))
+    }
   }
 }
 
