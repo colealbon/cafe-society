@@ -36,21 +36,20 @@ export default (state = initialState, action) => {
           return filter
         }
         if (!filter.sections) {
-          return Object.assign(filter, {sections: [action.payload.section]})
+          return Object.assign({sections: [action.payload.section]}, filter)
         }
-        if (filter.sections == []) {
-          return Object.assign(filter, {sections: [action.payload.section]})
+        if ([].concat(filter.sections).length === 0) {
+          return {...filter, sections: [action.payload.section]}
         }
+        
         const deleteSection = (filter.sections || []).filter((filterSection) => {
           return action.payload.section.id == filterSection.id
-        })
-        if (deleteSection.length < 1) {
-          return Object.assign(filter, {sections: filter.sections.concat(action.payload.section)})
+        }).length !== 0
+        
+        if (deleteSection) {
+          return {...filter, sections: filter.sections.filter((sectionItem) => sectionItem.id !== action.payload.section.id)}
         }
-        filter.sections = Object.assign((filter.sections || []).filter((filterSection) => {
-          return (action.payload.section.id !== filterSection.id)
-        }))
-        return filter
+        return {...filter, sections: filter.sections.concat(action.payload.section)}
       })
 
     case FILTER_FIELD_SELECT_FIELD:
