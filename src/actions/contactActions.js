@@ -1,5 +1,6 @@
 import * as blockstack from 'blockstack'
 var memoize = require("memoizee")
+
 export const CONTACT_SELECT_CONTACT = 'CONTACT_SELECT_CONTACT'
 
 export const selectContact = contact => {
@@ -22,50 +23,6 @@ export const updateContact = contact => {
   }
 }
 
-export const CONTACTS_ADD_CONTACT = 'CONTACTS_ADD_CONTACT'
-
-export const addContact = (contact, contacts) => {
-  return (dispatch) => {
-    dispatch({
-      type: CONTACTS_ADD_CONTACT,
-      payload: {
-        id: contact,
-        name: contact,
-        muted: false
-      }
-    })
-    dispatch(updateContact(''))
-    const newContacts = Object.assign(contacts.filter((contactItem) => contactItem.id !== name).concat({ id: contact, name: contact,  muted: false }))
-    dispatch(publishContacts(newContacts))
-  }
-}
-
-export const CONTACTS_REMOVE_CONTACT = 'CONTACTS_REMOVE_CONTACT'
-
-export const removeContact = (contact, contacts) => {
-  return (dispatch) => {
-    dispatch({
-      type: CONTACTS_REMOVE_CONTACT,
-      payload: contact
-    })
-    if (!!contacts) {
-      dispatch(publishContacts(contacts.filter((filterContact) => filterContact.id !== contact.id)))
-    }
-  }
-}
-
-export const CONTACTS_TOGGLE_CONTACT = 'CONTACTS_TOGGLE_CONTACT'
-
-export const toggleContact = (contact, contacts) => {
-  return (dispatch) => {
-    dispatch({
-      type: CONTACTS_TOGGLE_CONTACT,
-      payload: contact
-    })
-    dispatch(publishContacts(contacts.map(contactItem => contactItem.id == contact.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)))
-  }
-}
-
 export const PUBLISH_CONTACTS_REQUEST = 'PUBLISH_CONTACTS_REQUEST'
 export const PUBLISH_CONTACTS_SUCCESS = 'PUBLISH_CONTACTS_SUCCESS'
 export const PUBLISH_CONTACTS_ERROR = 'PUBLISH_CONTACTS_ERROR'
@@ -79,24 +36,67 @@ export const publishContacts = (contacts) => {
       })
       const fileContent = JSON.stringify(contacts)
       return blockstack.putFile('contacts.json', fileContent, {encrypt: false})
-        .then((response) => {
-          dispatch({
-            type: PUBLISH_CONTACTS_SUCCESS,
-            payload: {
-              response: response,
-              contacts: contacts
-            }
-          })
+      .then((response) => {
+        dispatch({
+          type: PUBLISH_CONTACTS_SUCCESS,
+          payload: {
+            response: response,
+            contacts: contacts
+          }
         })
-        .catch((error) => {
-          dispatch({
-            type: PUBLISH_CONTACTS_ERROR,
-            payload: {
-              error: error
-            }
-          })
+      })
+      .catch((error) => {
+        dispatch({
+          type: PUBLISH_CONTACTS_ERROR,
+          payload: {
+            error: error
+          }
         })
+      })
     }
+  }
+}
+
+export const CONTACTS_ADD_CONTACT = 'CONTACTS_ADD_CONTACT'
+
+export const addContact = (contact, contacts) => {
+  return (dispatch) => {
+    dispatch({
+      type: CONTACTS_ADD_CONTACT,
+      payload: {
+        id: contact,
+        name: contact,
+        muted: false
+      }
+    })
+    dispatch(updateContact(''))
+    dispatch(publishContacts(contacts.filter((contactItem) => contactItem.id !== name).concat({ id: contact, name: contact,  muted: false })))
+  }
+}
+
+export const CONTACTS_REMOVE_CONTACT = 'CONTACTS_REMOVE_CONTACT'
+
+export const removeContact = (contact, contacts) => {
+  return (dispatch) => {
+    dispatch({
+      type: CONTACTS_REMOVE_CONTACT,
+      payload: contact
+    })
+    dispatch(publishContacts(contacts.filter((filterContact) => filterContact.id !== contact.id)))
+  }
+}
+
+export const CONTACTS_TOGGLE_CONTACT = 'CONTACTS_TOGGLE_CONTACT'
+
+export const toggleContact = (contact, contacts) => {
+  return (dispatch) => {
+    dispatch({
+      type: CONTACTS_TOGGLE_CONTACT,
+      payload: {
+        contact: contact
+      }
+    })
+    dispatch(publishContacts(contacts.map(contactItem => contactItem.id == contact.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)))
   }
 }
 
@@ -136,6 +136,7 @@ export const fetchBlockstackContacts = (contacts) => {
         resolve([])
       })
     }))
+    // fetch feeds from each contact
     if (!!contacts && contacts.length > 0) {
       contacts.filter((contactItem) => !contactItem.muted).map((contactItem) => {
         return fetchContactFileQueue.push(new Promise((resolve) => {

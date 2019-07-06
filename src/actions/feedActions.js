@@ -24,6 +24,40 @@ export const updateFeed = feed => {
   }
 }
 
+export const PUBLISH_FEEDS_REQUEST = 'PUBLISH_FEEDS_REQUEST'
+export const PUBLISH_FEEDS_SUCCESS = 'PUBLISH_FEEDS_SUCCESS'
+export const PUBLISH_FEEDS_ERROR = 'PUBLISH_FEEDS_ERROR'
+
+export const publishFeeds = (feeds) => {
+  if (!!feeds) {
+    return (dispatch) => {
+      dispatch({
+        type: PUBLISH_FEEDS_REQUEST,
+        payload: feeds
+      })
+      const fileContent = JSON.stringify(feeds)
+      blockstack.putFile('feeds.json', fileContent, {encrypt: false})
+      .then((response) => {
+        dispatch({
+          type: PUBLISH_FEEDS_SUCCESS,
+          payload: {
+            response: response,
+            feeds: feeds
+          }
+        })
+      })
+      .catch((error) => {
+        dispatch({
+          type: PUBLISH_FEEDS_ERROR,
+          payload: {
+            error: error
+          }
+        })
+      })
+    }
+  }
+}
+
 export const FEEDS_ADD_FEED = 'FEEDS_ADD_FEED'
 
 export const addFeed = (feed, feeds) => {
@@ -48,34 +82,7 @@ export const removeFeed = (feed, feeds) => {
       type: FEEDS_REMOVE_FEED,
       payload: feed
     })
-    publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed.id))
-  }
-}
-
-export const PUBLISH_FEEDS_REQUEST = 'PUBLISH_FEEDS_REQUEST'
-export const PUBLISH_FEEDS_SUCCESS = 'PUBLISH_FEEDS_SUCCESS'
-export const PUBLISH_FEEDS_ERROR = 'PUBLISH_FEEDS_ERROR'
-
-export const publishFeeds = (feeds) => {
-  if (!!feeds) {
-    return (dispatch) => {
-      dispatch({
-        type: PUBLISH_FEEDS_REQUEST,
-        payload: feeds
-      })
-      const fileContent = JSON.stringify(feeds)
-      blockstack.putFile('feeds.json', fileContent, {encrypt: false})
-        .then((response) => {
-          dispatch({
-            type: PUBLISH_FEEDS_SUCCESS,
-            payload: {
-              response: response,
-              feeds: feeds
-            }
-          })
-        }
-      )
-    }
+    dispatch(publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed.id)))
   }
 }
 
@@ -86,12 +93,10 @@ export const toggleFeed = (feed, feeds) => {
     dispatch({
       type: FEEDS_TOGGLE_FEED,
       payload: {
-        feed: feed,
-        feeds: feeds
+        feed: feed
       }
     })
-    const newFeeds = feeds.filter((filterFeed) => filterFeed.id !== feed.id).concat({ ...feed, muted: !feed.muted || false })
-    dispatch(publishFeeds(newFeeds))
+    dispatch(publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed.id).concat({ ...feed, muted: !feed.muted || false })))
   }
 }
 
@@ -106,7 +111,14 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 
 export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
   return (dispatch) => {
-    dispatch({ type: FETCH_FEEDS_REQUEST })
+    dispatch({ 
+      type: FETCH_FEEDS_REQUEST,
+      payload: {
+        contacts: contacts,
+        filters: filters,
+        feeds: feeds
+      }
+     })
     const fetchFeedFileQueue = []
     fetchFeedFileQueue.push(new Promise((resolve) => {
       blockstackGetFile('feeds.json', {
@@ -128,6 +140,7 @@ export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
         resolve([])
       })
     }))
+    // fetch feeds from each contact
     if (!!contacts && contacts.length > 0) {
       contacts.filter((contact) => !contact.muted).map((contact) => {
         return fetchFeedFileQueue.push(new Promise((resolve) => {

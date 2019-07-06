@@ -90,8 +90,9 @@ const runInitialAppStartActions = () => {
     }
   }
   if(!!store.getState().contacts) {
-    store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
     store.dispatch(fetchBlockstackContacts(store.getState().contacts))
+    store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
+    
   }
   store.dispatch(fetchBlockstackFilters(store.getState().contacts))
   store.dispatch(fetchAccounts())
