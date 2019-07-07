@@ -163,6 +163,11 @@ export const fetchBlockstackFilters = (contacts) => {
           })
           dispatch(publishFilters(uniqueFilters))
         }
+      }).catch((error) => {
+        dispatch({
+          type: FETCH_FILTERS_SUCCESS,
+          payload: uniqueFilters
+        })
       })
     })
   }
