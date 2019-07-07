@@ -92,9 +92,7 @@ export const toggleContact = (contact, contacts) => {
   return (dispatch) => {
     dispatch({
       type: CONTACTS_TOGGLE_CONTACT,
-      payload: {
-        contact: contact
-      }
+      payload: contact
     })
     dispatch(publishContacts(contacts.map(contactItem => contactItem.id == contact.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)))
   }
@@ -102,7 +100,9 @@ export const toggleContact = (contact, contacts) => {
 
 export const FETCH_CONTACTS_START = 'FETCH_CONTACTS_START'
 export const FETCH_CONTACTS_SUCCESS = 'FETCH_CONTACTS_SUCCESS'
+export const FETCH_SAVED_CONTACTS_SUCCESS = 'FETCH_SAVED_CONTACTS_SUCCESS'
 export const FETCH_CONTACTS_ERROR = 'FETCH_CONTACTS_ERROR'
+export const FETCH_SAVED_CONTACTS_ERROR = 'FETCH_SAVED_CONTACTS_ERROR'
 
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
@@ -121,19 +121,17 @@ export const fetchBlockstackContacts = (contacts) => {
         decrypt: false,
       })
       .then((fileContents) => {
-        if (fileContents === null) {
-          resolve([])
-        } else {
-          resolve(
-            JSON.parse(fileContents)
-            .map((contact) => {
-              return(contact)
-            }).concat(contacts)
-          )
-        }
+        dispatch({
+          type: FETCH_SAVED_CONTACTS_SUCCESS,
+          payload: JSON.parse(fileContents)
+        })
+        resolve(JSON.parse(fileContents))
       })
-      .catch(() => {
-        resolve([])
+      .catch((error) =>{
+        dispatch({
+          type: FETCH_SAVED_CONTACTS_ERROR,
+          payload: {error: error}
+        })
       })
     }))
     // fetch feeds from each contact
@@ -186,7 +184,7 @@ export const fetchBlockstackContacts = (contacts) => {
         dispatch(publishContacts(uniqueContacts))
       } else {
         dispatch({
-          type: 'FETCH_CONTACT_FAILURE',
+          type: FETCH_CONTACTS_ERROR,
           payload: 'no contacts found'
         })
       }

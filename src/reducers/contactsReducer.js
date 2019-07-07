@@ -1,7 +1,9 @@
 import {
   CONTACTS_ADD_CONTACT,
   CONTACTS_REMOVE_CONTACT,
-  CONTACTS_TOGGLE_CONTACT
+  CONTACTS_TOGGLE_CONTACT,
+  FETCH_SAVED_CONTACTS_SUCCESS,
+  FETCH_CONTACTS_SUCCESS
 } from '../actions/contactActions'
 
 const initialState = [
@@ -16,12 +18,47 @@ export default (state = initialState, action) => {
         action.payload
       ]
     case CONTACTS_REMOVE_CONTACT:
-      return state
-        .filter(contact => contact.id !== action.payload.id)
+      return state.filter(stateItem => {
+        let matchId = false
+        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
+        payload.map((payloadItem) => {
+          if (payloadItem.id === stateItem.id) {
+            matchId = true
+          }
+        })
+        return !matchId
+      })
 
     case CONTACTS_TOGGLE_CONTACT:
-      return state.map(contactItem => contactItem.id == action.payload.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)
+      return state.map(contact => contact.id === action.payload.id ? { ...contact, muted: !contact.muted || false } : contact)
 
+    case FETCH_SAVED_CONTACTS_SUCCESS:
+      return state.filter((stateItem) => !Array.isArray(stateItem))
+      .map((stateItem) => {
+        const overwrite = action.payload.filter((payloadItem) => payloadItem.id === stateItem.id)[0]
+        return overwrite ? overwrite : stateItem
+      }).concat(action.payload.state.filter((stateItem) => !Array.isArray(stateItem))
+      .filter((payloadItem) => {
+        let itemExists = false
+        state.map((stateItem) => {
+          if (stateItem.id === payloadItem.id) {
+            itemExists = true
+          }
+        })
+        return !itemExists
+      }))
+
+    case FETCH_CONTACTS_SUCCESS:
+      return state.filter((stateItem) => !Array.isArray(stateItem))
+      .concat(action.payload.filter((payloadItem) => {
+        let itemExists = false
+        state.map((stateItem) => {
+          if (stateItem.id === payloadItem.id) {
+            itemExists = true
+          }
+        })
+        return !itemExists
+      }))
     default:
       return state
   }

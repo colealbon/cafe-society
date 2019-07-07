@@ -110,7 +110,7 @@ export const fetchArticles = (feeds, filters) => {
           payload: {error: error}
         })
       })
-   }))
+    }))
 
     feeds.map((feed) => {
       if (feed.muted !== true) { 

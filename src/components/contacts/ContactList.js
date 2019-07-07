@@ -24,14 +24,14 @@ const mapStateToProps = ({ contacts }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickRemoveContact: (contact) => {
-      dispatch(removeContact(contact))
+    handleClickRemoveContact: (contact, contacts) => {
+      dispatch(removeContact(contact, contacts))
     },
     handleClickToggleContact: (contact, contacts) => {
       dispatch(toggleContact(contact, contacts))
     },
     handleClickRemoveAllContacts: (contacts) => {
-      contacts.map((contact) => dispatch(removeContact(contact)))
+      dispatch(removeContact(contacts, contacts))
     }
   }
 }
@@ -55,7 +55,7 @@ export const ContactList = ({ handleClickRemoveContact, handleClickToggleContact
                 <RemoveContact
                   {...contact}
                   onClick={() => {
-                    handleClickRemoveContact(contact)
+                    handleClickRemoveContact(contact, contacts)
                   }}
                 />
               </ListItemIcon>

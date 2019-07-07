@@ -7,7 +7,8 @@ export const selectFeedSection = (feedSection, feeds) => {
       type: FEED_SECTION_SELECT_SECTION,
       payload: feedSection
     })
-    dispatch(publishFeeds( // each feed has an optional list of sections
+    dispatch(publishFeeds( 
+      // each feed has an optional list of sections
       // clicking on a section inside a feed will turn the section on or off
       // this logic figures out current feed sections and does what it must
       // good place to introduce jest tests and refactor
