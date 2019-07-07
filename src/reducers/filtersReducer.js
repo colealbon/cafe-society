@@ -17,18 +17,15 @@ import {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_SAVED_FILTERS_SUCCESS:
-      // selectively overwrite filter cache with blockstack version
       return state.map((stateFilterItem) => {
         const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
         return overwrite ? overwrite : stateArticleItem
       })
     case FETCH_FILTERS_SUCCESS:
-      const newFilters = action.payload.filter((newFilter) => {
+      return action.payload.filter((newFilter) => {
         const filterExists = state.filter((stateFilter) => stateFilter.id === newFilter.id).length !== 0
         return !(filterExists === false)
       })
-      return state.concat(newFilters)
-
     case FILTERS_ADD_FILTER:
       return [
         ...state.filter(filter => filter.id !== action.payload.id),
