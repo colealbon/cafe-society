@@ -16,16 +16,35 @@ import {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+
     case FETCH_SAVED_FILTERS_SUCCESS:
       return state.map((stateFilterItem) => {
         const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
-        return overwrite ? overwrite : stateArticleItem
-      })
+        return overwrite ? overwrite : stateFilterItem
+      }).concat(action.payload.filter((payloadItem) => {
+        let itemExists = false
+        state.map((stateItem) => {
+          if (stateItem.id === payloadItem.id) {
+            itemExists = true
+          }
+        })
+        return !itemExists
+      }))
+
     case FETCH_FILTERS_SUCCESS:
-      return action.payload.filter((newFilter) => {
-        const filterExists = state.filter((stateFilter) => stateFilter.id === newFilter.id).length !== 0
-        return !(filterExists === false)
-      })
+      return state.map((stateFilterItem) => {
+        const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
+        return overwrite ? overwrite : stateFilterItem
+      }).concat(action.payload.filter((payloadItem) => {
+        let itemExists = false
+        state.map((stateItem) => {
+          if (stateItem.id === payloadItem.id) {
+            itemExists = true
+          }
+        })
+        return !itemExists
+      }))
+
     case FILTERS_ADD_FILTER:
       return [
         ...state.filter(filter => filter.id !== action.payload.id),

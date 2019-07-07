@@ -29,7 +29,7 @@ export default (state = [], action) => {
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
       return state.map((stateArticleItem) => {
-        const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
+        const overwrite = action.payload.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return overwrite ? overwrite : stateArticleItem
       })
 
