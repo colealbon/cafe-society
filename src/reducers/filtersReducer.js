@@ -17,16 +17,10 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_FILTERS_SUCCESS:
       const newFilters = action.payload.filter((newFilter) => {
-        const filterExists = state.filter((filterItem) => !!filterItem)
-          .filter((stateFilter) => stateFilter.id === newFilter.id).length !== 0
+        const filterExists = state.filter((stateFilter) => stateFilter.id === newFilter.id).length !== 0
         return !(filterExists === false)
       })
-      return state.map((stateFilterItem) => {
-        return action.payload.filter((payloadFilterItem) => stateFilterItem.id === payloadFilterItem.id) || stateFilterItem
-      }).concat(newFilters)
-      // return  [...state, ...action.payload].filter((obj, pos, arr) => {
-      //   return arr.map(mapObj => mapObj['id']).indexOf(obj['id']) !== pos;
-      // });
+      return state.concat(newFilters)
 
     case FILTERS_ADD_FILTER:
       return [

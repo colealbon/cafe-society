@@ -106,3 +106,7 @@ ReactDOM.render(
 )
 setTimeout(store.dispatch(fetchAccounts()), 4000)
 store.dispatch(fetchUserData())
+store.dispatch(fetchBlockstackContacts(store.getState().contacts))
+store.dispatch(fetchBlockstackFilters(store.getState().contacts))
+store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
+

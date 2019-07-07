@@ -100,11 +100,22 @@ export const fetchBlockstackFilters = (contacts) => {
     dispatch(() => {
       const fetchFilterFileQueue = []
       fetchFilterFileQueue.push(new Promise((resolve, reject) => {
-        blockstackGetFile('filters.json', {
+        blockstack.getFile('filters.json', {
           decrypt: false
         })
-        .then((fileContents) => resolve((JSON.parse(fileContents))))
-        .catch((error) => reject(error))
+        .then((fileContents) => {
+          dispatch({
+            type: FETCH_SAVED_FILTERS_SUCCESS,
+            payload: JSON.parse(fileContents)
+          })
+          resolve(JSON.parse(fileContents))
+        })
+        .catch((error) =>{
+          dispatch({
+            type: FETCH_SAVED_ARTICLES_FAIL,
+            payload: {error: error}
+          })
+        })
       }))
       if (contacts.length > 0) {
         contacts.filter((contact) => !contact.muted).map((contact) => {
