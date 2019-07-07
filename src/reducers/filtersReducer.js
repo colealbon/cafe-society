@@ -16,7 +16,7 @@ import {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_FILTERS_SUCCESS:
-      const newFilterss = action.payload.filter((newFilter) => {
+      const newFilters = action.payload.filter((newFilter) => {
         const filterExists = state.filter((filterItem) => !!filterItem)
           .filter((stateFilter) => stateFilter.id === newFilter.id).length !== 0
         return !(filterExists === false)

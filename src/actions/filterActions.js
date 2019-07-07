@@ -149,10 +149,10 @@ export const fetchBlockstackFilters = (contacts) => {
             }]
           })
         } else {
-          flattenedFilters.filter((filter) => {
+          uniqueFilters = flattenedFilters.filter((filter) => {
             if (dedup[filter.id] === undefined) {
               dedup[filter.id] = {}
-              uniqueFilters.push(filter)
+              //uniqueFilters.push(filter)
               return true
             }
             return false
