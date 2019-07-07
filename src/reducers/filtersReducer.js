@@ -18,10 +18,6 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_SAVED_FILTERS_SUCCESS:
       // selectively overwrite filter cache with blockstack version
-      alert(JSON.stringify(state.map((stateFilterItem) => {
-        const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
-        return overwrite ? overwrite : stateArticleItem
-      })))
       return state.map((stateFilterItem) => {
         const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
         return overwrite ? overwrite : stateArticleItem
