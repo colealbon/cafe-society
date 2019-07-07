@@ -23,7 +23,7 @@ export const updateContact = contact => {
   }
 }
 
-export const PUBLISH_CONTACTS_REQUEST = 'PUBLISH_CONTACTS_REQUEST'
+export const PUBLISH_CONTACTS_START = 'PUBLISH_CONTACTS_START'
 export const PUBLISH_CONTACTS_SUCCESS = 'PUBLISH_CONTACTS_SUCCESS'
 export const PUBLISH_CONTACTS_ERROR = 'PUBLISH_CONTACTS_ERROR'
 
@@ -31,7 +31,7 @@ export const publishContacts = (contacts) => {
   if (!!contacts) {
     return (dispatch) => {
       dispatch({
-        type: PUBLISH_CONTACTS_REQUEST,
+        type: PUBLISH_CONTACTS_START,
         payload: contacts
       })
       const fileContent = JSON.stringify(contacts)
@@ -100,7 +100,7 @@ export const toggleContact = (contact, contacts) => {
   }
 }
 
-export const FETCH_CONTACTS_REQUEST = 'FETCH_CONTACTS_REQUEST'
+export const FETCH_CONTACTS_START = 'FETCH_CONTACTS_START'
 export const FETCH_CONTACTS_SUCCESS = 'FETCH_CONTACTS_SUCCESS'
 export const FETCH_CONTACTS_ERROR = 'FETCH_CONTACTS_ERROR'
 
@@ -112,7 +112,7 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 export const fetchBlockstackContacts = (contacts) => {
   return (dispatch) => {
     dispatch({ 
-      type: FETCH_CONTACTS_REQUEST,
+      type: FETCH_CONTACTS_START,
       payload: {contacts: contacts}
      })
     const fetchContactFileQueue = []

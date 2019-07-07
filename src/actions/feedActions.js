@@ -24,7 +24,7 @@ export const updateFeed = feed => {
   }
 }
 
-export const PUBLISH_FEEDS_REQUEST = 'PUBLISH_FEEDS_REQUEST'
+export const PUBLISH_FEEDS_START = 'PUBLISH_FEEDS_START'
 export const PUBLISH_FEEDS_SUCCESS = 'PUBLISH_FEEDS_SUCCESS'
 export const PUBLISH_FEEDS_ERROR = 'PUBLISH_FEEDS_ERROR'
 
@@ -32,7 +32,7 @@ export const publishFeeds = (feeds) => {
   // if (!!feeds) {
   return (dispatch) => {
     dispatch({
-      type: PUBLISH_FEEDS_REQUEST,
+      type: PUBLISH_FEEDS_START,
       payload: feeds
     })
     const fileContent = JSON.stringify(feeds)
@@ -104,9 +104,10 @@ export const toggleFeed = (feed, feeds) => {
   }
 }
 
-export const FETCH_FEEDS_REQUEST = 'FETCH_FEEDS_REQUEST'
+export const FETCH_FEEDS_START = 'FETCH_FEEDS_START'
 export const FETCH_FEEDS_SUCCESS = 'FETCH_FEEDS_SUCCESS'
 export const FETCH_FEEDS_ERROR = 'FETCH_FEEDS_ERROR'
+export const FETCH_SAVED_FEEDS_SUCCESS = 'FETCH_SAVED_FEEDS_SUCCESS'
 
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
@@ -116,7 +117,7 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
   return (dispatch) => {
     dispatch({ 
-      type: FETCH_FEEDS_REQUEST,
+      type: FETCH_FEEDS_START,
       payload: {
         contacts: contacts,
         filters: filters,

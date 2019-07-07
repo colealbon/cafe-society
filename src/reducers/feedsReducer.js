@@ -1,6 +1,6 @@
 import {
   FEEDS_ADD_FEED,
-  FEEDS_UPSERT_FEED,
+  FETCH_SAVED_FEEDS_SUCCESS,
   FEEDS_REMOVE_FEED,
   FEEDS_TOGGLE_FEED,
   FETCH_FEEDS_SUCCESS
@@ -12,16 +12,34 @@ import {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+
+    case FETCH_SAVED_FEEDS_SUCCESS:
+      return state.filter((stateItem) => !Array.isArray(stateItem))
+      .map((stateItem) => {
+        const overwrite = action.payload.filter((payloadItem) => payloadItem.id === stateItem.id)[0]
+        return overwrite ? overwrite : stateItem
+      }).concat(action.payload.state.filter((stateItem) => !Array.isArray(stateItem))
+      .filter((payloadItem) => {
+        let itemExists = false
+        state.map((stateItem) => {
+          if (stateItem.id === payloadItem.id) {
+            itemExists = true
+          }
+        })
+        return !itemExists
+      }))
+
     case FETCH_FEEDS_SUCCESS:
-      const newFeeds = action.payload.filter((newFeed) => {
-        const feedExists = state.filter((feedItem) => !!feedItem)
-          .filter((stateFeed) => stateFeed.id === newFeed.id).length !== 0
-        return !(feedExists === false)
-      })
-      return state.map((stateFeedItem) => {
-        //alert(JSON.stringify(action.payload.filter((feedItem) => !!feedItem).filter((payloadFeedItem) => stateFeedItem.id === payloadFeedItem.id)))
-        return action.payload.filter((payloadFeedItem) => stateFeedItem.id === payloadFeedItem.id) || stateFeedItem
-      }).concat(newFeeds)
+      return state.filter((stateItem) => !Array.isArray(stateItem))
+      .concat(action.payload.filter((payloadItem) => {
+        let itemExists = false
+        state.map((stateItem) => {
+          if (stateItem.id === payloadItem.id) {
+            itemExists = true
+          }
+        })
+        return !itemExists
+      }))
 
     case FEEDS_ADD_FEED:
       return [

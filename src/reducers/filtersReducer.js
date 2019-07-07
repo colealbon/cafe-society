@@ -18,12 +18,12 @@ export default (state = initialState, action) => {
   switch (action.type) {
 
     case FETCH_SAVED_FILTERS_SUCCESS:
-      return state.map((stateFilterItem) => {
+      return state.filter((stateItem) => !Array.isArray(stateItem)).map((stateFilterItem) => {
         const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
         return overwrite ? overwrite : stateFilterItem
       }).concat(action.payload.filter((payloadItem) => {
         let itemExists = false
-        state.map((stateItem) => {
+        state.filter((stateItem) => !Array.isArray(stateItem)).map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
@@ -32,12 +32,9 @@ export default (state = initialState, action) => {
       }))
 
     case FETCH_FILTERS_SUCCESS:
-      return state.map((stateFilterItem) => {
-        const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
-        return overwrite ? overwrite : stateFilterItem
-      }).concat(action.payload.filter((payloadItem) => {
+      return state.filter((stateItem) => !Array.isArray(stateItem)).concat(action.payload.filter((payloadItem) => {
         let itemExists = false
-        state.map((stateItem) => {
+        state.filter((stateItem) => !Array.isArray(stateItem)).map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }

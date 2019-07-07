@@ -160,7 +160,7 @@ export const PUBLISH_ARTICLES_FAIL = 'PUBLISH_ARTICLES_FAIL'
 export const publishArticles = (articles) => {
   return (dispatch) => {
     dispatch({
-      type: 'PUBLISH_ARTICLES_REQUEST',
+      type: 'PUBLISH_ARTICLES_START',
       payload: articles
     })
     const fileContent = JSON.stringify(articles)

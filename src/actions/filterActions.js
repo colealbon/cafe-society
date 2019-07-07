@@ -50,14 +50,14 @@ export const removeFilter = (filter, filters) => {
     dispatch(publishFilters(filters.filter((filterItem) => filterItem.id !== filter.id)))
   }
 }
-export const PUBLISH_FILTERS_REQUEST = 'PUBLISH_FILTERS_REQUEST'
+export const PUBLISH_FILTERS_START = 'PUBLISH_FILTERS_START'
 export const PUBLISH_FILTERS_SUCCESS = 'PUBLISH_FILTERS_SUCCESS'
 export const PUBLISH_FILTERS_ERROR = 'PUBLISH_FILTERS_ERROR'
 
 export const publishFilters = (filters) => {
   return (dispatch) => {
     dispatch({
-      type: PUBLISH_FILTERS_REQUEST,
+      type: PUBLISH_FILTERS_START,
       payload: filters
     })
     const fileContent = JSON.stringify(filters)
@@ -87,7 +87,7 @@ export const toggleFilter = (filter, filters) => {
   }
 }
 
-export const FETCH_FILTERS_REQUEST = 'FETCH_FILTERS_REQUEST'
+export const FETCH_FILTERS_START = 'FETCH_FILTERS_START'
 export const FETCH_FILTERS_SUCCESS = 'FETCH_FILTERS_SUCCESS'
 export const FETCH_FILTERS_ERROR = 'FETCH_FILTERS_ERROR'
 export const FETCH_SAVED_FILTERS_SUCCESS = 'FETCH_SAVED_FILTERS_SUCCESS'
@@ -98,7 +98,7 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 export const fetchBlockstackFilters = (contacts) => {
   return (dispatch) => {
     dispatch({ 
-      type: FETCH_FILTERS_REQUEST,
+      type: FETCH_FILTERS_START,
       payload: contacts 
     })
     dispatch(() => {
