@@ -97,7 +97,10 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 
 export const fetchBlockstackFilters = (contacts) => {
   return (dispatch) => {
-    dispatch({ type: FETCH_FILTERS_REQUEST })
+    dispatch({ 
+      type: FETCH_FILTERS_REQUEST,
+      payload: contacts 
+    })
     dispatch(() => {
       const fetchFilterFileQueue = []
       fetchFilterFileQueue.push(new Promise((resolve, reject) => {
