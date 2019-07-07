@@ -18,7 +18,7 @@ export default (state = initialState, action) => {
           .filter((stateFeed) => stateFeed.id === newFeed.id).length !== 0
         return !(feedExists === false)
       })
-      const stateFeeds = state.map((stateFeedItem) => {
+      return state.map((stateFeedItem) => {
         //alert(JSON.stringify(action.payload.filter((feedItem) => !!feedItem).filter((payloadFeedItem) => stateFeedItem.id === payloadFeedItem.id)))
         return action.payload.filter((payloadFeedItem) => stateFeedItem.id === payloadFeedItem.id) || stateFeedItem
       }).concat(newFeeds)
