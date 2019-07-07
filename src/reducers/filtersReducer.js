@@ -16,19 +16,9 @@ import {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_FILTERS_SUCCESS:
-      let dedup = {}
-      let uniqueFilters = []
-      action.payload.map((payloadItem) => {
-        if (!dedupe[payloadItem.id]) {
-          uniqueFilters.push(payloadItem)
-        }
-      })
-      state.map((stateItem) => {
-        if (!dedup[stateItem.id]) {
-          uniqueFilters.push(stateItem)
-        }
-      })
-      return uniqueFilters.filter((filterItem) => !Array.isArray(filterItem))
+      return  [...state, ...action.payload].filter((obj, pos, arr) => {
+        return arr.map(mapObj => mapObj['id']).indexOf(obj['id']) !== pos;
+      });
 
     case FILTERS_ADD_FILTER:
       return [
