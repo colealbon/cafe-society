@@ -49,8 +49,10 @@ export default (state = initialState, action) => {
       ]
 
     case FEEDS_REMOVE_FEED:
-      return state
-        .filter(feed => feed.id !== action.payload.id)
+      return state.filter(stateItem => {
+        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
+        return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
+      })
 
     case FEEDS_TOGGLE_FEED:
       return state.map(feed => feed.id === action.payload.feed.id ? { ...feed, muted: !feed.muted || false } : feed)

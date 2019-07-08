@@ -40,8 +40,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickRemoveAllFeeds: (feeds) => {
       removeFeed(feeds, feeds)
     },
-    handleClickSetFeed: (feed) => {
-      dispatch(selectFeedSection(feed))
+    handleClickSetFeed: (feed, feeds) => {
+      dispatch(selectFeedSection(feed, feeds))
     }
   }
 }

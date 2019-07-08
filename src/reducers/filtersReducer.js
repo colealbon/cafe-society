@@ -48,7 +48,10 @@ export default (state = initialState, action) => {
         action.payload
       ]
     case FILTERS_REMOVE_FILTER:
-      return state.filter(filter => filter.id !== action.payload.id)
+      return state.filter(stateItem => {
+        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
+        return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
+      })
 
     case FILTERS_TOGGLE_FILTER:
       return state.map(filter => filter.id === action.payload.id ? { ...filter, muted: !filter.muted || false } : filter)

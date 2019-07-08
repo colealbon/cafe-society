@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Check, PlaylistAddCheck, VoiceOverOff } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { removeArticle, toggleArticle } from '../../actions/articleActions'
+import { removeArticle, toggleArticle, markArticleRead } from '../../actions/articleActions'
 import { addFilter} from '../../actions/filterActions'
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -26,14 +26,14 @@ const mapDispatchToProps = (dispatch) => {
     handleClickShadowBanDomain: (link, selectedSection, filters) => {
       dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
-    handleClickRemoveArticle: (article) => {
-      dispatch(removeArticle(article))
+    handleClickRemoveArticle: (article, articles) => {
+      dispatch(removeArticle(article, articles))
     },
     handleClickToggleArticle: (article, articles) => {
       dispatch(toggleArticle(article, articles))
     },
     handleClickMarkAllRead: (articles) => {
-      dispatch(markArticleRead(articles))
+      dispatch(markArticleRead(articles, articles))
     }
   }
 }

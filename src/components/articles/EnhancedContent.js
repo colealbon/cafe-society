@@ -13,7 +13,7 @@ import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
 import { RemoveCircle } from '@material-ui/icons'
 
-const mapStateToProps = ({ selectedSection, articles }) => {
+const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
     selectedSection: selectedSection,
     articles: articles,
@@ -26,17 +26,17 @@ const mapDispatchToProps = (dispatch) => {
     handleClickShadowBanDomain: (link, selectedSection, filters) => {
       dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
-    handleClickRemoveArticle: (article) => {
-      dispatch(removeArticle(article))
+    handleClickRemoveArticle: (article, articles) => {
+      dispatch(removeArticle(article, articles))
     },
     handleClickToggleArticle: (article, articles) => {
       dispatch(toggleArticle(article, articles))
     },
-    handleClickMarkAllRead: (articles) => {
-      dispatch(markArticleRead(articles))
+    handleClickMarkAllRead: (articles, allArticles) => {
+      dispatch(markArticleRead(articles, allArticles))
     },
     handleClickRemoveAllArticles: (articles) => {
-      dispatch(removeArticle(articles))
+      dispatch(removeArticle(articles, articles))
     }
   }
 }
@@ -60,17 +60,17 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveAllAr
             <Card>
               <CardContent>
                 <Typography variant="h6" >
-                  <IconButton title="mark article as read" onClick={() => handleClickToggleArticle(article)}>
+                  <IconButton title="mark article as read" onClick={() => handleClickToggleArticle(article, articles)}>
                     <Check
                       id='checkToggleArticle'
                       style={{ color: 'green' }}
                     />
                   </IconButton>
-                  <IconButton title={`delete ${name}`} onClick={() => handleClickRemoveArticle(article)}>
+                  <IconButton title={`delete ${name}`} onClick={() => handleClickRemoveArticle(article, articles)}>
                     <RemoveCircle></RemoveCircle>
                   </IconButton>
                   <a href={article.link} target="cafe-society-article">{article.title}</a>
-                  <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection)} >
+                  <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
                 </Typography>

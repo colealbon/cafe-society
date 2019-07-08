@@ -2,7 +2,8 @@ import {
   ARTICLES_REMOVE_ARTICLE,
   ARTICLES_TOGGLE_ARTICLE,
   FETCH_ARTICLES_SUCCESS,
-  FETCH_SAVED_ARTICLES_SUCCESS
+  FETCH_SAVED_ARTICLES_SUCCESS,
+  ARTICLES_MARK_READ
 } from '../actions/articleActions'
 
 import {
@@ -72,10 +73,18 @@ export default (state = [], action) => {
     })
     return state.concat(newArticles)
 
+    case ARTICLES_MARK_READ:
+      return state.map(stateItem => {
+        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
+        let muteArticle = payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length !== 0
+        return (muteArticle === true) ? { ...stateItem, muted: true} : stateItem
+      })
 
     case ARTICLES_REMOVE_ARTICLE:
-      return state
-      .filter(article => article.id !== action.payload.id);
+      return state.filter(stateItem => {
+        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
+        return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
+      })
 
     case ARTICLES_TOGGLE_ARTICLE:
       return state.map(article => article.id === action.payload.id ? { ...article, muted: !article.muted || false } : article )

@@ -19,14 +19,8 @@ export default (state = initialState, action) => {
       ]
     case CONTACTS_REMOVE_CONTACT:
       return state.filter(stateItem => {
-        let matchId = false
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        payload.map((payloadItem) => {
-          if (payloadItem.id === stateItem.id) {
-            matchId = true
-          }
-        })
-        return !matchId
+        return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
       })
 
     case CONTACTS_TOGGLE_CONTACT:

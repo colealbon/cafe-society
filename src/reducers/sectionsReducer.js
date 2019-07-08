@@ -44,8 +44,10 @@ const initialState = [
           action.payload
         ]
       case SECTIONS_REMOVE_SECTION:
-        return state
-          .filter(section => section.id !== action.payload.id)
+        return state.filter(stateItem => {
+          let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
+          return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
+        })
   
       case SECTIONS_TOGGLE_SECTION:
         return state.map(section => section.id === action.payload.id ? { ...section, muted: !section.muted || false } : section)

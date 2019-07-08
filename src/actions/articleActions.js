@@ -2,6 +2,7 @@ let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
 import * as blockstack from 'blockstack'
+import { BottomNavigationAction } from '@material-ui/core';
 
 const FETCH_FEED_CONTENT_FAILED = 'FETCH_FEED_CONTENT_FAILED'
 
@@ -25,16 +26,18 @@ const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge:
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 
-export const removeArticle = article => {
+export const removeArticle = (removeArticle, articles) => {
+  const removeArticles = [].concat(removeArticle)
   return (dispatch) => {
     dispatch({
       type: ARTICLES_REMOVE_ARTICLE,
-      payload: article
+      payload: removeArticle
     })
-    dispatch({
-      type: ARTICLES_REMOVE_ARTICLE,
-      payload: article
-    })
+    if (!!articles) {
+      dispatch(publishArticles(articles.filter(articleItem => {
+        return removeArticles.filter((removeArticleItem) => (removeArticleItem.id === articleItem.id)).length === 0
+      })))
+    }
   }
 }
 
@@ -46,17 +49,11 @@ export const markArticleRead = (articles, allArticles) => {
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    const newArticles = allArticles.map((allArticlesItem) => {
-      let articleMatched = false
-      articles = [].concat(articles)
-      articles.map((articlesItem) => {
-        if (articlesItem.id === allArticlesItem.id) {
-          articleMatched = true
-        }
-      })
-      return (articleMatched === true ) ? { muted: true, ...allArticlesItem} : stateArticle
-    })
-    dispatch(publishArticles(newArticles))
+    dispatch(publishArticles(allArticles.map(allArticlesItem => {
+      let payload = [].concat(articles)
+      let muteArticle = payload.filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
+      return (muteArticle === true) ? { ...allArticlesItem, muted: true} : allArticlesItem
+    })))
   }
 }
 
