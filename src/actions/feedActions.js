@@ -76,16 +76,17 @@ export const addFeed = (feed, feeds) => {
 
 export const FEEDS_REMOVE_FEED = 'FEEDS_REMOVE_FEED'
 
-export const removeFeed = (feed, feeds) => {
+export const removeFeed = (removeFeed, feeds) => {
+  const removeFeeds = [].concat(removeFeed)
   return (dispatch) => {
     dispatch({
       type: FEEDS_REMOVE_FEED,
-      payload: feed
+      payload: removeFeed
     })
-    if (feed === feeds) {
-      dispatch(publishFeeds([]))
-    } else {
-      dispatch(publishFeeds(feeds.filter((filterFeed) => filterFeed.id !== feed.id)))
+    if (!!feeds) {
+      dispatch(publishFeeds(feeds.filter(feedItem => {
+        return removeFeeds.filter((removeFeedItem) => (removeFeedItem.id === feedItem.id)).length === 0
+      })))
     }
   }
 }

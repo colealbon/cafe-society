@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(toggleFeed(feed, feeds))
     },
     handleClickRemoveAllFeeds: (feeds) => {
-      removeFeed(feeds, feeds)
+      dispatch(removeFeed(feeds, feeds))
     },
     handleClickSetFeed: (feed, feeds) => {
       dispatch(selectFeedSection(feed, feeds))

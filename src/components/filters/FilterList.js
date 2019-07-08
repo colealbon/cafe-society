@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(toggleFilter(filter, filters))
     },
     handleClickRemoveAllFilters: (filters) => {
-      dispatch(removeFilter(filter, filters))
+      dispatch(removeFilter(filters, filters))
     },
     handleClickSetFilterSection: (filter, filters) => {
       dispatch(selectFilterSection(filter, filters))
