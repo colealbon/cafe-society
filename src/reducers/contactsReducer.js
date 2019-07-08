@@ -29,9 +29,9 @@ export default (state = initialState, action) => {
     case FETCH_SAVED_CONTACTS_SUCCESS:
       return state.filter((stateItem) => !Array.isArray(stateItem))
       .map((stateItem) => {
-        const overwrite = action.payload.filter((payloadItem) => payloadItem.id === stateItem.id)[0]
-        return overwrite ? overwrite : stateItem
-      }).concat(action.payload.state.filter((stateItem) => !Array.isArray(stateItem))
+        const overwrite = action.payload.filter((payloadItem) => payloadItem.id === stateItem.id).filter(payloadItem => !!payloadItem.title)[0]
+        return (!!overwrite) ? overwrite : stateItem
+      }).concat((action.payload)
       .filter((payloadItem) => {
         let itemExists = false
         state.map((stateItem) => {

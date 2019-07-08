@@ -65,7 +65,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
                       style={{ color: 'green' }}
                     />
                   </IconButton>
-                  <a href={article.link} target="newsfeed-demo-article">{article.title.replace(/&apos;/g, "\'").replace(/&amp;/g, "&")}</a>
+                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "\'").replace(/&amp;/g, "&") : 'empty'}</a>
                   <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
