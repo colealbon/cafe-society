@@ -82,11 +82,10 @@ const store = createStore(
 
 const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
-    //store.dispatch(fetchUserData())
-    store.dispatch(fetchArticles(store.getState().contacts))
     store.dispatch(fetchBlockstackContacts(store.getState().contacts))
     store.dispatch(fetchBlockstackFilters(store.getState().contacts))
     store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
+    store.dispatch(fetchArticles(store.getState().feeds, store.getState().filters))
   }
   store.dispatch(fetchAccounts())
 }

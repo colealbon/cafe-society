@@ -32,10 +32,7 @@ export const addFilter = (filter, filters) => {
       payload: filter
     })
     dispatch(updateFilter(''))
-    dispatch(publishFilters([
-      ...filters.filter(filterItem => filterItem.id !== filter.id),
-      filter
-    ]))
+    dispatch(publishFilters(filters.filter(filterItem => filterItem.id !== filter.id).concat(filter)))
   }
 }
 
@@ -93,7 +90,7 @@ export const FETCH_FILTERS_ERROR = 'FETCH_FILTERS_ERROR'
 export const FETCH_SAVED_FILTERS_SUCCESS = 'FETCH_SAVED_FILTERS_SUCCESS'
 
 const slowBlockstackGetFile = (filename, options) => blockstack.getFile(filename, options)
-const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
+const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: (1000 * 60 * 60) }) //  miliseconds * seconds * minutes
 
 export const fetchBlockstackFilters = (contacts) => {
   return (dispatch) => {
@@ -159,8 +156,7 @@ export const fetchBlockstackFilters = (contacts) => {
             payload: [{
               id: 'measles',
               text: 'measles',
-              fields: [{id:'title', name:'title', muted: false}],
-              sections: [{id:'politics', name:'politics'}]
+              fields: [{id:'title', name:'title', muted: false}]
             }]
           })
         } else {

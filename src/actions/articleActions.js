@@ -147,6 +147,11 @@ export const fetchArticles = (feeds, filters) => {
         )
       }
     })
+    Promise.all(articlesRequestQueue).then(() => {
+      dispatch({
+        type: 'FETCH_ARTICLES_COMPLETE'
+      })
+    })
   }
 }
 
