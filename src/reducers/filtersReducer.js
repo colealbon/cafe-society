@@ -18,12 +18,12 @@ export default (state = initialState, action) => {
   switch (action.type) {
 
     case FETCH_SAVED_FILTERS_SUCCESS:
-      return state.filter((stateItem) => !Array.isArray(stateItem)).map((stateFilterItem) => {
+      return state.map((stateFilterItem) => {
         const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
-        return overwrite ? overwrite : stateFilterItem
+        return (!!overwrite) ? overwrite : stateFilterItem
       }).concat(action.payload.filter((payloadItem) => {
         let itemExists = false
-        state.filter((stateItem) => !Array.isArray(stateItem)).map((stateItem) => {
+        state.map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }

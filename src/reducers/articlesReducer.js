@@ -32,8 +32,7 @@ export default (state = [], action) => {
       return state.map((stateArticleItem) => {
         const overwrite = action.payload.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return (!!overwrite) ? overwrite : stateArticleItem
-      }).concat((action.payload)
-      .filter((payloadItem) => {
+      }).concat((action.payload).filter((payloadItem) => {
         let itemExists = false
         state.map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
