@@ -70,7 +70,7 @@ export const toggleArticle = (articles, allArticles) => {
       let articleMatched = false
       articles = [].concat(articles)
       const newArticles = articles.map((toggleArticle) => {
-        if (toggleArticle.id === stateArticle) {
+        if (toggleArticle.id === stateArticle.id) {
           articleMatched = true
         }
       })
@@ -124,7 +124,7 @@ export const fetchArticles = (feeds, filters) => {
             .then((feedContent) => {
               if (!!feedContent ) {
                 if (!!feedContent.items) {
-                  const articles = feedContent.items.map((item) => Object.assign({id: item.link, feed: feed, muted: false}, item ))
+                  const articles = feedContent.items.map((item) => Object.assign({id: item.guid || item.link, feed: feed, muted: false}, item ))
                   dispatch({
                     type: FETCH_ARTICLES_SUCCESS,
                     payload: {articles: articles, filters: filters}
