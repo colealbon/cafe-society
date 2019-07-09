@@ -31,7 +31,7 @@ export const addFilter = (filter, filters) => {
       type: FILTERS_ADD_FILTER,
       payload: filter
     })
-    dispatch(updateFilter({text: ''}))
+    dispatch(updateFilter(''))
     dispatch(publishFilters([
       ...filters.filter(filterItem => filterItem.id !== filter.id),
       filter
