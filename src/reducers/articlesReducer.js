@@ -25,14 +25,49 @@ import {
 } from '../actions/filterFieldActions'
 import { stringify } from 'querystring';
 
+const applyFilters = (articleItem, filters) => {
+  const articleItems = [].concat(articleItem)
+  const blockReasons = action.payload.filters.filter((filterItem) => {
+    if ((filterItem.fields || []).length == 0) {
+      return [...action.payload.articles].filter((articleField) => {
+        if (!!action.payload.articles[`${articleField}`]) {
+          return (action.payload.articles[`${articleField}`].indexOf(filterItem.text) !== -1)
+        }
+      }).length !== 0
+    }
+    return filterItem.fields.filter((filterField) => {
+      if (!!articleItem[`${filterField}`]) {
+        if ((filterItem.sections || []).length !== 0) {
+          return (articleItem[`${filterField}`].indexOf(filterItem.text) !== -1)
+        }
+        (filterItem.sections || []).map((filterSection) => {
+          if (!!articleItem.feed) {
+            if (!!articleItem.feed.sections) {
+              articleItem.feed.sections.map((articleSection) => {
+                if (filterSection.id === articleSection.id) {
+                  return (action.payload[`${filterField}`].indexOf(filterItem.text) !== -1)
+                }
+              })
+            }
+          }
+        })
+      }
+    }).length !== 0
+  })
+  if ((blockReasons || []).length !== 0) {
+    return {...articleItem, blockReasons: {blockReasons}}
+  }
+  return articleItem
+}
+
 export default (state = [], action) => {
   switch (action.type) {
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
       return state.map((stateArticleItem) => {
-        const overwrite = action.payload.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
+        const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return (!!overwrite) ? overwrite : stateArticleItem
-      }).concat((action.payload).filter((payloadItem) => {
+      }).concat((action.payload.articles).filter((payloadItem) => {
         let itemExists = false
         state.map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
@@ -40,44 +75,14 @@ export default (state = [], action) => {
           }
         })
         return !itemExists
-      }))
+      })).map((articleItem) => applyFilters(articleItem, filters))
 
     case FETCH_ARTICLES_SUCCESS:
       const newArticles = action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
       }).map((articleItem) => {
-        const blockReasons = action.payload.filters.filter((filterItem) => {
-          if ((filterItem.fields || []).length == 0) {
-            return [...action.payload.articles].filter((articleField) => {
-              if (!!action.payload.articles[`${articleField}`]) {
-                return (action.payload.articles[`${articleField}`].indexOf(filterItem.text) !== -1)
-              }
-            }).length !== 0
-          }
-          return filterItem.fields.filter((filterField) => {
-            if (!!articleItem[`${filterField}`]) {
-              if ((filterItem.sections || []).length !== 0) {
-                return (articleItem[`${filterField}`].indexOf(filterItem.text) !== -1)
-              }
-              (filterItem.sections || []).map((filterSection) => {
-                if (!!articleItem.feed) {
-                  if (!!articleItem.feed.sections) {
-                    articleItem.feed.sections.map((articleSection) => {
-                      if (filterSection.id === articleSection.id) {
-                        return (action.payload[`${filterField}`].indexOf(filterItem.text) !== -1)
-                      }
-                    })
-                  }
-                }
-              })
-            }
-          }).length !== 0
-        })
-      if ((blockReasons || []).length !== 0) {
-        return {...articleItem, blockReasons: {blockReasons}}
-      }
-      return articleItem
+        return applyFilters(articleItem, filters)
     })
     return state.concat(newArticles)
 

@@ -97,7 +97,10 @@ export const fetchArticles = (feeds, filters) => {
       .then((fileContents) => {
         dispatch({
           type: FETCH_SAVED_ARTICLES_SUCCESS,
-          payload: {articles: JSON.parse(fileContents)}
+          payload: {
+            articles:JSON.parse(fileContents),
+            filters: filters
+          }
         })
         resolve(JSON.parse(fileContents))
       })
