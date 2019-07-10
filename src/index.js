@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { fetchUserData } from './actions/blockstackUserActions'
 import { fetchAccounts } from './actions/contractActions'
-import { fetchBlockstackFeeds } from './actions/feedActions'
-import { fetchBlockstackFilters } from './actions/filterActions'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { createLogger } from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
@@ -34,7 +32,6 @@ import { MuiThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from './theme'
 import sectionReducer from './reducers/sectionReducer'
-import { fetchArticles } from './actions/articleActions'
 import { fetchBlockstackContacts } from './actions/contactActions'
 import createIdbStorage from '@piotr-cz/redux-persist-idb-storage/src'
 import * as blockstack from "blockstack";
@@ -83,9 +80,9 @@ const store = createStore(
 const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
     store.dispatch(fetchBlockstackContacts(store.getState().contacts))
-    store.dispatch(fetchBlockstackFilters(store.getState().contacts))
-    store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
-    store.dispatch(fetchArticles(store.getState().feeds, store.getState().filters))
+    //store.dispatch(fetchBlockstackFilters(store.getState().contacts))
+    //store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
+    //store.dispatch(fetchArticles(store.getState().feeds, store.getState().filters))
   }
   store.dispatch(fetchAccounts())
 }

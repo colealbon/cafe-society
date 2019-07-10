@@ -1,6 +1,8 @@
 import * as blockstack from 'blockstack'
 var memoize = require("memoizee");
 
+import { fetchBlockstackFeeds } from './feedActions'
+
 export const FILTER_UPDATE_FILTER = 'FILTER_UPDATE_FILTER'
 
 export const updateFilter = text => {
@@ -150,7 +152,7 @@ export const fetchBlockstackFilters = (contacts) => {
         const flattenedFilters = fetchedFilters.reduce((a, b) => !a ? b : a.concat(b))
         const uniqueFilters = []
         let dedup = {}
-          if ((flattenedFilters || []).length < 1) {
+        if ((flattenedFilters || []).length < 1) {
           dispatch({
             type: FETCH_FILTERS_SUCCESS,
             payload: [{
@@ -173,11 +175,12 @@ export const fetchBlockstackFilters = (contacts) => {
             payload: uniqueFilters
           })
           dispatch(publishFilters(uniqueFilters))
+          dispatch(fetchBlockstackFeeds(contacts, uniqueFilters))
         }
       }).catch((error) => {
         dispatch({
-          type: FETCH_FILTERS_SUCCESS,
-          payload: uniqueFilters
+          type: FETCH_FILTERS_ERROR,
+          payload: error
         })
       })
     })

@@ -115,14 +115,13 @@ const slowBlockstackGetFile = (filename, options) => {
 }
 const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 
-export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
+export const fetchBlockstackFeeds = (contacts, filters) => {
   return (dispatch) => {
     dispatch({ 
       type: FETCH_FEEDS_START,
       payload: {
         contacts: contacts,
-        filters: filters,
-        feeds: feeds
+        filters: filters
       }
      })
     const fetchFeedFileQueue = []
@@ -136,9 +135,6 @@ export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
         } else {
           resolve(
             JSON.parse(fileContents)
-            .map((feed) => {
-              return(feed)
-            }).concat(feeds)
           )
         }
       })
@@ -164,7 +160,7 @@ export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
                   feed.source_contact = Object.assign(contact)
                   feed.muted = true
                   return(feed)
-                }).concat(feeds)
+                })
               )
             }
           })
@@ -213,7 +209,6 @@ export const fetchBlockstackFeeds = (contacts, filters, feeds) => {
           }
         ]
         dispatch(fetchArticles(theUniqueFeeds, filters))
-        dispatch(publishFeeds(theUniqueFeeds))
         dispatch({
           type: FETCH_FEEDS_SUCCESS,
           payload: theUniqueFeeds

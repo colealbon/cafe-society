@@ -1,5 +1,6 @@
 import * as blockstack from 'blockstack'
 var memoize = require("memoizee")
+import { fetchBlockstackFilters } from './filterActions'
 
 export const CONTACT_SELECT_CONTACT = 'CONTACT_SELECT_CONTACT'
 
@@ -182,6 +183,7 @@ export const fetchBlockstackContacts = (contacts) => {
           payload: uniqueContacts
         })
         dispatch(publishContacts(uniqueContacts))
+        dispatch(fetchBlockstackFilters(uniqueContacts))
       } else {
         dispatch({
           type: FETCH_CONTACTS_ERROR,
