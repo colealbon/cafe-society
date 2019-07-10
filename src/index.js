@@ -80,9 +80,6 @@ const store = createStore(
 const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
     store.dispatch(fetchBlockstackContacts(store.getState().contacts))
-    //store.dispatch(fetchBlockstackFilters(store.getState().contacts))
-    //store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
-    //store.dispatch(fetchArticles(store.getState().feeds, store.getState().filters))
   }
   store.dispatch(fetchAccounts())
 }
@@ -103,7 +100,3 @@ ReactDOM.render(
 )
 setTimeout(store.dispatch(fetchAccounts()), 4000)
 store.dispatch(fetchUserData())
-// store.dispatch(fetchBlockstackContacts(store.getState().contacts))
-// store.dispatch(fetchBlockstackFilters(store.getState().contacts))
-// store.dispatch(fetchBlockstackFeeds(store.getState().contacts, store.getState().filters, store.getState().feeds))
-

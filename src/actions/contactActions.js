@@ -187,7 +187,7 @@ export const fetchBlockstackContacts = (contacts) => {
       } else {
         dispatch({
           type: FETCH_CONTACTS_ERROR,
-          payload: 'no contacts found'
+          payload: error
         })
       }
     })

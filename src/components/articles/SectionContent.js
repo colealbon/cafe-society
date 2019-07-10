@@ -15,7 +15,7 @@ import VerticalSpace from '../VerticalSpace'
 const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
     selectedSection: selectedSection,
-    articles: articles.filter(article => !article.muted).filter(article => article.visible).filter(article => (article.blockReasons || []).length < 1),
+    articles: articles.filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1),
     allArticles: articles,
     filters: filters
   }
@@ -65,7 +65,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
                       style={{ color: 'green' }}
                     />
                   </IconButton>
-                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "\'").replace(/&amp;/g, "&") : 'empty'}</a>
+                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "\'").replace(/&amp;/g, "&") : ''}</a>
                   <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
