@@ -1,3 +1,5 @@
+var flatten = require('@flatten/array')
+
 import {
   ARTICLES_REMOVE_ARTICLE,
   ARTICLES_TOGGLE_ARTICLE,
@@ -24,45 +26,49 @@ import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
 
-const applyFilters = (articleItem, filters) => {
-  const blockReasons = filters.filter((filterItem) => {
-    if ((filterItem.fields || []).length == 0) {
-      return [...articleItem].filter((articleField) => {
-        if (!!action.payload.articles[`${articleField}`]) {
-          return (articleItem[`${articleField}`].indexOf(filterItem.text) !== -1)
-        }
-      }).length !== 0
-    }
-    return filterItem.fields.filter((filterField) => {
-      if (!!articleItem[`${filterField}`]) {
-        if ((filterItem.sections || []).length !== 0) {
-          return (articleItem[`${filterField}`].indexOf(filterItem.text) !== -1)
-        }
-        (filterItem.sections || []).map((filterSection) => {
-          if (!!articleItem.feed) {
-            if (!!articleItem.feed.sections) {
-              articleItem.feed.sections.map((articleSection) => {
-                if (filterSection.id === articleSection.id) {
-                  return (action.payload[`${filterField}`].indexOf(filterItem.text) !== -1)
-                }
-              })
-            }
+const applyFilters = (articles, filters) => {
+  articles = flatten(articles)
+  //return articles
+  return articles.map(articleItem =>  {
+    const blockReasons = filters.filter((filterItem) => {
+      if (!!filterItem.fields && filterItem.fields !== []) {
+        return Object.keys(articleItem).filter((articleField) => {
+          if (!!articleItem[`${articleField}`]) {
+            return (articleItem[`${articleField}`].indexOf(filterItem.text) !== -1)
           }
-        })
+        }).length !== 0
       }
-    }).length !== 0
+      return filterItem.fields.filter((filterField) => {
+        if (!!articleItem[`${filterField}`]) {
+          if ((filterItem.sections || []).length !== 0) {
+            return (articleItem[`${filterField}`].indexOf(filterItem.text) !== -1)
+          }
+          (filterItem.sections || []).map((filterSection) => {
+            if (!!articleItem.feed) {
+              if (!!articleItem.feed.sections) {
+                articleItem.feed.sections.map((articleSection) => {
+                  if (filterSection.id === articleSection.id) {
+                    return (articleItem[`${filterField}`].indexOf(filterItem.text) !== -1)
+                  }
+                })
+              }
+            }
+          })
+        }
+      })
+    })
+    if (!!blockReasons) {
+      alert(JSON.stringify(blockReasons))
+    }
+    return (blockReasons.length !== 0 ) ? {...articleItem, blockReasons: {blockReasons}} : articleItem
   })
-  if ((blockReasons || []).length !== 0) {
-    return {...articleItem, blockReasons: {blockReasons}}
-  }
-  return articleItem
 }
 
 export default (state = [], action) => {
   switch (action.type) {
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
-      return state.map((stateArticleItem) => {
+      alert(JSON.stringify(applyFilters(state.map((stateArticleItem) => {
         const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return (!!overwrite) ? overwrite : stateArticleItem
       }).concat((action.payload.articles).filter((payloadItem) => {
@@ -73,19 +79,27 @@ export default (state = [], action) => {
           }
         })
         return !itemExists
-      }))
-      /map((articleItem) => applyFilters(articleItem, action.payload.filters))
+      })),  action.payload.filters)))
+
+      return flatten(state.map((stateArticleItem) => {
+        const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
+        return (!!overwrite) ? overwrite : stateArticleItem
+      }).concat((action.payload.articles).filter((payloadItem) => {
+        let itemExists = false
+        state.map((stateItem) => {
+          if (stateItem.id === payloadItem.id) {
+            itemExists = true
+          }
+        })
+        return !itemExists
+      })))
 
     case FETCH_ARTICLES_SUCCESS:
       const newArticles = action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
       })
-      .map((articleItem) => {
-        alert(JSON.stringify(filters))
-        return applyFilters(articleItem, action.payload.filters)
-    })
-    return state.concat(newArticles)
+      return applyFilters(state.concat(newArticles))
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
