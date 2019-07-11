@@ -2,7 +2,6 @@ let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
 import * as blockstack from 'blockstack'
-import { BottomNavigationAction } from '@material-ui/core';
 
 const FETCH_FEED_CONTENT_FAILED = 'FETCH_FEED_CONTENT_FAILED'
 
