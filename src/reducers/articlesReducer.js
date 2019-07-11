@@ -23,15 +23,13 @@ import {
 import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
-import { stringify } from 'querystring';
 
 const applyFilters = (articleItem, filters) => {
-  const articleItems = [].concat(articleItem)
-  const blockReasons = action.payload.filters.filter((filterItem) => {
+  const blockReasons = filters.filter((filterItem) => {
     if ((filterItem.fields || []).length == 0) {
-      return [...action.payload.articles].filter((articleField) => {
+      return [...articleItem].filter((articleField) => {
         if (!!action.payload.articles[`${articleField}`]) {
-          return (action.payload.articles[`${articleField}`].indexOf(filterItem.text) !== -1)
+          return (articleItem[`${articleField}`].indexOf(filterItem.text) !== -1)
         }
       }).length !== 0
     }
@@ -75,14 +73,17 @@ export default (state = [], action) => {
           }
         })
         return !itemExists
-      })).map((articleItem) => applyFilters(articleItem, filters))
+      }))
+      /map((articleItem) => applyFilters(articleItem, action.payload.filters))
 
     case FETCH_ARTICLES_SUCCESS:
       const newArticles = action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
-      }).map((articleItem) => {
-        return applyFilters(articleItem, filters)
+      })
+      .map((articleItem) => {
+        alert(JSON.stringify(filters))
+        return applyFilters(articleItem, action.payload.filters)
     })
     return state.concat(newArticles)
 

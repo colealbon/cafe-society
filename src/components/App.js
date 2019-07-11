@@ -14,7 +14,7 @@ class App extends Component {
     if(!session.isUserSignedIn() && session.isSignInPending()) {
       session.handlePendingSignIn()
       .then((userData) => {
-        window.location = '/'
+        window.location = '/home'
       })
     }
   }
