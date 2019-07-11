@@ -57,9 +57,6 @@ const applyFilters = (articles, filters) => {
         }
       })
     })
-    if (!!blockReasons) {
-      alert(JSON.stringify(blockReasons))
-    }
     return (blockReasons.length !== 0 ) ? {...articleItem, blockReasons: {blockReasons}} : articleItem
   })
 }
@@ -68,7 +65,7 @@ export default (state = [], action) => {
   switch (action.type) {
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
-      alert(JSON.stringify(applyFilters(state.map((stateArticleItem) => {
+      return flatten(applyFilters(state.map((stateArticleItem) => {
         const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return (!!overwrite) ? overwrite : stateArticleItem
       }).concat((action.payload.articles).filter((payloadItem) => {
@@ -79,20 +76,7 @@ export default (state = [], action) => {
           }
         })
         return !itemExists
-      })),  action.payload.filters)))
-
-      return flatten(state.map((stateArticleItem) => {
-        const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
-        return (!!overwrite) ? overwrite : stateArticleItem
-      }).concat((action.payload.articles).filter((payloadItem) => {
-        let itemExists = false
-        state.map((stateItem) => {
-          if (stateItem.id === payloadItem.id) {
-            itemExists = true
-          }
-        })
-        return !itemExists
-      })))
+      }))))
 
     case FETCH_ARTICLES_SUCCESS:
       const newArticles = action.payload.articles.filter((newArticle) => {
