@@ -90,9 +90,9 @@ export default (state = [], action) => {
       //   //)
       // ))
       return (
-        //applyFilters(
+        applyFilters(
           state.concat(newArticles)
-        //)
+        )
       )
 
     case ARTICLES_MARK_READ:
