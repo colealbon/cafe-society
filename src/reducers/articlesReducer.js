@@ -27,7 +27,8 @@ import {
 } from '../actions/filterFieldActions'
 
 const applyFilters = (articles, filters) => {
-  articles = flatten(articles)
+  //alert(JSON.stringify(articles))
+  //articles = flatten(articles)
   //return articles
   return articles.map(articleItem =>  {
     const blockReasons = filters.filter((filterItem) => {
@@ -83,7 +84,16 @@ export default (state = [], action) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
       })
-      return applyFilters(state.concat(newArticles))
+      alert(JSON.stringify(
+        //applyFilters(
+          state.concat(newArticles)
+        //)
+      ))
+      return (
+        //applyFilters(
+          state.concat(newArticles)
+        //)
+      )
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
