@@ -58,7 +58,7 @@ const applyFilters = (articles, filters) => {
         }
       })
     })
-    return (blockReasons.length !== 0 ) ? {...articleItem, blockReasons: {blockReasons}} : articleItem
+    return (!!blockReasons) ? {...articleItem, blockReasons: {blockReasons}} : articleItem
   })
 }
 
@@ -84,11 +84,11 @@ export default (state = [], action) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
       })
-      alert(JSON.stringify(
-        //applyFilters(
-          state.concat(newArticles)
-        //)
-      ))
+      // alert(JSON.stringify(
+      //   //applyFilters(
+      //     state.concat(newArticles)
+      //   //)
+      // ))
       return (
         //applyFilters(
           state.concat(newArticles)
