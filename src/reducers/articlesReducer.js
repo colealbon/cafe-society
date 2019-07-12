@@ -27,9 +27,7 @@ import {
 } from '../actions/filterFieldActions'
 
 const applyFilters = (articles, filters) => {
-  //alert(JSON.stringify(articles))
-  //articles = flatten(articles)
-  //return articles
+  filters = [].concat(filters)
   return articles.map(articleItem =>  {
     const blockReasons = filters.filter((filterItem) => {
       if (!!filterItem.fields && filterItem.fields !== []) {
@@ -58,7 +56,10 @@ const applyFilters = (articles, filters) => {
         }
       })
     })
-    return (!!blockReasons) ? {...articleItem, blockReasons: {blockReasons}} : articleItem
+    if (blockReasons.length !== 0) {
+      articleItem.blockReasons = blockReasons
+    }
+    return articleItem
   })
 }
 
@@ -66,7 +67,7 @@ export default (state = [], action) => {
   switch (action.type) {
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
-      return flatten(applyFilters(state.map((stateArticleItem) => {
+      return applyFilters(state.map((stateArticleItem) => {
         const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return (!!overwrite) ? overwrite : stateArticleItem
       }).concat((action.payload.articles).filter((payloadItem) => {
@@ -77,23 +78,14 @@ export default (state = [], action) => {
           }
         })
         return !itemExists
-      }))))
+      })), action.payload.filters)
 
     case FETCH_ARTICLES_SUCCESS:
       const newArticles = action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
       })
-      // alert(JSON.stringify(
-      //   //applyFilters(
-      //     state.concat(newArticles)
-      //   //)
-      // ))
-      return (
-        applyFilters(
-          state.concat(newArticles)
-        )
-      )
+      return applyFilters(state.concat(newArticles), action.payload.filters)
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
