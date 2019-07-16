@@ -10,12 +10,12 @@ const slow_fetchFeedContent = feedUrl => {
     parser.parseURL(feedUrl)
     .then((parsedContent) => resolve(parsedContent))
     .catch(() => {
-      parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+      parser.parseURL(`https://cors.io/?${feedUrl}`)
       .then((parsedContent) => {
         resolve(parsedContent)
       })
       .catch((error) => {
-        parser.parseURL(`https://cors.io/?${feedUrl}`)
+        parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
         .then((parsedContent) => resolve(parsedContent))
         .catch((error) => {
           reject(error)
