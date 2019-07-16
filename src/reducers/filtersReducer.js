@@ -32,9 +32,9 @@ export default (state = initialState, action) => {
       }))
 
     case FETCH_FILTERS_SUCCESS:
-      return state.filter((stateItem) => !Array.isArray(stateItem)).concat(action.payload.filter((payloadItem) => {
+      return state.concat(action.payload.filter((payloadItem) => {
         let itemExists = false
-        state.filter((stateItem) => !Array.isArray(stateItem)).map((stateItem) => {
+        action.payload.map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
@@ -44,9 +44,10 @@ export default (state = initialState, action) => {
 
     case FILTERS_ADD_FILTER:
       return [
-        ...state.filter(filter => filter.id !== action.payload.id),
+        ...state.filter(filter => filter.id != action.payload.id),
         action.payload
       ]
+
     case FILTERS_REMOVE_FILTER:
       return state.filter(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]

@@ -11,6 +11,7 @@ import CardContent from '@material-ui/core/CardContent';
 import {parse} from 'tldjs';
 import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
+import JSONTree from 'react-json-tree'
 
 const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
@@ -70,9 +71,8 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
                 </Typography>
-                <br/>
                 <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "\'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
-                <p/>
+                {(!article.blockReasons) ? '' : <Typography>blockReasons: <JSONTree data={article.blockReasons} /></Typography>}
               </CardContent>
             </Card>
           </Grid>

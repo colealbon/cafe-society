@@ -26,51 +26,42 @@ import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
 
-const applyFilters = (articles, filters) => {
-  filters = [].concat(filters)
-  return articles.map(articleItem =>  {
-    const blockReasons = filters.filter((filterItem) => {
-      if (!!filterItem.fields && filterItem.fields !== []) {
-        return Object.keys(articleItem).filter((articleField) => {
-          if (!!articleItem[`${articleField}`]) {
-            return (articleItem[`${articleField}`].indexOf(filterItem.text) !== -1)
-          }
-        }).length !== 0
-      }
-      return filterItem.fields.filter((filterField) => {
-        if (!!articleItem[`${filterField}`]) {
-          if ((filterItem.sections || []).length !== 0) {
-            return (articleItem[`${filterField}`].indexOf(filterItem.text) !== -1)
-          }
-          (filterItem.sections || []).map((filterSection) => {
-            if (!!articleItem.feed) {
-              if (!!articleItem.feed.sections) {
-                articleItem.feed.sections.map((articleSection) => {
-                  if (filterSection.id === articleSection.id) {
-                    return (articleItem[`${filterField}`].indexOf(filterItem.text) !== -1)
-                  }
-                })
-              }
-            }
-          })
-        }
-      })
-    })
-    if (blockReasons.length !== 0) {
-      articleItem.blockReasons = blockReasons
-    }
-    return articleItem
-  })
-}
+// const applyFilters = (articles, filters) => {
+//   return articles.map(articleItem =>  {
+//     const blockReasons = Object.assign(
+//       [].concat(filters).filter(filterItem => !filterItem.muted)
+//       .filter((filterItem) => {
+//         if (!filterItem.fields !! filterItem.fields === []) {
+//           return !!Object.keys(articleItem)
+//           .filter((articleField) => articleField !== 'id')
+//           .filter((articleField) => articleField !== 'feed')
+//           .filter((articleField) => articleField !== 'isoDate')
+//           .filter((articleField) => articleField !== 'guid')
+//           .filter((articleField) => articleField !== 'muted')
+//           .filter((articleField) => articleField !== 'pubDate')
+//           .filter((articleField) => {
+//             return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+//           })
+//         }
+//         return filterItem.fields.filter((fieldItem) => !!fieldItem.name)
+//       })
+//     )
+//     if (blockReasons.length === 0) {
+//       return Object.assign(articleItem)
+//     }
+//     return Object.assign(articleItem, {blockReasons: blockReasons})
+//   })
+// }
 
 export default (state = [], action) => {
   switch (action.type) {
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
-      return applyFilters(state.map((stateArticleItem) => {
+      return flatten(state.map((stateArticleItem) => {
         const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return (!!overwrite) ? overwrite : stateArticleItem
-      }).concat((action.payload.articles).filter((payloadItem) => {
+      })
+      .concat((action.payload.articles).filter((payloadItem) => {
         let itemExists = false
         state.map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
@@ -78,14 +69,73 @@ export default (state = [], action) => {
           }
         })
         return !itemExists
-      })), action.payload.filters)
+      })))
+      .map(articleItem => {
+        const blockReasons = action.payload.filters
+        .filter((filterItem) => !filterItem.muted )
+        .filter((filterItem) => {
+          return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+          true :
+          filterItem.sections.filter((filterItemSectionItem) => {
+            return articleItem.feed.sections.filter((articleItemSectionItem) => {
+              return articleItemSectionItem.id == filterItemSectionItem.id
+            }).length !== 0
+          }).length !==0
+        })
+        .filter(filterItem => {
+          return (filterItem.fields == undefined || filterItem.fields.length == 0) ?
+          Object.keys(articleItem)
+          .filter((articleField) => articleField !== 'id')
+          .filter((articleField) => articleField !== 'feed')
+          .filter((articleField) => articleField !== 'isoDate')
+          .filter((articleField) => articleField !== 'guid')
+          .filter((articleField) => articleField !== 'muted')
+          .filter((articleField) => articleField !== 'pubDate')
+          .filter((articleField) => {
+            return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+          }).length !== 0 :
+          filterItem.fields.filter((filterItemFieldItem) => {
+            return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+          }).length !== 0
+        })
+        return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
+      })
 
     case FETCH_ARTICLES_SUCCESS:
-      const newArticles = action.payload.articles.filter((newArticle) => {
+      return flatten(state.concat(action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
+      }))).filter((articleItem) => articleItem.title != '')
+      .map(articleItem => {
+        const blockReasons = action.payload.filters
+        .filter((filterItem) => !filterItem.muted )
+        .filter((filterItem) => {
+          return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+          true :
+          filterItem.sections.filter((filterItemSectionItem) => {
+            return articleItem.feed.sections.filter((articleItemSectionItem) => {
+              return articleItemSectionItem.id == filterItemSectionItem.id
+            }).length !== 0
+          }).length !==0
+        })
+        .filter(filterItem => {
+          return (filterItem.fields == undefined || filterItem.fields.length == 0) ?
+          Object.keys(articleItem)
+          .filter((articleField) => articleField !== 'id')
+          .filter((articleField) => articleField !== 'feed')
+          .filter((articleField) => articleField !== 'isoDate')
+          .filter((articleField) => articleField !== 'guid')
+          .filter((articleField) => articleField !== 'muted')
+          .filter((articleField) => articleField !== 'pubDate')
+          .filter((articleField) => {
+            return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+          }).length !== 0 :
+          filterItem.fields.filter((filterItemFieldItem) => {
+            return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+          }).length !== 0
+        })
+        return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
       })
-      return applyFilters(state.concat(newArticles), action.payload.filters)
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
@@ -220,6 +270,12 @@ export default (state = [], action) => {
     }
     return state.map((article) => {
       const matchedFilter = (action.payload.fields.map((filterField) => {
+        if (!filterField.name) {
+          return false
+        }
+        if (!(article[`${filterField.name}`])) {
+          return false
+        }
         if ((article[`${filterField.name}`]).indexOf(action.payload.text) !== -1) {
           if (article.feed.sections === undefined) {
             return true
@@ -239,6 +295,7 @@ export default (state = [], action) => {
           return true
         }
       }).filter((filterMatched) => filterMatched === true).length > 0)
+
       if (article.blockReasons) {
         if (!!article.blockReasons.blockReasons) {
           //we'd like for this if statement (next 6 lines) to go away
