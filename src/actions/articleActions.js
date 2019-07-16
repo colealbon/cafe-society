@@ -10,18 +10,22 @@ const slow_fetchFeedContent = feedUrl => {
     parser.parseURL(feedUrl)
     .then((parsedContent) => resolve(parsedContent))
     .catch(() => {
-      parser.parseURL(`https://cors.io/?${feedUrl}`)
+      parser.parseURL(`https://cors-escape.herokuapp.com/?${feedUrl}`)
       .then((parsedContent) => resolve(parsedContent))
       .catch(() => {
-        parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+        parser.parseURL(`https://cors.io/?${feedUrl}`)
         .then((parsedContent) => resolve(parsedContent))
-        .catch((error) => reject(error))
+        .catch(() => {
+          parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+          .then((parsedContent) => resolve(parsedContent))
+          .catch((error) => reject(error))
+        })
       })
     })
   })
 }
 
-const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10 * 1000  })
+const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000  })
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 
