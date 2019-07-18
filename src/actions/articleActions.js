@@ -140,7 +140,7 @@ export const fetchArticles = (feeds, filters) => {
               if (!!feedContent ) {
                 if (!!feedContent.items) {
                   // alert(JSON.stringify(feedContent.items))
-                  const articles = feedContent.items.map((item) => Object.assign({id: item.guid || item.link, feed: feed, muted: false}, item ))
+                  const articles = flatten([].concat(feedContent.items)).map((item) => Object.assign({id: item.guid || item.link, feed: feed, muted: false}, item ))
                   dispatch({
                     type: FETCH_ARTICLES_SUCCESS,
                     payload: {
@@ -156,7 +156,7 @@ export const fetchArticles = (feeds, filters) => {
             })
             .catch((error) => {
               dispatch({
-                type: 'FETCH_ARTICLES_FAILED',
+                type: FETCH_ARTICLES_FAIL,
                 payload: {
                   error: error
                 }
