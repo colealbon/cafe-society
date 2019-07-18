@@ -14,9 +14,7 @@ const slow_fetchFeedContent = feedUrl => {
     })
     .catch(() => {
       parser.parseURL(`http://localhost:1337/${feedUrl.replace(/(^\w+:|^)\/\//, '')}`)
-      .then((parsedContent) => {
-        resolve(parsedContent)
-      })
+      .then((parsedContent) => resolve(parsedContent))
       .catch(() => {
         parser.parseURL(`http://cafe-society.news/proxy/${feedUrl}`)
         .then((parsedContent) => resolve(parsedContent))
