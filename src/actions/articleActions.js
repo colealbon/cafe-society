@@ -94,12 +94,11 @@ export const toggleArticle = (articles, allArticles) => {
 
 export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
 export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
+export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
 export const FETCH_SAVED_ARTICLES_SUCCESS = 'FETCH_SAVED_ARTICLES_SUCCESS'
-export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
+export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 
 export const fetchArticles = (feeds, filters) => {
-  filters = [].concat(filters)
-  feeds = flatten([].concat(feeds))
   return (dispatch) => {
     const articlesRequestQueue = []
     articlesRequestQueue.push(new Promise((resolve, reject) => {
@@ -123,7 +122,6 @@ export const fetchArticles = (feeds, filters) => {
         })
       })
     }))
-
     feeds.map((feed) => {
       if (feed.muted !== true) { 
         dispatch({
@@ -139,8 +137,7 @@ export const fetchArticles = (feeds, filters) => {
             .then((feedContent) => {
               if (!!feedContent ) {
                 if (!!feedContent.items) {
-                  // alert(JSON.stringify(feedContent.items))
-                  const articles = flatten([].concat(feedContent.items)).map((item) => Object.assign({id: item.guid || item.link, feed: feed, muted: false}, item ))
+                  const articles = feedContent.items.map((item) => Object.assign({id: item.guid || item.link, feed: feed, muted: false}, item ))
                   dispatch({
                     type: FETCH_ARTICLES_SUCCESS,
                     payload: {

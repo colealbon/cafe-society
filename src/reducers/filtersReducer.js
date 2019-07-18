@@ -122,7 +122,6 @@ const initialState = [
   {
     id: 'Aries',
     text: 'Aries',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -143,7 +142,6 @@ const initialState = [
   {
     id: 'Taurus',
     text: 'Taurus',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -164,7 +162,6 @@ const initialState = [
   {
     id: 'Gemini',
     text: 'Gemini',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -185,7 +182,6 @@ const initialState = [
   {
     id: 'Cancer',
     text: 'Cancer',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -206,7 +202,6 @@ const initialState = [
   {
     id: 'Virgo',
     text: 'Virgo',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -227,7 +222,6 @@ const initialState = [
   {
     id: 'Libra',
     text: 'Libra',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -248,7 +242,6 @@ const initialState = [
   {
     id: 'Scorpio',
     text: 'Scorpio',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -269,7 +262,6 @@ const initialState = [
   {
     id: 'Sagittarius',
     text: 'Sagittarius',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -290,7 +282,6 @@ const initialState = [
   {
     id: 'Capricorn',
     text: 'Capricorn',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -311,7 +302,6 @@ const initialState = [
   {
     id: 'Aquarius',
     text: 'Aquarius',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
     fields: [
       'title',
       {
@@ -332,7 +322,7 @@ const initialState = [
   {
     id: 'Pisces',
     text: 'Pisces',
-    feedUrl: 'https://www.findyourfate.com/rss/horoscope-astrology.php',
+
     fields: [
       'title',
       {
@@ -353,7 +343,7 @@ const initialState = [
   {
     id: 'Car Detailer',
     text: 'Car Detailer',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -373,7 +363,7 @@ const initialState = [
   {
     id: 'DoorDash',
     text: 'DoorDash',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -393,7 +383,7 @@ const initialState = [
   {
     id: '(La Pine)',
     text: '(La Pine)',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -413,7 +403,7 @@ const initialState = [
   {
     id: 'Handyman',
     text: 'Handyman',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -433,7 +423,7 @@ const initialState = [
   {
     id: 'Guest Experience Specialist',
     text: 'Guest Experience Specialist',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -453,7 +443,7 @@ const initialState = [
   {
     id: 'Attendant',
     text: 'Attendant',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -473,7 +463,7 @@ const initialState = [
   {
     id: 'Housekeeping',
     text: 'Housekeeping',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -493,7 +483,7 @@ const initialState = [
   {
     id: 'Bend Sales Support',
     text: 'Bend Sales Support',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -513,7 +503,7 @@ const initialState = [
   {
     id: 'Delivery Driver',
     text: 'Delivery Driver',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -533,7 +523,7 @@ const initialState = [
   {
     id: 'Equipment Operator',
     text: 'Equipment Operator',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -553,7 +543,7 @@ const initialState = [
   {
     id: 'Automotive technician',
     text: 'Automotive technician',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -573,7 +563,7 @@ const initialState = [
   {
     id: 'Service Advisor',
     text: 'Service Advisor',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -593,7 +583,7 @@ const initialState = [
   {
     id: 'Customer Support',
     text: 'Customer Support',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'title',
       {
@@ -613,7 +603,7 @@ const initialState = [
   {
     id: 'Selectron',
     text: 'Selectron',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -633,7 +623,7 @@ const initialState = [
   {
     id: 'Content Integrity Specialist',
     text: 'Content Integrity Specialist',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -653,7 +643,7 @@ const initialState = [
   {
     id: 'Active911',
     text: 'Active911',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -678,7 +668,7 @@ const initialState = [
   {
     id: 'OpenEye',
     text: 'OpenEye',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -703,7 +693,7 @@ const initialState = [
   {
     id: 'PTIGlobal',
     text: 'PTIGlobal',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -723,7 +713,7 @@ const initialState = [
   {
     id: 'track installation',
     text: 'track installation',
-    feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -773,7 +763,7 @@ const initialState = [
   {
     id: 'rt.com/sporthttps://www.rt.com/rss/',
     text: 'rt.com/sport',
-    feedUrl: 'https://www.rt.com/rss/',
+
     fields: [
       'link',
       {
@@ -800,7 +790,7 @@ const initialState = [
   {
     id: 'foxnews.com/entertainmenthttps://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
     text: 'foxnews.com/entertainment',
-    feedUrl: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+
     fields: [
       'link',
       {
@@ -814,7 +804,7 @@ const initialState = [
   {
     id: 'entertainmenthttps://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
     text: 'entertainment',
-    feedUrl: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+
     fields: [
       'link',
       {
@@ -1127,7 +1117,7 @@ const initialState = [
   {
     id: 'sports.yahoo.comhttps://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
     text: 'sports.yahoo.com',
-    feedUrl: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+
     fields: [
       'link',
       {
@@ -2194,7 +2184,7 @@ const initialState = [
   {
     id: 'arts/televisionhttps://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/us/rss.xml',
     text: 'arts/television',
-    feedUrl: 'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/us/rss.xml',
+
     fields: [
       'link',
       {
@@ -2299,7 +2289,7 @@ const initialState = [
   {
     id: 'Data Analyst',
     text: 'Data Analyst',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -2319,7 +2309,7 @@ const initialState = [
   {
     id: 'FileMaker',
     text: 'FileMaker',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -2618,7 +2608,7 @@ const initialState = [
   {
     id: 'ESPN',
     text: 'ESPN',
-    feedUrl: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+
     fields: [
       'contentSnippet',
       {
@@ -2768,7 +2758,7 @@ const initialState = [
   {
     id: 'Affirma Consulting',
     text: 'Affirma Consulting',
-    feedUrl: 'https://seattle.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -2788,7 +2778,7 @@ const initialState = [
   {
     id: 'Programmer 2, Library',
     text: 'Programmer 2, Library',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -2827,7 +2817,7 @@ const initialState = [
   {
     id: 'Pathrise',
     text: 'Pathrise',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -2847,7 +2837,7 @@ const initialState = [
   {
     id: 'Driving',
     text: 'Driving',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -2965,7 +2955,7 @@ const initialState = [
   {
     id: 'Affirma',
     text: 'Affirma',
-    feedUrl: 'https://seattle.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -3037,7 +3027,7 @@ const initialState = [
   {
     id: 'Simulation Technician Specialist',
     text: 'Simulation Technician Specialist',
-    feedUrl: 'https://seattle.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -3096,7 +3086,7 @@ const initialState = [
   {
     id: 'Database Administrator',
     text: 'Database Administrator',
-    feedUrl: 'https://seattle.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -3493,7 +3483,7 @@ const initialState = [
   {
     id: 'Technical Writer',
     text: 'Technical Writer',
-    feedUrl: 'https://seattle.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -3882,7 +3872,7 @@ const initialState = [
   {
     id: 'Bootcamp',
     text: 'Bootcamp',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -3902,7 +3892,7 @@ const initialState = [
   {
     id: 'Newton Research Labs',
     text: 'Newton Research Labs',
-    feedUrl: 'https://seattle.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -3980,7 +3970,7 @@ const initialState = [
   {
     id: 'Senior Ruby Developer',
     text: 'Senior Ruby Developer',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -4000,7 +3990,7 @@ const initialState = [
   {
     id: 'DoD',
     text: 'DoD',
-    feedUrl: 'https://sanantonio.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -4020,7 +4010,7 @@ const initialState = [
   {
     id: 'Account Manager',
     text: 'Account Manager',
-    feedUrl: 'https://sanantonio.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4040,7 +4030,7 @@ const initialState = [
   {
     id: 'Customer Care',
     text: 'Customer Care',
-    feedUrl: 'https://sanantonio.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4060,7 +4050,7 @@ const initialState = [
   {
     id: 'File Processor',
     text: 'File Processor',
-    feedUrl: 'https://sanantonio.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4080,7 +4070,7 @@ const initialState = [
   {
     id: 'at craigslist',
     text: 'at craigslist',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4100,7 +4090,7 @@ const initialState = [
   {
     id: 'T-SQL',
     text: 'T-SQL',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -4120,7 +4110,7 @@ const initialState = [
   {
     id: 'Jr. PHP',
     text: 'Jr. PHP',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4140,7 +4130,7 @@ const initialState = [
   {
     id: 'Client Services',
     text: 'Client Services',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4160,7 +4150,7 @@ const initialState = [
   {
     id: 'Test Lead',
     text: 'Test Lead',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4180,7 +4170,7 @@ const initialState = [
   {
     id: 'Wastewater Treatment',
     text: 'Wastewater Treatment',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'contentSnippet',
       {
@@ -4200,7 +4190,7 @@ const initialState = [
   {
     id: 'Vehicle Operations Specialist',
     text: 'Vehicle Operations Specialist',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4220,7 +4210,7 @@ const initialState = [
   {
     id: 'Vehicle Operator',
     text: 'Vehicle Operator',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4337,7 +4327,7 @@ const initialState = [
   {
     id: 'Software Tester',
     text: 'Software Tester',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4506,7 +4496,7 @@ const initialState = [
   {
     id: 'Office Coordinator',
     text: 'Office Coordinator',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4545,7 +4535,7 @@ const initialState = [
   {
     id: 'Data Processing Manager',
     text: 'Data Processing Manager',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4565,7 +4555,7 @@ const initialState = [
   {
     id: 'Network Engineer',
     text: 'Network Engineer',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4585,7 +4575,7 @@ const initialState = [
   {
     id: 'TECHNOLOGY MANAGER',
     text: 'TECHNOLOGY MANAGER',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4605,7 +4595,7 @@ const initialState = [
   {
     id: 'Database Consultant',
     text: 'Database Consultant',
-    feedUrl: 'https://portland.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4781,7 +4771,7 @@ const initialState = [
   {
     id: 'criminal record',
     text: 'criminal record',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4800,7 +4790,7 @@ const initialState = [
   {
     id: 'Safety Contractor',
     text: 'Safety Contractor',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4820,7 +4810,7 @@ const initialState = [
   {
     id: 'Map Annotator',
     text: 'Map Annotator',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4840,7 +4830,7 @@ const initialState = [
   {
     id: 'Annotation Specialist',
     text: 'Annotation Specialist',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4860,7 +4850,7 @@ const initialState = [
   {
     id: 'Quality Assurance Engineer',
     text: 'Quality Assurance Engineer',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {
@@ -4892,7 +4882,7 @@ const initialState = [
   {
     id: 'Paid Opinion Study',
     text: 'Paid Opinion Study',
-    feedUrl: 'https://sfbay.craigslist.org/search/sof?format=rss',
+
     fields: [
       'title',
       {

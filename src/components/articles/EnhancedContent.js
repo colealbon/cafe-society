@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Check, DeleteSweep, VoiceOverOff, CancelPresentation } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { removeArticle, toggleArticle, removeAllArticles } from '../../actions/articleActions'
+import { removeArticle, toggleArticle } from '../../actions/articleActions'
 import { addFilter} from '../../actions/filterActions'
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -73,6 +73,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     handleClickResetAppData: () => {
       dispatch({type: 'RESET_APP'})
+    },
+    handleClickRemoveAllArticles: (articles) => {
+      dispatch(removeArticle(articles, articles))
     }
   }
 }

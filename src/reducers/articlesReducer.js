@@ -26,32 +26,6 @@ import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
 
-// const applyFilters = (articles, filters) => {
-//   return articles.map(articleItem =>  {
-//     const blockReasons = Object.assign(
-//       [].concat(filters).filter(filterItem => !filterItem.muted)
-//       .filter((filterItem) => {
-//         if (!filterItem.fields !! filterItem.fields === []) {
-//           return !!Object.keys(articleItem)
-//           .filter((articleField) => articleField !== 'id')
-//           .filter((articleField) => articleField !== 'feed')
-//           .filter((articleField) => articleField !== 'isoDate')
-//           .filter((articleField) => articleField !== 'guid')
-//           .filter((articleField) => articleField !== 'muted')
-//           .filter((articleField) => articleField !== 'pubDate')
-//           .filter((articleField) => {
-//             return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
-//           })
-//         }
-//         return filterItem.fields.filter((fieldItem) => !!fieldItem.name)
-//       })
-//     )
-//     if (blockReasons.length === 0) {
-//       return Object.assign(articleItem)
-//     }
-//     return Object.assign(articleItem, {blockReasons: blockReasons})
-//   })
-// }
 
 export default (state = [], action) => {
   switch (action.type) {
@@ -61,7 +35,7 @@ export default (state = [], action) => {
         
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
-      return flatten(state.map((stateArticleItem) => {
+      return flatten(state.filter((articleItem) => articleItem.title !== '').map((stateArticleItem) => {
         const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
         return (!!overwrite) ? overwrite : stateArticleItem
       })
@@ -74,6 +48,7 @@ export default (state = [], action) => {
         })
         return !itemExists
       })))
+      .filter((articleItem) => articleItem.title !== '')
       .map(articleItem => {
         const blockReasons = action.payload.filters
         .filter((filterItem) => !filterItem.muted )
@@ -98,18 +73,18 @@ export default (state = [], action) => {
           .filter((articleField) => {
             return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
           }).length !== 0 :
-          filterItem.fields.filter((filterItemFieldItem) => {
+          filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
           }).length !== 0
         })
-         return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
+        return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
       })
 
     case FETCH_ARTICLES_SUCCESS:
-      return flatten(state.concat(action.payload.articles.filter((newArticle) => {
+      return state.concat(action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
-      }))).filter((articleItem) => articleItem.title != '')
+      })).filter((articleItem) => articleItem.title !== '')
       .map(articleItem => {
         const blockReasons = action.payload.filters
         .filter((filterItem) => !filterItem.muted )
@@ -134,7 +109,7 @@ export default (state = [], action) => {
           .filter((articleField) => {
             return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
           }).length !== 0 :
-          filterItem.fields.filter((filterItemFieldItem) => {
+          filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
           }).length !== 0
         })
@@ -158,7 +133,7 @@ export default (state = [], action) => {
       return state.map(article => article.id === action.payload.id ? { ...article, muted: !article.muted || false } : article )
 
     case "@@router/LOCATION_CHANGE":
-      return [].concat(state).map(article => action.payload.location.pathname === "/" ? { ...article, visible: true } : article)
+      return state.map(article => action.payload.location.pathname === "/" ? { ...article, visible: true } : article)
 
     case SECTION_SELECT_SECTION:
       return state.map(article => {
