@@ -18,15 +18,19 @@ const slow_fetchFeedContent = feedUrl => {
         resolve(parsedContent)
       })
       .catch(() => {
-        parser.parseURL(`https://cors-escape.herokuapp.com/${feedUrl}`)
+        parser.parseURL(`http://cafe-society.news/proxy/${feedUrl}`)
         .then((parsedContent) => resolve(parsedContent))
         .catch(() => {
-          parser.parseURL(`https://cors.io/?${feedUrl}`)
+          parser.parseURL(`https://cors-escape.herokuapp.com/${feedUrl}`)
           .then((parsedContent) => resolve(parsedContent))
           .catch(() => {
-            parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+            parser.parseURL(`https://cors.io/?${feedUrl}`)
             .then((parsedContent) => resolve(parsedContent))
-            .catch((error) => reject(error))
+            .catch(() => {
+              parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+              .then((parsedContent) => resolve(parsedContent))
+              .catch((error) => reject(error))
+            })
           })
         })
       })
