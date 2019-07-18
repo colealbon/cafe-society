@@ -1,6 +1,7 @@
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
+var flatten = require('@flatten/array')
 import * as blockstack from 'blockstack'
 
 const FETCH_FEED_CONTENT_FAILED = 'FETCH_FEED_CONTENT_FAILED'
@@ -98,7 +99,7 @@ export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
 
 export const fetchArticles = (feeds, filters) => {
   filters = [].concat(filters)
-  feeds = [].concat(feeds)
+  feeds = flatten([].concat(feeds))
   return (dispatch) => {
     const articlesRequestQueue = []
     articlesRequestQueue.push(new Promise((resolve, reject) => {
