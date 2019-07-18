@@ -5,6 +5,8 @@ import {
 
 export default (state = '', action) => {
   switch (action.type) {
+    case 'RESET_APP':
+      return ''
     case FILTER_UPDATE_FILTER:
       return { ...state, ...action.payload }
     default:

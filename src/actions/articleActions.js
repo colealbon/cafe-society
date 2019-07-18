@@ -8,17 +8,25 @@ const FETCH_FEED_CONTENT_FAILED = 'FETCH_FEED_CONTENT_FAILED'
 const slow_fetchFeedContent = feedUrl => {
   return new Promise((resolve, reject) => {
     parser.parseURL(feedUrl)
-    .then((parsedContent) => resolve(parsedContent))
+    .then((parsedContent) => {
+      resolve(parsedContent)
+    })
     .catch(() => {
-      parser.parseURL(`https://cors-escape.herokuapp.com/?${feedUrl}`)
-      .then((parsedContent) => resolve(parsedContent))
+      parser.parseURL(`http://localhost:1337/${feedUrl.replace(/(^\w+:|^)\/\//, '')}`)
+      .then((parsedContent) => {
+        resolve(parsedContent)
+      })
       .catch(() => {
-        parser.parseURL(`https://cors.io/?${feedUrl}`)
+        parser.parseURL(`https://cors-escape.herokuapp.com/${feedUrl}`)
         .then((parsedContent) => resolve(parsedContent))
         .catch(() => {
-          parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+          parser.parseURL(`https://cors.io/?${feedUrl}`)
           .then((parsedContent) => resolve(parsedContent))
-          .catch((error) => reject(error))
+          .catch(() => {
+            parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+            .then((parsedContent) => resolve(parsedContent))
+            .catch((error) => reject(error))
+          })
         })
       })
     })
@@ -130,6 +138,7 @@ export const fetchArticles = (feeds, filters) => {
             .then((feedContent) => {
               if (!!feedContent ) {
                 if (!!feedContent.items) {
+                  // alert(JSON.stringify(feedContent.items))
                   const articles = feedContent.items.map((item) => Object.assign({id: item.guid || item.link, feed: feed, muted: false}, item ))
                   dispatch({
                     type: FETCH_ARTICLES_SUCCESS,

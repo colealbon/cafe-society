@@ -57,7 +57,7 @@ export default (state = [], action) => {
   switch (action.type) {
 
     case 'RESET_APP':
-        return []
+      return []
         
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
@@ -102,7 +102,7 @@ export default (state = [], action) => {
             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
           }).length !== 0
         })
-        return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
+         return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
       })
 
     case FETCH_ARTICLES_SUCCESS:
