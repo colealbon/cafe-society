@@ -9,7 +9,7 @@ import VerticalSpace from './VerticalSpace'
 
 const mapStateToProps = ({ accounts }) => {
   return {
-    accounts: accounts
+    accounts: !!accounts ? accounts : []
   }
 }
 
@@ -31,6 +31,6 @@ export const AccountList = ({ accounts }) => {
   )
 }
 AccountList.propTypes = {
-  accounts: PropTypes.array.isRequired,
+  accounts: PropTypes.array,
 };
 export default connect(mapStateToProps)(AccountList)

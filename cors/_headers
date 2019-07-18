@@ -2,27 +2,7 @@
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
   Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT"
-/appicon.png
-  Access-Control-Allow-Origin: *
-  Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
-  Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT"
-/favicon.ico
-  Access-Control-Allow-Origin: *
-  Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
-  Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT"
 /manifest.json
-  Access-Control-Allow-Origin: *
-  Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
-  Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT"
-/registerServiceWorker.js
-  Access-Control-Allow-Origin: *
-  Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
-  Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT"
-/main.js
-  Access-Control-Allow-Origin: *
-  Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
-  Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT"
-/service-worker.js
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
   Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT"

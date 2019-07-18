@@ -8,7 +8,7 @@ import Link from '@material-ui/core/Link';
 
 const mapStateToProps = ({blockstackUser}) => {
   return {
-      blockstackUser: blockstackUser
+      blockstackUser: !!blockstackUser ? blockstackUser : {}
   }
 }
 
@@ -21,7 +21,7 @@ export const BlockstackProfile = ({blockstackUser}) => {
     <Fragment>
       <VerticalSpace/>
       <Typography variant="h6">Blockstack Profile</Typography>
-      {(!!blockstackUser.profile.username) ? <Typography>username: {blockstackUser.profile.username}</Typography>:''}
+      {(!!blockstackUser.profile && !!blockstackUser.profile.username) ? <Typography>username: {blockstackUser.profile.username}</Typography>:''}
       {(!!blockstackUser.feedsUrl) ? <Typography>feeds url: <Link href={blockstackUser.filtersUrl}>{blockstackUser.filtersUrl}</Link></Typography>:''}
       {(!!blockstackUser.filtersUrl) ? <Typography>filters url: <Link href={blockstackUser.filtersUrl}>{blockstackUser.filtersUrl}</Link></Typography>:''}
       {(!!blockstackUser.contactsUrl) ? <Typography>contacts url: <Link href={blockstackUser.contactsUrl}>{blockstackUser.contactsUrl}</Link></Typography>:''}

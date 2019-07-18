@@ -8,8 +8,46 @@ import IconButton from '@material-ui/core/IconButton'
 
 const mapStateToProps = ({feed, feeds}) => {
   return {
-    feed: feed,
-    feeds: feeds
+    feed: !!feed ? feed : '',
+    feeds: !!feeds ? feeds : [{
+      id: 'https://theintercept.com/feed/?lang=en',
+      url: 'https://theintercept.com/feed/?lang=en',
+      sections: [
+        {
+          id: 'politics',
+          name: 'politics',
+          muted: true
+        }
+      ],
+      muted: true
+    },
+    {
+      id: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
+      url: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en'
+    },
+    {
+      id: 'https://www.statnews.com/feed/',
+      url: 'https://www.statnews.com/feed/',
+      sections: [
+        {
+          id: 'technology',
+          name: 'technology'
+        }
+      ],
+      muted: false
+    },
+    {
+      id: 'https://lifehacker.com/rss',
+      url: 'https://lifehacker.com/rss',
+      sections: [
+        {
+          id: 'variety',
+          name: 'variety'
+        }
+      ],
+      muted: false
+    }
+  ]
   }
 }
 

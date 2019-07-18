@@ -90,6 +90,7 @@ export const FETCH_FILTERS_START = 'FETCH_FILTERS_START'
 export const FETCH_FILTERS_SUCCESS = 'FETCH_FILTERS_SUCCESS'
 export const FETCH_FILTERS_ERROR = 'FETCH_FILTERS_ERROR'
 export const FETCH_SAVED_FILTERS_SUCCESS = 'FETCH_SAVED_FILTERS_SUCCESS'
+export const FETCH_SAVED_FILTERS_FAIL = 'FETCH_SAVED_FILTERS_FAIL'
 
 const slowBlockstackGetFile = (filename, options) => blockstack.getFile(filename, options)
 const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: (1000 * 60 * 60) }) //  miliseconds * seconds * minutes
@@ -115,7 +116,7 @@ export const fetchBlockstackFilters = (contacts) => {
         })
         .catch((error) =>{
           dispatch({
-            type: FETCH_SAVED_ARTICLES_FAIL,
+            type: FETCH_SAVED_FILTERS_FAIL,
             payload: {error: error}
           })
         })

@@ -55,6 +55,10 @@ import {
 
 export default (state = [], action) => {
   switch (action.type) {
+
+    case 'RESET_APP':
+        return []
+        
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
       return flatten(state.map((stateArticleItem) => {
@@ -154,7 +158,7 @@ export default (state = [], action) => {
       return state.map(article => article.id === action.payload.id ? { ...article, muted: !article.muted || false } : article )
 
     case "@@router/LOCATION_CHANGE":
-      return state.map(article => action.payload.location.pathname === "/" ? { ...article, visible: true } : article)
+      return [].concat(state).map(article => action.payload.location.pathname === "/" ? { ...article, visible: true } : article)
 
     case SECTION_SELECT_SECTION:
       return state.map(article => {

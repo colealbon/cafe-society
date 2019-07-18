@@ -18,7 +18,9 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
 const mapStateToProps = ({ contacts }) => {
   return {
-    contacts: contacts
+    contacts: !!contacts ? contacts : [
+      {id: 'cole_albon.id', name: 'cole_albon.id', muted: true}
+    ]
   }
 }
 

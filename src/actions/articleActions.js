@@ -90,7 +90,7 @@ export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
 
 export const fetchArticles = (feeds, filters) => {
   filters = [].concat(filters)
-  feeds = [].concat(feeds.filter((feedItem) => feedItem !== null))
+  feeds = [].concat(feeds)
   return (dispatch) => {
     const articlesRequestQueue = []
     articlesRequestQueue.push(new Promise((resolve, reject) => {

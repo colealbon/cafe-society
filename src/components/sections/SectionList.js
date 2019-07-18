@@ -16,7 +16,7 @@ import Switch from '@material-ui/core/Switch'
 
 const mapStateToProps = ({ sections }) => {
   return {
-    sections: sections
+    sections: !!sections ? sections : [{id: 'headlines', name: 'headlines', muted: false}]
   }
 }
 

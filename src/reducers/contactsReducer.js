@@ -12,6 +12,9 @@ const initialState = [
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'RESET_APP':
+      return initialState
+        
     case CONTACTS_ADD_CONTACT:
       return [
         ...state.filter(contact => contact.id !== action.payload.id),

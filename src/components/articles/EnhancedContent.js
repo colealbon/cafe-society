@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Check, DeleteSweep, VoiceOverOff } from '@material-ui/icons';
+import { Check, DeleteSweep, VoiceOverOff, CancelPresentation } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { removeArticle, toggleArticle, removeAllArticles } from '../../actions/articleActions'
@@ -15,9 +15,48 @@ import JSONTree from 'react-json-tree'
 
 const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
-    selectedSection: selectedSection,
-    articles: articles,
-    filters: filters
+    selectedSection: !!selectedSection ? selectedSection :  {name: ''},
+    articles: !!articles ? articles : [],
+    filters: !!filters ? filters : [{
+      id: 'Car Detailer',
+      text: 'Car Detailer',
+      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+      fields: [
+        'title',
+        {
+          id: 'title',
+          name: 'title',
+          muted: false
+        }
+      ],
+      lastUsed: 1557619427441,
+      sections: [
+        {
+          id: 'classifieds',
+          name: 'classifieds'
+        }
+      ]
+    },
+    {
+      id: 'DoorDash',
+      text: 'DoorDash',
+      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+      fields: [
+        'title',
+        {
+          id: 'title',
+          name: 'title',
+          muted: false
+        }
+      ],
+      lastUsed: 1557619427441,
+      sections: [
+        {
+          id: 'classifieds',
+          name: 'classifieds'
+        }
+      ]
+    }]
   }
 }
 
@@ -32,13 +71,13 @@ const mapDispatchToProps = (dispatch) => {
     handleClickToggleArticle: (article, articles) => {
       dispatch(toggleArticle(article, articles))
     },
-    handleClickRemoveAllArticles: (articles) => {
-      dispatch(removeArticle(articles, articles))
+    handleClickResetAppData: () => {
+      dispatch({type: 'RESET_APP'})
     }
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveAllArticles, handleClickToggleArticle, articles, selectedSection, filters}) => {
+export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomain, handleClickRemoveAllArticles, handleClickToggleArticle, articles, selectedSection, filters}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'enhanced'
   const deleteSweepTitle = `delete: ${articles.length} articles`
   return (
@@ -47,6 +86,9 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveAllAr
       <Typography variant="h4" >
         <IconButton title={deleteSweepTitle} onClick={() => {handleClickRemoveAllArticles(articles)}}>
           <DeleteSweep></DeleteSweep>
+        </IconButton>
+        <IconButton title='reset all app data' onClick={() => {handleClickResetAppData(articles)}}>
+          <CancelPresentation></CancelPresentation>
         </IconButton>
         {sectionTitle}
       </Typography>

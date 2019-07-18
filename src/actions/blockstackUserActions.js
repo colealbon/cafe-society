@@ -27,7 +27,13 @@ export const fetchUserData = () => {
       }
     }
   }
-  return { type }
+  return{
+    type, 
+    payload: {
+      isLoginPending: false,
+      payload: null
+    }
+  }
 }
 
 export const loginWithBlockstack = () => {

@@ -23,12 +23,13 @@ import SectionContent from '../articles/SectionContent'
 import EnhancedContent from '../articles/EnhancedContent'
 import BlockstackProfile from '../BlockstackProfile'
 import { selectSection } from '../../actions/sectionActions'
+import { ViewHeadlineSharp } from '@material-ui/icons';
 
 
 const mapStateToProps = ({leftDrawer, sections}) => {
   return {
     leftDrawer: leftDrawer,
-    sections: sections
+    sections: !!sections ? sections : [{id: 'headlines', name: 'headlines', muted: false}]
   }
 }
 
@@ -55,6 +56,7 @@ export const FrontPage = ({handleDrawerOpen, handleSetSection, sections}) => {
         >
           <MenuIcon />
         </IconButton>
+
         <Typography variant="h6" color="inherit" noWrap>
           <Toolbar variant="dense">
             <Tab value="/home" label='home' component={Link} to="/" />

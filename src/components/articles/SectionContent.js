@@ -15,10 +15,49 @@ import JSONTree from 'react-json-tree'
 
 const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
-    selectedSection: selectedSection,
-    articles: articles.filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1),
-    allArticles: articles,
-    filters: filters
+    selectedSection: !!selectedSection ? selectedSection : '',
+    articles: !!articles ? articles.filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1) : [],
+    allArticles: !!articles ? articles : [],
+    filters: !!filters ? filters : [{
+      id: 'Car Detailer',
+      text: 'Car Detailer',
+      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+      fields: [
+        'title',
+        {
+          id: 'title',
+          name: 'title',
+          muted: false
+        }
+      ],
+      lastUsed: 1557619427441,
+      sections: [
+        {
+          id: 'classifieds',
+          name: 'classifieds'
+        }
+      ]
+    },
+    {
+      id: 'DoorDash',
+      text: 'DoorDash',
+      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+      fields: [
+        'title',
+        {
+          id: 'title',
+          name: 'title',
+          muted: false
+        }
+      ],
+      lastUsed: 1557619427441,
+      sections: [
+        {
+          id: 'classifieds',
+          name: 'classifieds'
+        }
+      ]
+    }]
   }
 }
 

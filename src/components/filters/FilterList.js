@@ -25,9 +25,52 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 
 const mapStateToProps = ({ filters, sections, fields }) => {
   return {
-    filters: filters,
-    sections: sections,
-    fields: fields
+    filters: !!filters ? filters : [{
+      id: 'Car Detailer',
+      text: 'Car Detailer',
+      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+      fields: [
+        'title',
+        {
+          id: 'title',
+          name: 'title',
+          muted: false
+        }
+      ],
+      lastUsed: 1557619427441,
+      sections: [
+        {
+          id: 'classifieds',
+          name: 'classifieds'
+        }
+      ]
+    },
+    {
+      id: 'DoorDash',
+      text: 'DoorDash',
+      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
+      fields: [
+        'title',
+        {
+          id: 'title',
+          name: 'title',
+          muted: false
+        }
+      ],
+      lastUsed: 1557619427441,
+      sections: [
+        {
+          id: 'classifieds',
+          name: 'classifieds'
+        }
+      ]
+    }],
+    sections:  !!sections ? sections : [{id: 'headlines', name: 'headlines', muted: false}],
+    fields: !!fields ? fields: [
+      {id: 'title', name: 'title', muted: false},
+      {id: 'link', name: 'link', muted: false},
+      {id: 'contentSnippet', name: 'contentSnippet', muted: false}
+    ]
   }
 }
 

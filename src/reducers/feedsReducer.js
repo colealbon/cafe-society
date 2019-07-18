@@ -12,7 +12,9 @@ import {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-
+    case 'RESET_APP':
+      return initialState
+        
     case FETCH_SAVED_FEEDS_SUCCESS:
       return state.filter((stateItem) => !Array.isArray(stateItem))
       .map((stateItem) => {
@@ -29,7 +31,7 @@ export default (state = initialState, action) => {
       }))
 
     case FETCH_FEEDS_SUCCESS:
-      return state.filter((stateItem) => !Array.isArray(stateItem))
+      state.filter((stateItem) => !Array.isArray(stateItem))
       .concat(action.payload.filter((payloadItem) => {
         let itemExists = false
         state.map((stateItem) => {
@@ -39,6 +41,7 @@ export default (state = initialState, action) => {
         })
         return !itemExists
       }))
+  
 
     case FEEDS_ADD_FEED:
       return [

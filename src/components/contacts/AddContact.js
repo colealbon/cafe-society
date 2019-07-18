@@ -8,8 +8,10 @@ import IconButton from '@material-ui/core/IconButton'
 
 const mapStateToProps = ({contact, contacts}) => {
   return {
-    contact: contact,
-    contacts: contacts
+    contact: !!contact ? contact : '',
+    contacts: !!contacts ? contacts : [
+      {id: 'cole_albon.id', name: 'cole_albon.id', muted: true}
+    ]
   }
 }
 

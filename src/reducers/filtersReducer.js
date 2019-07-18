@@ -16,7 +16,8 @@ import {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-
+    case 'RESET_APP':
+      return initialState
     case FETCH_SAVED_FILTERS_SUCCESS:
       return state.map((stateFilterItem) => {
         const overwrite = action.payload.filter((payloadFilterItem) => payloadFilterItem.id === stateFilterItem.id)[0]
