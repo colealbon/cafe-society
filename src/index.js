@@ -82,17 +82,15 @@ const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
     store.dispatch(fetchBlockstackContacts(store.getState().contacts))
   } else {
-    store.dispatch(fetchArticles(
-      !!store.getState().feeds && store.getState().feeds.length !== 0 ?  store.getState().feeds : [{
-        id: 'https://theintercept.com/feed/?lang=en',
-        url: 'https://theintercept.com/feed/?lang=en',
-        sections: [
-          {
-            id: 'politics',
-            name: 'politics',
-            muted: true
-          }
-        ],
+    let deezFeeds = !!store.getState().feeds ? store.getState().feeds :  [{
+      id: 'https://theintercept.com/feed/?lang=en',
+      url: 'https://theintercept.com/feed/?lang=en',
+      sections: [
+        {
+          id: 'politics',
+          name: 'politics',
+          muted: true
+        }],
         muted: true
       },
       {
@@ -121,7 +119,9 @@ const runInitialAppStartActions = () => {
         ],
         muted: false
       }
-    ],  
+    ]
+    store.dispatch(fetchArticles(
+      deezFeeds, 
       store.getState().filters
     ))
   }
