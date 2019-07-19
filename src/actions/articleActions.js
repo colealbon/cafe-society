@@ -16,19 +16,7 @@ const slow_fetchFeedContent = feedUrl => {
       .catch(() => {
         parser.parseURL(`http://cafe-society.news/proxy/${feedUrl}`)
         .then((parsedContent) => resolve(parsedContent))
-        // .catch(() => {
-        //   parser.parseURL(`https://cors-escape.herokuapp.com/${feedUrl}`)
-        //   .then((parsedContent) => resolve(parsedContent))
-        //   .catch(() => {
-        //     parser.parseURL(`https://cors.io/?${feedUrl}`)
-        //     .then((parsedContent) => resolve(parsedContent))
-        //     .catch(() => {
-        //       parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
-        //       .then((parsedContent) => resolve(parsedContent))
-              .catch((error) => reject(error))
-        //     })
-        //   })
-        // })
+        .catch((error) => reject(error))
       })
     })
   })
