@@ -22,7 +22,7 @@ export const BlockstackProfile = ({blockstackUser}) => {
       <VerticalSpace/>
       <Typography variant="h6">Blockstack Profile</Typography>
       {(!!blockstackUser.profile && !!blockstackUser.profile.username) ? <Typography>username: {blockstackUser.profile.username}</Typography>:''}
-      {(!!blockstackUser.feedsUrl) ? <Typography>feeds url: <Link href={blockstackUser.filtersUrl}>{blockstackUser.filtersUrl}</Link></Typography>:''}
+      {(!!blockstackUser.feedsUrl) ? <Typography>feeds url: <Link href={blockstackUser.filtersUrl}>{blockstackUser.feedsUrl}</Link></Typography>:''}
       {(!!blockstackUser.filtersUrl) ? <Typography>filters url: <Link href={blockstackUser.filtersUrl}>{blockstackUser.filtersUrl}</Link></Typography>:''}
       {(!!blockstackUser.contactsUrl) ? <Typography>contacts url: <Link href={blockstackUser.contactsUrl}>{blockstackUser.contactsUrl}</Link></Typography>:''}
       {(!!blockstackUser.articlesUrl) ? <Typography>articles url: <Link href={blockstackUser.articlessUrl}>{blockstackUser.articlessUrl}</Link></Typography>:''}
