@@ -9,28 +9,26 @@ const FETCH_FEED_CONTENT_FAILED = 'FETCH_FEED_CONTENT_FAILED'
 const slow_fetchFeedContent = feedUrl => {
   return new Promise((resolve, reject) => {
     parser.parseURL(feedUrl)
-    .then((parsedContent) => {
-      resolve(parsedContent)
-    })
+    .then((parsedContent) => resolve(parsedContent))
     .catch(() => {
       parser.parseURL(`http://localhost:1337/${feedUrl.replace(/(^\w+:|^)\/\//, '')}`)
       .then((parsedContent) => resolve(parsedContent))
       .catch(() => {
         parser.parseURL(`http://cafe-society.news/proxy/${feedUrl}`)
         .then((parsedContent) => resolve(parsedContent))
-        .catch(() => {
-          parser.parseURL(`https://cors-escape.herokuapp.com/${feedUrl}`)
-          .then((parsedContent) => resolve(parsedContent))
-          .catch(() => {
-            parser.parseURL(`https://cors.io/?${feedUrl}`)
-            .then((parsedContent) => resolve(parsedContent))
-            .catch(() => {
-              parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
-              .then((parsedContent) => resolve(parsedContent))
+        // .catch(() => {
+        //   parser.parseURL(`https://cors-escape.herokuapp.com/${feedUrl}`)
+        //   .then((parsedContent) => resolve(parsedContent))
+        //   .catch(() => {
+        //     parser.parseURL(`https://cors.io/?${feedUrl}`)
+        //     .then((parsedContent) => resolve(parsedContent))
+        //     .catch(() => {
+        //       parser.parseURL(`https://cors-anywhere.herokuapp.com/${feedUrl}`)
+        //       .then((parsedContent) => resolve(parsedContent))
               .catch((error) => reject(error))
-            })
-          })
-        })
+        //     })
+        //   })
+        // })
       })
     })
   })
