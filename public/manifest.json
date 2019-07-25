@@ -1,0 +1,13 @@
+{
+  "short_name": "cafe-society",
+  "name": "cafe society",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "description": "experimental rss reader with filters and blockstack sharing",
+  "background_color": "#ffffff",
+  "icons": [{
+    "src": "appicon.png",
+    "type": "image/png"
+  }],
+  "start_url": "./index.html"
+}
