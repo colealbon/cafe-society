@@ -1,6 +1,8 @@
 import * as blockstack from 'blockstack'
-var memoize = require("memoizee")
 import { fetchArticles } from './articleActions'
+
+var memoize = require("memoizee")
+
 
 export const FEED_SELECT_FEED = 'FEED_SELECT_FEED'
 

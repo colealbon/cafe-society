@@ -1,7 +1,6 @@
 import * as blockstack from 'blockstack'
-var memoize = require("memoizee");
-
 import { fetchBlockstackFeeds } from './feedActions'
+var memoize = require("memoizee");
 
 export const FILTER_UPDATE_FILTER = 'FILTER_UPDATE_FILTER'
 

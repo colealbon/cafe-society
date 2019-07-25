@@ -39,6 +39,7 @@ export default (state = initialState, action) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
+          return 'o'
         })
         return !itemExists
       }))
@@ -51,6 +52,7 @@ export default (state = initialState, action) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
+          return 'o'
         })
         return !itemExists
       }))

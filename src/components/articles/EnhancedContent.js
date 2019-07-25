@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Check, DeleteSweep, VoiceOverOff, CancelPresentation } from '@material-ui/icons';
+import { Check, DeleteSweep, VoiceOverOff, CancelPresentation, RemoveCircle } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { removeArticle, toggleArticle } from '../../actions/articleActions'
@@ -80,7 +80,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomain, handleClickRemoveAllArticles, handleClickToggleArticle, articles, selectedSection, filters}) => {
+export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomain, handleClickRemoveAllArticles, handleClickToggleArticle, handleClickRemoveArticle, articles, selectedSection, filters}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'enhanced'
   const deleteSweepTitle = `delete: ${articles.length} articles`
   return (
@@ -110,13 +110,16 @@ export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomai
                       style={{ color: 'green' }}
                     />
                   </IconButton>
-                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "\'").replace(/&amp;/g, "&") : ''}</a>
+                  <IconButton onClick={() => handleClickRemoveArticle(article, articles)}>
+                    <RemoveCircle> </RemoveCircle>
+                  </IconButton>
+                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
                   <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
                 </Typography>
-                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "\'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>         
-                {(!article.blockReasons) ? '' : <Typography>blockReasons:<JSONTree data={article.blockReasons} /></Typography>}
+                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>         
+                {([].concat(article.blockReasons).length !== 0) ? '' : <Typography>blockReasons: <JSONTree data={article.blockReasons} /></Typography>}
                 <Typography>feed: {JSON.stringify(article.feed)}</Typography>
                 {(!!article.muted) ? <Typography>muted: {JSON.stringify(article.muted)}</Typography>:''}
               </CardContent>

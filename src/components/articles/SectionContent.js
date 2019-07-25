@@ -11,7 +11,6 @@ import CardContent from '@material-ui/core/CardContent';
 import {parse} from 'tldjs';
 import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
-import JSONTree from 'react-json-tree'
 
 const mapStateToProps = ({ selectedSection, articles, filters }) => {
   return {
@@ -80,7 +79,7 @@ const mapDispatchToProps = (dispatch) => {
 
 export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection, filters}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'home'
-  const readTitle = `mark ${articles.filter((article) => article.muted === false).length} articles as read`
+  const readTitle = `mark ${articles.length} articles as read`
   return (
     <Fragment>
       <VerticalSpace/>
@@ -105,13 +104,12 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
                       style={{ color: 'green' }}
                     />
                   </IconButton>
-                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "\'").replace(/&amp;/g, "&") : ''}</a>
+                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
                   <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
                 </Typography>
-                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "\'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
-                {(!article.blockReasons) ? '' : <Typography>blockReasons: <JSONTree data={article.blockReasons} /></Typography>}
+                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
               </CardContent>
             </Card>
           </Grid>

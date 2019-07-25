@@ -10,6 +10,7 @@ import {
 
       case FEED_UPDATE_FEED:
         return action.payload
+        
       default:
         return state
     }

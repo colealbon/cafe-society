@@ -9,7 +9,7 @@ import VerticalSpace from './VerticalSpace'
 
 const mapStateToProps = ({ accounts }) => {
   return {
-    accounts: !!accounts ? accounts : []
+    accounts: accounts
   }
 }
 
@@ -17,14 +17,14 @@ export const AccountList = ({ accounts }) => {
   return (
     <Fragment>
       <VerticalSpace />
-      <List subheader={<ListSubheader>{(accounts.length > 0) ? 'Web 3 accounts' : 'log in with metamask to view account'}</ListSubheader>} >
-        {accounts.map((account) => {
+      <List subheader={<ListSubheader>{(accounts) ? 'Web 3 accounts' : 'log in with metamask to view account'}</ListSubheader>} >
+        {accounts ? accounts.map((account) => {
           return (
             <ListItem key={account}>
               <ListItemText primary={account} />
             </ListItem>
           )
-        })
+        }) : {}
         }
       </List>
     </Fragment>

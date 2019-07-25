@@ -8,18 +8,21 @@ export const USER_HANDLE_LOGIN = 'USER_HANDLE_LOGIN'
 export const USER_LOGGED_IN = 'USER_LOGGED_IN'
 export const USER_LOGIN_ERROR = 'USER_LOGIN_ERROR'
 
+const appConfig = new blockstack.AppConfig()
+const userSession = new blockstack.UserSession({ appConfig: appConfig })
+
 export const fetchUserData = () => {
   const type = FETCH_USER_DATA
 
-  if (blockstack.isUserSignedIn()) {
+  if (userSession.isUserSignedIn()) {
     return {
       type,
       payload: {
         isAuthenticated: true,
-        profile: blockstack.loadUserData()
+        profile: userSession.loadUserData()
       }
     }
-  } else if (blockstack.isSignInPending()) {
+  } else if (userSession.isSignInPending()) {
     return {
       type,
       payload: {
@@ -39,7 +42,7 @@ export const fetchUserData = () => {
 export const loginWithBlockstack = () => {
   // Open the blockstack browser for sign in
   // After choosing an Id to sign in with, redirect back to the login page
-  blockstack.redirectToSignIn(
+  userSession.redirectToSignIn(
     `${window.location.origin}/`,
     `${window.location.origin}/manifest.json`,
      ['store_write', 'publish_data'])
@@ -47,7 +50,7 @@ export const loginWithBlockstack = () => {
 }
 
 export const userLogout = () => {
-  blockstack.signUserOut()
+  userSession.signUserOut()
   window.location.replace(`${window.location.origin}/`)
   return { type: USER_LOGOUT }
 }
@@ -61,7 +64,7 @@ export const handleBlockstackLogin = () => {
     dispatch({ type: USER_HANDLE_LOGIN })
     // Handle sign in from Blockstack after redirect from Blockstack browser
     // Once sign in completes (promise is fulfilled), redirect to an authenticated only route
-    return blockstack.handlePendingSignIn()
+    return userSession.handlePendingSignIn()
       .then(
         res => {
           window.location.replace(`${window.location.origin}/`)

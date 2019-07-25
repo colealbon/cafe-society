@@ -23,7 +23,6 @@ import SectionContent from '../articles/SectionContent'
 import EnhancedContent from '../articles/EnhancedContent'
 import BlockstackProfile from '../BlockstackProfile'
 import { selectSection } from '../../actions/sectionActions'
-import { ViewHeadlineSharp } from '@material-ui/icons';
 
 
 const mapStateToProps = ({leftDrawer, sections}) => {
@@ -48,7 +47,7 @@ export const FrontPage = ({handleDrawerOpen, handleSetSection, sections}) => {
   return (
     <Fragment>
       <AppBar position="fixed">
-        <Toolbar disableGutters={!open}>
+        <Toolbar>
         <IconButton
           color="inherit"
           aria-label="Open drawer"

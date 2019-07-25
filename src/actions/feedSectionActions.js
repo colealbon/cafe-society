@@ -19,19 +19,19 @@ export const selectFeedSection = (feedSection, feeds) => {
         if (!feedItem.sections) {
           return Object.assign(feedItem, {sections: [feedSection.section]})
         }
-        if (feedItem.sections == []) {
+        if (feedItem.sections === []) {
           return Object.assign(feedItem, {sections: [feedSection.section]})
         }
         const deleteSection = (feedItem.sections || []).filter((feedSectionItem) => {
-          return feedSection.section.id == feedSectionItem.id
+          return feedSection.section.id === feedSectionItem.id
         })
-        if (deleteSection.length < 1) {
+
+        if (deleteSection === undefined || deleteSection.length === 0) {
           return Object.assign(feedItem, {sections: feedItem.sections.concat(feedSection.section)})
         }
-        feedItem.sections = Object.assign((feedItem.sections || []).filter((feedSectionItem) => {
+        return {sections: feedItem.sections.filter((feedSectionItem) => {
           return (feedSection.section.id !== feedSectionItem.id)
-        }))
-        return feedItem
+        }), ...feedItem}
       })
     ))
   }

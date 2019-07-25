@@ -1,28 +1,20 @@
+import * as blockstack from 'blockstack'
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
-var flatten = require('@flatten/array')
-import * as blockstack from 'blockstack'
-
-const FETCH_FEED_CONTENT_FAILED = 'FETCH_FEED_CONTENT_FAILED'
 
 const slow_fetchFeedContent = feedUrl => {
-  return new Promise((resolve, reject) => {
-    parser.parseURL(feedUrl)
-    .then((parsedContent) => resolve(parsedContent))
-    .catch(() => {
-      parser.parseURL(`http://localhost:1337/${feedUrl.replace(/(^\w+:|^)\/\//, '')}`)
-      .then((parsedContent) => resolve(parsedContent))
-      .catch(() => {
-        parser.parseURL(`http://cafe-society.news/proxy/${feedUrl}`)
-        .then((parsedContent) => resolve(parsedContent))
-        .catch((error) => reject(error))
-      })
-    })
-  })
+  return !feedUrl ? 
+  Promise.reject('slow_fetchFeedContent requires feed url') :
+  parser.parseURL(`/.netlify/functions/node-fetch?url=${feedUrl}`)
 }
 
-const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000  })
+const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000 })
+
+const slowBlockstackGetFile = (filename, options) => {
+  return blockstack.getFile(filename, options)
+}
+const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 
@@ -33,7 +25,7 @@ export const removeArticle = (removeArticle, articles) => {
       type: ARTICLES_REMOVE_ARTICLE,
       payload: removeArticle
     })
-    if (!!articles) {
+    if (!!articles && articles !== undefined) {
       dispatch(publishArticles(articles.filter(articleItem => {
         return removeArticles.filter((removeArticleItem) => (removeArticleItem.id === articleItem.id)).length === 0
       })))
@@ -66,17 +58,17 @@ export const toggleArticle = (articles, allArticles) => {
       type: ARTICLES_TOGGLE_ARTICLE,
       payload: articles
     })
-    const newArticles = allArticles.map((stateArticle) => {
+    dispatch(publishArticles(allArticles.map((stateArticle) => {
       let articleMatched = false
       articles = [].concat(articles)
-      const newArticles = articles.map((toggleArticle) => {
+      articles.map((toggleArticle) => {
         if (toggleArticle.id === stateArticle.id) {
           articleMatched = true
         }
+        return 'o'
       })
       return (articleMatched === true ) ? { ...stateArticle, muted: !stateArticle.muted || false } : stateArticle
-    })
-    dispatch(publishArticles(newArticles))
+    })))
   }
 }
 
@@ -89,29 +81,25 @@ export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 export const fetchArticles = (feeds, filters) => {
   return (dispatch) => {
     const articlesRequestQueue = []
-    articlesRequestQueue.push(new Promise((resolve, reject) => {
-      blockstack.getFile('articles.json', {
+    articlesRequestQueue.push(
+      blockstackGetFile('articles.json', {
         decrypt: false
       })
-      .then((fileContents) => {
+      .then((savedArticles) => {
+        if (!JSON.parse(savedArticles)) {
+          return
+        }
         dispatch({
           type: FETCH_SAVED_ARTICLES_SUCCESS,
           payload: {
-            articles:JSON.parse(fileContents),
+            articles: JSON.parse(savedArticles),
             filters: filters
           }
         })
-        resolve(JSON.parse(fileContents))
       })
-      .catch((error) =>{
-        dispatch({
-          type: FETCH_SAVED_ARTICLES_FAIL,
-          payload: {error: error}
-        })
-      })
-    }))
+    )
     feeds.map((feed) => {
-      if (feed.muted !== true) { 
+      if (feed.muted !== true && feed.url) { 
         dispatch({
           type: FETCH_ARTICLES_START,
           payload: {
@@ -119,45 +107,32 @@ export const fetchArticles = (feeds, filters) => {
             filters: filters
           }
         })
-        articlesRequestQueue.push(
-          new Promise((resolve, reject) => {
-            fetchFeedContent(feed.url)
-            .then((feedContent) => {
-              if (!!feedContent ) {
-                if (!!feedContent.items) {
-                  const articles = feedContent.items.map((item) => Object.assign({id: item.guid || item.link, feed: feed, muted: false}, item ))
-                  dispatch({
-                    type: FETCH_ARTICLES_SUCCESS,
-                    payload: {
-                      articles: articles, 
-                      filters: filters
-                    }
-                  })
-                  resolve()   
-                }
-                reject({message: feedUrl})
-              }
-              reject({message: feedUrl})
-            })
-            .catch((error) => {
+        fetchFeedContent(feed.url).then((fetchedContent) => {
+          dispatch({
+            type: 'FETCH_ARTICLES_COMPLETE',
+            payload: fetchedContent
+          })
+
+          if (!!fetchedContent) {
+            if (!!fetchedContent.items) {
               dispatch({
-                type: FETCH_ARTICLES_FAIL,
+                type: FETCH_ARTICLES_SUCCESS,
                 payload: {
-                  error: error
+                  articles: fetchedContent.items.map((item) => {
+                    return !item.guid ? 
+                    Object.assign({id: item.link, feed: feed}, item) :
+                    Object.assign({id: item.guid, feed: feed}, item)
+                  }), 
+                  filters: filters
                 }
               })
-            })
-          })
-        )
+            }
+          }
+        })
       }
+      return 'o'
     })
-    Promise.all(articlesRequestQueue).then(() => {
-      dispatch({
-        type: 'FETCH_ARTICLES_COMPLETE'
-      })
-    })
-  }
-}
+  }}
 
 export const PUBLISH_ARTICLES_START = 'PUBLISH_ARTICLES_START'
 export const PUBLISH_ARTICLES_SUCCESS = 'PUBLISH_ARTICLES_SUCCESS'

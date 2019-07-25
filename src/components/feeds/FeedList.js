@@ -78,13 +78,13 @@ const mapDispatchToProps = (dispatch) => {
     handleClickRemoveAllFeeds: (feeds) => {
       dispatch(removeFeed(feeds, feeds))
     },
-    handleClickSetFeed: (feed, feeds) => {
-      dispatch(selectFeedSection(feed, feeds))
-    }
+    handleClickSetFeedSection: (feedSection, feeds) => {
+      dispatch(selectFeedSection(feedSection, feeds))
+    },
   }
 }
 
-export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClickToggleFeed, handleClickRemoveAllFeeds, feeds, sections}) => {
+export const FeedList = ({ handleClickSetFeedSection, handleClickRemoveFeed, handleClickToggleFeed, handleClickRemoveAllFeeds, feeds, sections}) => {
   const deleteSweepFeed = `delete: ${[].concat(feeds).length}`
   return (
     <Fragment>
@@ -133,10 +133,10 @@ export const FeedList = ({ handleClickSetFeed, handleClickRemoveFeed, handleClic
                     sections.map((section) => {
                       return (<Chip
                         key={section.id}
-                        color={(section.id == (feed.sections || [] ).filter((feedSection) => feedSection.id === section.id)
+                        color={(section.id === (feed.sections || [] ).filter((feedSection) => feedSection.id === section.id)
                           .map((feedSection) => feedSection.id)[0]) ? 'primary' : 'default'}
                         label={section.name}
-                        onClick={() => handleClickSetFeed(Object.assign(
+                        onClick={() => handleClickSetFeedSection(Object.assign(
                           {"section": section},
                           feed
                         ), feeds)}

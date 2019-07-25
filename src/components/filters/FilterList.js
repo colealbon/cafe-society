@@ -138,7 +138,7 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
                     sections.map((section) => {
                       return (<Chip
                         key={section.id}
-                        color={(section.id == (filter.sections || [] ).filter((filterSection) => filterSection.id === section.id)
+                        color={(section.id === (filter.sections || [] ).filter((filterSection) => filterSection.id === section.id)
                           .map((filterSection) => filterSection.id)[0]) ? 'primary' : 'default'}
                         label={section.name}
                         onClick={() => handleClickSetFilterSection(Object.assign(
@@ -158,7 +158,7 @@ export const FilterList = ({ handleClickRemoveFilter, handleClickToggleFilter, h
                     fields.map((field) => {
                       return (<Chip
                         key={field.id}
-                        color={(field.id == (filter.fields || [] ).filter((filterField) => filterField.id === field.id)
+                        color={(field.id === (filter.fields || [] ).filter((filterField) => filterField.id === field.id)
                           .map((filterField) => filterField.id)[0]) ? 'primary' : 'default'}
                         label={field.name}
                         onClick={() => handleClickSetFilterField(Object.assign(

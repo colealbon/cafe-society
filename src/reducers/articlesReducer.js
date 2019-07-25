@@ -1,5 +1,3 @@
-var flatten = require('@flatten/array')
-
 import {
   ARTICLES_REMOVE_ARTICLE,
   ARTICLES_TOGGLE_ARTICLE,
@@ -8,14 +6,17 @@ import {
   ARTICLES_MARK_READ
 } from '../actions/articleActions'
 
+// todo: replace the above actions with:
+// FETCHED_ARTICLES_OVERWRITE_IF_EXISTS
+// FETCHED_ARTICLES_DISCARD_IF_EXISTS
+// FETCHED_ARTICLES_REMOVE_IF_NOT_IN_FEED
+
 import {
   SECTION_SELECT_SECTION
 } from '../actions/sectionActions'
 
 import {
-  FILTERS_ADD_FILTER,
-  FILTERS_REMOVE_FILTER,
-  FILTERS_TOGGLE_FILTER
+  FILTERS_ADD_FILTER
 } from '../actions/filterActions'
 
 import {
@@ -26,7 +27,6 @@ import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
 
-
 export default (state = [], action) => {
   switch (action.type) {
 
@@ -35,9 +35,9 @@ export default (state = [], action) => {
         
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
-      return flatten(state.filter((articleItem) => articleItem.title !== '').map((stateArticleItem) => {
-        const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)[0]
-        return (!!overwrite) ? overwrite : stateArticleItem
+      return state.filter((articleItem) => articleItem.title !== '').map((stateArticleItem) => {
+        const overwrite = action.payload.articles.filter((payloadArticleItem) => payloadArticleItem.id === stateArticleItem.id)
+        return overwrite ? overwrite[0] : stateArticleItem
       })
       .concat((action.payload.articles).filter((payloadItem) => {
         let itemExists = false
@@ -45,9 +45,11 @@ export default (state = [], action) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
+          return 'o'
         })
         return !itemExists
-      })))
+      }))
+      .reduce((a, b) => a.concat(b))
       .filter((articleItem) => articleItem.title !== '')
       .map(articleItem => {
         const blockReasons = action.payload.filters
@@ -57,12 +59,12 @@ export default (state = [], action) => {
           true :
           filterItem.sections.filter((filterItemSectionItem) => {
             return articleItem.feed.sections.filter((articleItemSectionItem) => {
-              return articleItemSectionItem.id == filterItemSectionItem.id
+              return articleItemSectionItem.id === filterItemSectionItem.id
             }).length !== 0
           }).length !==0
         })
         .filter(filterItem => {
-          return (filterItem.fields == undefined || filterItem.fields.length == 0) ?
+          return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
           Object.keys(articleItem)
           .filter((articleField) => articleField !== 'id')
           .filter((articleField) => articleField !== 'feed')
@@ -92,13 +94,14 @@ export default (state = [], action) => {
           return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
           true :
           filterItem.sections.filter((filterItemSectionItem) => {
-            return articleItem.feed.sections.filter((articleItemSectionItem) => {
-              return articleItemSectionItem.id == filterItemSectionItem.id
-            }).length !== 0
+            if (articleItem.feed.sections === undefined) {
+              return false
+            }
+            return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
           }).length !==0
         })
         .filter(filterItem => {
-          return (filterItem.fields == undefined || filterItem.fields.length == 0) ?
+          return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
           Object.keys(articleItem)
           .filter((articleField) => articleField !== 'id')
           .filter((articleField) => articleField !== 'feed')
@@ -154,7 +157,7 @@ export default (state = [], action) => {
         if (filterSection === undefined) {
           return false
         }
-        return action.payload.section.id == (filterSection.id || true)
+        return action.payload.section.id === (filterSection.id || true)
       }).length > 0
 
       if (!!action.payload.muted) {
@@ -190,6 +193,7 @@ export default (state = [], action) => {
               })
             }
           }
+          return 'o'
         }).filter((filterMatched) => filterMatched === true).length > 0)
         return (
           (matchedFilter) ?
@@ -204,16 +208,16 @@ export default (state = [], action) => {
         if (filterField === undefined) {
           return false
         }
-        return action.payload.field.id == (filterField.id || true)
+        return action.payload.field.id === (filterField.id || true)
       }).length > 0
       if (isToggleOffField) {
         return state.map((article) => {
-
           const matchedFilter = (action.payload.fields.map((filterField) => {
             if ((article[`${filterField.name}`]).indexOf(action.payload.text) !== -1) {
               return true
             }
-          }).filter((filterMatched) => filterMatched == true).length > 0)
+            return false
+          }).filter((filterMatched) => filterMatched === true).length > 0)
     
           return (
             (matchedFilter) ?
@@ -223,12 +227,12 @@ export default (state = [], action) => {
         })
       }
       return state.map((article) => {
-
         const matchedFilter = (action.payload.fields.map((filterField) => {
           if ((article[`${filterField.name}`]).indexOf(action.payload.text) !== -1) {
             return true
           }
-        }).filter((filterMatched) => filterMatched == true).length > 0)
+          return false
+        }).filter((filterMatched) => filterMatched === true).length > 0)
   
         return (
           (matchedFilter) ?
@@ -269,10 +273,12 @@ export default (state = [], action) => {
               if ((feedSection.id ||  action.payload.section.id) === action.payload.section.id) {
                 return true
               }
+              return false
             })
           }
           return true
         }
+        return false
       }).filter((filterMatched) => filterMatched === true).length > 0)
 
       if (article.blockReasons) {
@@ -302,5 +308,3 @@ export default (state = [], action) => {
       return state
   }
 }
-
-const initialState = []

@@ -18,7 +18,7 @@ import FilterListIcon from '@material-ui/icons/FilterList'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ContactsIcon from '@material-ui/icons/Contacts'
 import MoneyIcon from '@material-ui/icons/Money'
-import IdentityIcon from '@material-ui/icons/PermIdentity'
+// import IdentityIcon from '@material-ui/icons/PermIdentity'
 
 const mapStateToProps = ({ leftDrawer, blockstackUser }) => {
   return {
@@ -73,10 +73,6 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose, blockstackUser }) =>
           <ListItemText primary="Blockstack Profile" />
         </ListItem>
       </List>
-      <ListItem onClick={() => handleDrawerClose()} button key='/web3-account-list' component={Link} to='/web3-account-list'>
-        <ListItemIcon><IdentityIcon/></ListItemIcon>
-        <ListItemText primary="Web3 Provider" />
-      </ListItem>
       <Divider />
       <List subheader={<ListSubheader>Project / Community</ListSubheader>}>
         <ListItem onClick={() => handleDrawerClose()} button key='/about-us' component={Link} to='/about-us'>

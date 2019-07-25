@@ -1,6 +1,7 @@
 import * as blockstack from 'blockstack'
-var memoize = require("memoizee")
 import { fetchBlockstackFilters } from './filterActions'
+
+var memoize = require("memoizee")
 
 export const CONTACT_SELECT_CONTACT = 'CONTACT_SELECT_CONTACT'
 
@@ -71,7 +72,7 @@ export const addContact = (contact, contacts) => {
       }
     })
     dispatch(updateContact(''))
-    dispatch(publishContacts(contacts.filter((contactItem) => contactItem.id !== name).concat({ id: contact, name: contact,  muted: false })))
+    dispatch(publishContacts(contacts.filter((contactItem) => contactItem.id !== contact).concat({ id: contact, name: contact,  muted: false })))
   }
 }
 
@@ -95,7 +96,7 @@ export const toggleContact = (contact, contacts) => {
       type: CONTACTS_TOGGLE_CONTACT,
       payload: contact
     })
-    dispatch(publishContacts(contacts.map(contactItem => contactItem.id == contact.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)))
+    dispatch(publishContacts(contacts.map(contactItem => contactItem.id === contact.id ? { ...contactItem, muted: !contactItem.muted || false } : contactItem)))
   }
 }
 

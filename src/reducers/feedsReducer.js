@@ -26,22 +26,22 @@ export default (state = initialState, action) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
+        return 'o'
         })
         return !itemExists
       }))
 
     case FETCH_FEEDS_SUCCESS:
-      state.filter((stateItem) => !Array.isArray(stateItem))
-      .concat(action.payload.filter((payloadItem) => {
+      return state.filter((stateItem) => !Array.isArray(stateItem)).concat(action.payload.filter((payloadItem) => {
         let itemExists = false
         state.map((stateItem) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
+          return 'o'
         })
         return !itemExists
       }))
-  
 
     case FEEDS_ADD_FEED:
       return [
@@ -71,19 +71,22 @@ export default (state = initialState, action) => {
         if (!feed.sections) {
           return Object.assign(feed, {sections: [action.payload.section]})
         }
-        if (feed.sections == []) {
+        if (feed.sections === []) {
           return Object.assign(feed, {sections: [action.payload.section]})
         }
         const deleteSection = feed.sections.filter((feedSection) => {
-          return action.payload.section.id == feedSection.id
+          return action.payload.section.id === feedSection.id
         })
         if (deleteSection.length < 1) {
           return Object.assign(feed, {sections: feed.sections.concat(action.payload.section)})
         }
-        feed.sections = Object.assign(feed.sections.filter((feedSection) => {
+        feed.sections = feed.sections.filter((feedSection) => {
           return (action.payload.section.id !== feedSection.id)
-        }))
-        return feed
+        })
+
+        return {sections: feed.sections.filter((feedSection) => {
+          return (action.payload.section.id !== feedSection.id)
+        }), ...feed}
         })
     default:
       return state

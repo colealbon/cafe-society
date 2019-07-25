@@ -28,6 +28,7 @@ export default (state = initialState, action) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
+          return 'o'
         })
         return !itemExists
       }))
@@ -39,13 +40,14 @@ export default (state = initialState, action) => {
           if (stateItem.id === payloadItem.id) {
             itemExists = true
           }
+          return 'o'
         })
         return !itemExists
       }))
 
     case FILTERS_ADD_FILTER:
       return [
-        ...state.filter(filter => filter.id != action.payload.id),
+        ...state.filter(filter => filter.id !== action.payload.id),
         action.payload
       ]
 
@@ -76,7 +78,7 @@ export default (state = initialState, action) => {
         }
         
         const deleteSection = (filter.sections || []).filter((filterSection) => {
-          return action.payload.section.id == filterSection.id
+          return action.payload.section.id === filterSection.id
         }).length !== 0
         
         if (deleteSection) {
@@ -99,11 +101,11 @@ export default (state = initialState, action) => {
         if (!filter.fields) {
           return Object.assign(filter, {fields: [action.payload.field]})
         }
-        if (filter.fields == []) {
+        if (filter.fields === []) {
           return Object.assign(filter, {fields: [action.payload.field]})
         }
         const deleteField = filter.fields.filter((field) => {
-          return action.payload.field.id == field.id
+          return action.payload.field.id === field.id
         })
         if (deleteField.length < 1) {
           return Object.assign(filter, {fields: filter.fields.concat(action.payload.field)})

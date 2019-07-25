@@ -19,11 +19,11 @@ export const selectFilterSection = (filterSection, filters) => {
         if (!filterItem.sections) {
           return Object.assign(filterItem, {sections: [filterSection.section]})
         }
-        if (filterItem.sections == []) {
+        if (filterItem.sections === []) {
           return Object.assign(filterItem, {sections: [filterSection.section]})
         }
         const deleteSection = (filterItem.sections || []).filter((filterSectionItem) => {
-          return filterSection.section.id == filterSectionItem.id
+          return filterSection.section.id === filterSectionItem.id
         })
         if (deleteSection.length < 1) {
           return Object.assign(filterItem, {sections: filterItem.sections.concat(filterSection.section)})
