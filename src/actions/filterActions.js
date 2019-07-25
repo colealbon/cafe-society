@@ -49,6 +49,7 @@ export const removeFilter = (filter, filters) => {
   }
 }
 export const PUBLISH_FILTERS_START = 'PUBLISH_FILTERS_START'
+export const PUBLISH_FILTERS_FAIL = 'PUBLISH_FILTERS_FAIL'
 export const PUBLISH_FILTERS_SUCCESS = 'PUBLISH_FILTERS_SUCCESS'
 export const PUBLISH_FILTERS_ERROR = 'PUBLISH_FILTERS_ERROR'
 
@@ -68,8 +69,12 @@ export const publishFilters = (filters) => {
             filters: filters
           }
         })
-      }
-    )
+      }).catch((error) => {
+        dispatch({
+          type: PUBLISH_FILTERS_FAIL,
+          payload: error
+        })
+      })
   }
 }
 

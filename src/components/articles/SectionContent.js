@@ -1,22 +1,33 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Check, PlaylistAddCheck, VoiceOverOff } from '@material-ui/icons';
+import { Check, PlaylistAddCheck, VoiceOverOff, ThumbDown } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { removeArticle, toggleArticle, markArticleRead } from '../../actions/articleActions'
-import { addFilter} from '../../actions/filterActions'
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import {parse} from 'tldjs';
 import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
+import { addFilter, updateFilter, publishFilters} from '../../actions/filterActions'
 
-const mapStateToProps = ({ selectedSection, articles, filters }) => {
+function getSelectionText() {
+  var text = "";
+  if (window.getSelection) {
+      text = window.getSelection().toString();
+  } else if (document.selection && document.selection.type !== "Control") {
+      text = document.selection.createRange().text;
+  }
+  return text;
+}
+
+const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser }) => {
   return {
     selectedSection: !!selectedSection ? selectedSection : '',
     articles: !!articles ? articles.filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1) : [],
     allArticles: !!articles ? articles : [],
+    blockstackUser: blockstackUser, 
     filters: !!filters ? filters : [{
       id: 'Car Detailer',
       text: 'Car Detailer',
@@ -73,11 +84,21 @@ const mapDispatchToProps = (dispatch) => {
     },
     handleClickMarkAllRead: (articles) => {
       dispatch(markArticleRead(articles, articles))
+    },
+    handleClickAddFilter: (text, filters, selectedSection, blockstackUser) => {
+      const newFilter = {
+        id: text,
+        text: text,
+        fields: [{id: "title", name: "title", muted: false}],
+        sections: [selectedSection]
+      }
+      dispatch(addFilter(newFilter, filters))
+      dispatch(updateFilter(''))
     }
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection, filters}) => {
+export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection, filters}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'home'
   const readTitle = `mark ${articles.length} articles as read`
   return (
@@ -103,6 +124,9 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickRemoveArtic
                       id='checkToggleArticle'
                       style={{ color: 'green' }}
                     />
+                  </IconButton>
+                  <IconButton title="add filter" onClick={() => handleClickAddFilter(getSelectionText(), filters, selectedSection)}>
+                    <ThumbDown id='addFilter'/>
                   </IconButton>
                   <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
                   <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
