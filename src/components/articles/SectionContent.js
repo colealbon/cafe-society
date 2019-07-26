@@ -86,6 +86,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(markArticleRead(articles, articles))
     },
     handleClickAddFilter: (text, filters, selectedSection, blockstackUser) => {
+      if (text === '') {
+        return
+      }
       const newFilter = {
         id: text,
         text: text,
@@ -125,7 +128,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                       style={{ color: 'green' }}
                     />
                   </IconButton>
-                  <IconButton title="add filter" onClick={() => handleClickAddFilter(getSelectionText(), filters, selectedSection)}>
+                  <IconButton title="add filter from selected text" onClick={() => handleClickAddFilter(getSelectionText(), filters, selectedSection)}>
                     <ThumbDown id='addFilter'/>
                   </IconButton>
                   <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
