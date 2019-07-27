@@ -8,6 +8,7 @@
     "@piotr-cz/redux-persist-idb-storage": "^1.0.0",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "axios": "^0.19.0",
+    "bayes": "^0.0.7",
     "blockstack": "^19.2.1",
     "connected-react-router": "^6.5.2",
     "encoding": "^0.1.12",

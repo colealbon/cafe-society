@@ -1,16 +1,17 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Check, PlaylistAddCheck, VoiceOverOff, ThumbDown } from '@material-ui/icons';
+import { PlaylistAddCheck, VoiceOverOff, ThumbDown, ThumbUp } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { removeArticle, toggleArticle, markArticleRead } from '../../actions/articleActions'
+import { learn } from '../../actions/classifierActions'
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import {parse} from 'tldjs';
 import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
-import { addFilter, updateFilter, publishFilters} from '../../actions/filterActions'
+import { addFilter, updateFilter} from '../../actions/filterActions'
 
 function getSelectionText() {
   var text = "";
@@ -97,11 +98,15 @@ const mapDispatchToProps = (dispatch) => {
       }
       dispatch(addFilter(newFilter, filters))
       dispatch(updateFilter(''))
+    },
+    handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
+      dispatch(learn(category, selectedSection, article, classifiers))
+      dispatch(markArticleRead(article, articles))
     }
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection, filters}) => {
+export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection, filters, classifiers, handleClickLearn}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'home'
   const readTitle = `mark ${articles.length} articles as read`
   return (
@@ -122,16 +127,20 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
             <Card>
               <CardContent>
                 <Typography variant="h6" >
-                  <IconButton title="mark article as read" onClick={() => handleClickToggleArticle(article, articles)}>
-                    <Check
-                      id='checkToggleArticle'
-                      style={{ color: 'green' }}
-                    />
-                  </IconButton>
-                  <IconButton title="add filter from selected text" onClick={() => handleClickAddFilter(getSelectionText(), filters, selectedSection)}>
+                  <IconButton title="train as not-good, add filter from selected text" onClick={() => {
+                    if (getSelectionText().length !== 0) {
+                      handleClickAddFilter(getSelectionText(), filters, selectedSection)
+                    }
+                    handleClickLearn(selectedSection, article, 'not-good', classifiers, articles)
+                  }}>
                     <ThumbDown id='addFilter'/>
                   </IconButton>
                   <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
+                  <IconButton title="train as good" onClick={() => {
+                    handleClickLearn(selectedSection, article, 'good', classifiers, articles)
+                  }}>
+                    <ThumbUp id='train-good'/>
+                  </IconButton>
                   <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
