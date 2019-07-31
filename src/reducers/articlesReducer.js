@@ -27,12 +27,18 @@ import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
 
+import {
+  CLASSIFIERS_LEARN_SUCCESS
+} from '../actions/classifierActions'
+
+var bayes = require('bayes')
+
 export default (state = [], action) => {
   switch (action.type) {
 
     case 'RESET_APP':
       return []
-        
+
     case FETCH_SAVED_ARTICLES_SUCCESS:
       // selectively overwrite article cache with blockstack version
       return state.filter((articleItem) => articleItem.title !== '').map((stateArticleItem) => {
@@ -303,6 +309,46 @@ export default (state = [], action) => {
       )
 
   })  
+
+  case CLASSIFIERS_LEARN_SUCCESS:
+    return state.map((article) => {
+      if (!article.classifiers) {
+        article.classifiers = action.payload.filter((classifier) => {
+          if (!article.feed.sections) {
+            return Object.keys(article).map((articleField) =>{
+              return classifier.id ===articleField
+            }).length !== 0
+          }
+          return article.feed.sections.filter((articleSection) => {
+            return classifier.section.id === articleSection.id
+          }).length !== 0
+        })
+        return article
+      }
+      article.classifiers =  article.classifiers.filter((articleClassifier) => {
+        return !action.payload.filter((payloadClassifier) => payloadClassifier.id === articleClassifier.id)
+      }).concat(action.payload)
+      .filter((classifier) => {
+        if (!article.feed.sections) {
+          return Object.keys(article).map((articleField) =>{
+            return classifier.id ===articleField
+          }).length !== 0
+        }
+        return article.feed.sections.filter((articleSection) => {
+          return classifier.section.id === articleSection.id
+        }).length !== 0
+      })
+      return article
+    }).map((article) => {
+      article.bayesCategories = article.classifiers.map((classifier) => {
+        let bayesClassifier = bayes(classifier.bayes)
+        return  {
+          classifier: classifier.id,
+          category: bayesClassifier.categorize(article[`${classifier.field}`])
+        }
+      })
+      return article
+    })
 
   default:
       return state

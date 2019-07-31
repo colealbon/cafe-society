@@ -16,6 +16,7 @@ import FilterList from '../filters/FilterList'
 import FeedList from '../feeds/FeedList'
 import ContactList from '../contacts/ContactList'
 import AccountList from '../AccountList'
+import ClassifierList from '../classifiers/ClassifierList'
 import LeftDrawer from './LeftDrawer'
 import Logout from '../Logout'
 import { handleLeftDrawerOpen } from '../../actions/sideDrawerActions'
@@ -74,6 +75,7 @@ export const FrontPage = ({handleDrawerOpen, handleSetSection, sections}) => {
             <Tab hidden disabled value="/contact-list" component={Link} to="/contact-list" />
             <Tab hidden disabled value="/enhanced-content" component={Link} to="/enhanced-content" />
             <Tab hidden disabled value="/blockstack-profile" component={Link} to="/blockstack-profile" />
+            <Tab hidden disabled value="/classifier-list" component={Link} to="/classifier-list" />
           </Toolbar>
         </Typography>
         </Toolbar>
@@ -86,6 +88,7 @@ export const FrontPage = ({handleDrawerOpen, handleSetSection, sections}) => {
         <Route path='/feed-list' component={FeedList} />
         <Route path='/filter-list' component={FilterList} />
         <Route path='/contact-list' component={ContactList} />
+        <Route path='/classifier-list' component={ClassifierList} />
         <Route path='/enhanced-content' component={EnhancedContent} />
         <Route path='/blockstack-profile' component={BlockstackProfile} />
         <Route path='/web3-account-list' component={AccountList} />

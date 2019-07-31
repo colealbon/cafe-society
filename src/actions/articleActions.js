@@ -108,11 +108,6 @@ export const fetchArticles = (feeds, filters) => {
           }
         })
         fetchFeedContent(feed.url).then((fetchedContent) => {
-          dispatch({
-            type: 'FETCH_ARTICLES_COMPLETE',
-            payload: fetchedContent
-          })
-
           if (!!fetchedContent) {
             if (!!fetchedContent.items) {
               dispatch({

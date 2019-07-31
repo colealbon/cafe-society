@@ -26,6 +26,7 @@ import leftDrawerReducer from './reducers/leftDrawerReducer'
 import selectedSectionReducer from './reducers/selectedSectionReducer'
 import feedsReducer from './reducers/feedsReducer'
 import feedReducer from './reducers/feedReducer'
+import classifiersReducer from './reducers/classifiersReducer'
 import contactsReducer from './reducers/contactsReducer'
 import contactReducer from './reducers/contactReducer'
 import filtersReducer from './reducers/filtersReducer'
@@ -47,6 +48,7 @@ const middleware = routerMiddleware(history)
 const rootReducer = combineReducers({
   articles: articlesReducer,
   accounts: accountsReducer,
+  classifiers: classifiersReducer,
   selectedSection: selectedSectionReducer,
   developerFund: developerFundReducer,
   leftDrawer: leftDrawerReducer,

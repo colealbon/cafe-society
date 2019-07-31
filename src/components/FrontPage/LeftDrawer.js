@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import { handleLeftDrawerClose } from '../../actions/sideDrawerActions'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
+import { ThumbsUpDown } from '@material-ui/icons'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import PropTypes from 'prop-types'
 import Divider from '@material-ui/core/Divider'
@@ -35,7 +36,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const LeftDrawer = ({ leftDrawer, handleDrawerClose, blockstackUser }) => {
+export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
   return (
     <Drawer
       variant="persistent"
@@ -60,6 +61,10 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose, blockstackUser }) =>
         <ListItem onClick={() => handleDrawerClose()} button key='/filter-list' component={Link} to='/filter-list'>
           <ListItemIcon><FilterListIcon/></ListItemIcon>
           <ListItemText primary="Filters" />
+        </ListItem>
+        <ListItem onClick={() => handleDrawerClose()} button key='/classifier-list' component={Link} to='/classifier-list'>
+          <ListItemIcon><ThumbsUpDown/></ListItemIcon>
+          <ListItemText primary="Classifiers" />
         </ListItem>
         <ListItem onClick={() => handleDrawerClose()} button key='/contact-list' component={Link} to='/contact-list'>
           <ListItemIcon><ContactsIcon/></ListItemIcon>

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Check, DeleteSweep, VoiceOverOff, CancelPresentation, RemoveCircle } from '@material-ui/icons';
+import { Check, DeleteSweep, VoiceOverOff, ClearAll, RemoveCircle } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { removeArticle, toggleArticle } from '../../actions/articleActions'
@@ -91,7 +91,7 @@ export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomai
           <DeleteSweep></DeleteSweep>
         </IconButton>
         <IconButton title='reset all app data' onClick={() => {handleClickResetAppData(articles)}}>
-          <CancelPresentation></CancelPresentation>
+          <ClearAll></ClearAll>
         </IconButton>
         {sectionTitle}
       </Typography>
@@ -118,8 +118,10 @@ export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomai
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
                 </Typography>
-                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>         
-                {([].concat(article.blockReasons).length !== 0) ? '' : <Typography>blockReasons: <JSONTree data={article.blockReasons} /></Typography>}
+                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
+                {(article.bayesCategories && article.bayesCategories.length !== 0) ? <Typography variant="h6" >bayes categories: <JSONTree hideRoot={true} data={article.bayesCategories} /></Typography> : ''}
+                {(article.bayes && article.bayes.length !== 0) ? <Typography variant="h6" >bayes: <JSONTree hideRoot={true} data={article.bayes} /></Typography> : ''}
+                {(article.blockReasons && article.blockReasons.length !== 0) ? <Typography variant="h6" >blockReasons: <JSONTree hideRoot={true} data={article.blockReasons} /></Typography> : ''}
                 <Typography>feed: {JSON.stringify(article.feed)}</Typography>
                 {(!!article.muted) ? <Typography>muted: {JSON.stringify(article.muted)}</Typography>:''}
               </CardContent>

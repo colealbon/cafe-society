@@ -1,31 +1,33 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import { PlaylistAddCheck, VoiceOverOff, ThumbDown, ThumbUp } from '@material-ui/icons';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import { PlaylistAddCheck, VoiceOverOff, ThumbDown, ThumbUp } from '@material-ui/icons'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
 import { removeArticle, toggleArticle, markArticleRead } from '../../actions/articleActions'
 import { learn } from '../../actions/classifierActions'
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import {parse} from 'tldjs';
+import Grid from '@material-ui/core/Grid'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import {parse} from 'tldjs'
 import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
 import { addFilter, updateFilter} from '../../actions/filterActions'
 
+
 function getSelectionText() {
-  var text = "";
+  var text = ""
   if (window.getSelection) {
       text = window.getSelection().toString();
   } else if (document.selection && document.selection.type !== "Control") {
-      text = document.selection.createRange().text;
+      text = document.selection.createRange().text
   }
-  return text;
+  return text
 }
 
-const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser }) => {
+const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers}) => {
   return {
     selectedSection: !!selectedSection ? selectedSection : '',
+    classifiers: classifiers,
     articles: !!articles ? articles.filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1) : [],
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
@@ -86,7 +88,7 @@ const mapDispatchToProps = (dispatch) => {
     handleClickMarkAllRead: (articles) => {
       dispatch(markArticleRead(articles, articles))
     },
-    handleClickAddFilter: (text, filters, selectedSection, blockstackUser) => {
+    handleClickAddFilter: (text, filters, selectedSection) => {
       if (text === '') {
         return
       }
@@ -100,7 +102,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateFilter(''))
     },
     handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
-      dispatch(learn(category, selectedSection, article, classifiers))
+      dispatch(learn(category, selectedSection, article, classifiers.filter(classifier => classifier.field === 'title' || classifier.field === 'contentSnippet').filter((classifier) => classifier.section.id === selectedSection.id)))
       dispatch(markArticleRead(article, articles))
     }
   }
@@ -131,11 +133,11 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                     if (getSelectionText().length !== 0) {
                       handleClickAddFilter(getSelectionText(), filters, selectedSection)
                     }
-                    handleClickLearn(selectedSection, article, 'not-good', classifiers, articles)
+                    handleClickLearn(selectedSection, article, 'notgood', classifiers, articles)
                   }}>
                     <ThumbDown id='addFilter'/>
                   </IconButton>
-                  <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
+                  <a href={article.link} target="newsfeed-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
                   <IconButton title="train as good" onClick={() => {
                     handleClickLearn(selectedSection, article, 'good', classifiers, articles)
                   }}>

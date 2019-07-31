@@ -26,6 +26,7 @@ export const BlockstackProfile = ({blockstackUser}) => {
       {(!!blockstackUser.filtersUrl) ? <Typography>filters url: <Link href={blockstackUser.filtersUrl}>{blockstackUser.filtersUrl}</Link></Typography>:''}
       {(!!blockstackUser.contactsUrl) ? <Typography>contacts url: <Link href={blockstackUser.contactsUrl}>{blockstackUser.contactsUrl}</Link></Typography>:''}
       {(!!blockstackUser.articlesUrl) ? <Typography>articles url: <Link href={blockstackUser.articlessUrl}>{blockstackUser.articlessUrl}</Link></Typography>:''}
+      {(!!blockstackUser.classifiersUrl) ? <Typography>classifiers url: <Link href={blockstackUser.classifiersUrl}>{blockstackUser.classifiersUrl}</Link></Typography>:''}
       {(blockstackUser.isAuthenticated) ? <BlockstackLogout /> : <BlockstackLogin />}
     </Fragment>
   )

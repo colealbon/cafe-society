@@ -156,7 +156,7 @@ export const FeedList = ({ handleClickSetFeedSection, handleClickRemoveFeed, han
 }
 
 FeedList.propTypes = {
-  handleClickSetFeed: PropTypes.func.isRequired,
+  handleClickSetFeedSection: PropTypes.func.isRequired,
   handleClickRemoveFeed: PropTypes.func.isRequired,
   handleClickToggleFeed: PropTypes.func.isRequired,
   handleClickRemoveAllFeeds: PropTypes.func.isRequired,
