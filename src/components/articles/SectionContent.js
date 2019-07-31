@@ -102,8 +102,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateFilter(''))
     },
     handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
-      dispatch(learn(category, selectedSection, article, classifiers.filter(classifier => classifier.field === 'title' || classifier.field === 'contentSnippet').filter((classifier) => classifier.section.id === selectedSection.id)))
       dispatch(markArticleRead(article, articles))
+      dispatch(learn(category, selectedSection, article, classifiers.filter(classifier => classifier.field === 'title' || classifier.field === 'contentSnippet').filter((classifier) => classifier.section.id === selectedSection.id)))
     }
   }
 }
@@ -129,7 +129,12 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
             <Card>
               <CardContent>
                 <Typography variant="h6" >
-                  <IconButton title="train as not-good, add filter from selected text" onClick={() => {
+
+                  <a href={article.link} target="newsfeed-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
+                </Typography>
+                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
+              </CardContent>
+              <Typography><IconButton title="train as not-good, add filter from selected text" onClick={() => {
                     if (getSelectionText().length !== 0) {
                       handleClickAddFilter(getSelectionText(), filters, selectedSection)
                     }
@@ -137,7 +142,6 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   }}>
                     <ThumbDown id='addFilter'/>
                   </IconButton>
-                  <a href={article.link} target="newsfeed-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
                   <IconButton title="train as good" onClick={() => {
                     handleClickLearn(selectedSection, article, 'good', classifiers, articles)
                   }}>
@@ -146,9 +150,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
-                </Typography>
-                <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
-              </CardContent>
+              </Typography>                
             </Card>
           </Grid>
         )
