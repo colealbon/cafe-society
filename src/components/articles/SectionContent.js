@@ -102,8 +102,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateFilter(''))
     },
     handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
-      dispatch(learn(category, selectedSection, article, classifiers.filter(classifier => classifier.field === 'title' || classifier.field === 'contentSnippet').filter((classifier) => classifier.section.id === selectedSection.id)))
       dispatch(markArticleRead(article, articles))
+      dispatch(learn(category, selectedSection, article, classifiers.filter(classifier => classifier.field === 'title' || classifier.field === 'contentSnippet').filter((classifier) => classifier.section.id === selectedSection.id)))
     }
   }
 }
