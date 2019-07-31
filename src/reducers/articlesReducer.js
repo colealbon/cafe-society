@@ -31,7 +31,7 @@ import {
   CLASSIFIERS_LEARN_SUCCESS
 } from '../actions/classifierActions'
 
-var bayes = require('bayes')
+var bayes = require('classificator')
 
 export default (state = [], action) => {
   switch (action.type) {
@@ -341,10 +341,11 @@ export default (state = [], action) => {
       return article
     }).map((article) => {
       article.bayesCategories = article.classifiers.map((classifier) => {
-        let bayesClassifier = bayes(classifier.bayes)
+        let bayesClassifier = bayes.fromJSON(classifier.bayesJSON)
+        let bayesCategory = bayesClassifier.categorize(article[`${classifier.field}`])
         return  {
           classifier: classifier.id,
-          category: bayesClassifier.categorize(article[`${classifier.field}`])
+          category: bayesCategory
         }
       })
       return article

@@ -28,7 +28,7 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
   return {
     selectedSection: !!selectedSection ? selectedSection : '',
     classifiers: classifiers,
-    articles: !!articles ? articles.filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1) : [],
+    articles: !!articles ? articles.filter((article) => [].concat(article.bayesCategories).filter((bayesCategory) => bayesCategory !== undefined && bayesCategory.category === 'notgood').length === 0).filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1) : [],
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
     filters: !!filters ? filters : [{
@@ -102,8 +102,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateFilter(''))
     },
     handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
-      dispatch(markArticleRead(article, articles))
       dispatch(learn(category, selectedSection, article, classifiers.filter(classifier => classifier.field === 'title' || classifier.field === 'contentSnippet').filter((classifier) => classifier.section.id === selectedSection.id)))
+      dispatch(markArticleRead(article, articles))
     }
   }
 }

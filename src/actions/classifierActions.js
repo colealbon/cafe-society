@@ -1,5 +1,5 @@
 import * as blockstack from 'blockstack'
-var bayes = require('bayes')
+const bayes = require('classificator')
 
 var memoize = require('memoizee')
 
@@ -173,12 +173,11 @@ export const learn = (category, selectedSection, article, classifiers) => {
         classifiers.map((classifier) => {
           return Object.keys(article).map((articleField) => {
             if (classifier.id === `${articleField}${selectedSection.id}`) {
-              let bayesClassifier = bayes(classifier.bayes)
-              let betterClassifier = bayesClassifier.learn(article[`${classifier.field}`], category)
-              classifier.bayes = betterClassifier
+              let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) : bayes()
+              bayesClassifier.learn(article[`${classifier.field}`], category)
+              classifier.bayesJSON = bayesClassifier.toJson()
               return classifier
             }
-            return null
           })
         }).reduce((a, b) => a.concat(b))
         .filter((x) => !!x)
