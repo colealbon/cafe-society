@@ -341,7 +341,10 @@ export default (state = [], action) => {
       return article
     }).map((article) => {
       if (article.classifiers.length === 0) {
-        return article
+        return {
+          bayesCategories: [],
+          ...article
+        }
       }
       article.bayesCategories = article.classifiers.map((classifier) => {
         let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) : bayes()
