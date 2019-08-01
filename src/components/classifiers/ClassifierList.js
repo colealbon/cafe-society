@@ -54,7 +54,7 @@ export const ClassifierList = ({ handleClickRemoveClassifier, handleClickToggleC
                   }}
                 />
               </ListItemIcon>
-              {(classifier.id !== 'placeholder' && classifier.bayesJSON) !== undefined ? <Typography variant="h6" >{classifier.id}: <JSONTree hideRoot={true} data={classifier} /></Typography> : ''} "
+              {(classifier.id !== 'placeholder') ? <Typography variant="h6" >{classifier.id}: <JSONTree hideRoot={true} data={classifier} /></Typography> : ''}
             </ListItem>
           )
         }).reverse()
