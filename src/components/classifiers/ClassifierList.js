@@ -54,7 +54,7 @@ export const ClassifierList = ({ handleClickRemoveClassifier, handleClickToggleC
                   }}
                 />
               </ListItemIcon>
-              {(classifier.bayesJSON) ? <Typography variant="h6" >{classifier.id}: <JSONTree hideRoot={true} data={JSON.parse(classifier.bayesJSON)} /></Typography> : ''} 
+              {(classifier.bayesJSON) ? <Typography variant="h6" >{classifier.id}: <JSONTree hideRoot={true} data={JSON.parse(classifier)} /></Typography> : ''} 
             </ListItem>
           )
         }).reverse()
