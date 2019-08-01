@@ -82,4 +82,4 @@ export default (state = initialState, action) => {
   }
 }
 
-const initialState = []
+const initialState = [{id: 'placeholder'}]
