@@ -312,55 +312,41 @@ export default (state = [], action) => {
 
   case CLASSIFIERS_LEARN_SUCCESS:
     return state.map((article) => {
-      if (!article.classifiers) {
-        article.classifiers = action.payload.filter((classifier) => {
-          if (!article.feed.sections) {
-            return Object.keys(article).map((articleField) =>{
-              return classifier.id ===articleField
-            }).length !== 0
+      return {
+        classifiers: action.payload,
+        ...article
+      }
+    }).map((article) => {
+      delete article.classifiers
+      return {
+        classifiers: action.payload.filter((classifier) => {
+          if (classifier.id === '' && !article.feed.sections) {
+            return true
           }
           return article.feed.sections.filter((articleSection) => {
-            return classifier.section.id === articleSection.id
+            return articleSection.id === classifier.id
           }).length !== 0
-        })
-        return article
+        }),
+        ...article
       }
-      article.classifiers =  article.classifiers.filter((articleClassifier) => {
-        return !action.payload.filter((payloadClassifier) => payloadClassifier.id === articleClassifier.id)
-      }).concat(action.payload)
-      .filter((classifier) => {
-        if (!article.feed.sections) {
-          return Object.keys(article).map((articleField) =>{
-            return classifier.id ===articleField
-          }).length !== 0
-        }
-        return article.feed.sections.filter((articleSection) => {
-          return classifier.section.id === articleSection.id
-        }).length !== 0
-      })
-      return article
     })
     .map((article) => {
-      if (article.classifiers.length === 0) {
-        return article
-      }
-      let bayesCategories = article.classifiers.map((classifier) => {
-        if (classifier.bayesJSON) {
-          let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) :  bayes()
-          let bayesCategory = bayesClassifier.categorize(article[`${classifier.field}`])
-          return {
-            classifier: classifier.id,
-            category: bayesCategory
+      delete article.bayesCategories
+      return {
+        bayesCategories: article.classifiers.map((classifier) => {
+          if (classifier.bayesJSON) {
+            let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) :  bayes()
+            let bayesCategory = bayesClassifier.categorize(article.title.concat(article.contentSnippet))
+            return {
+              classifier: classifier.id,
+              category: bayesCategory
+            }
           }
-        }
-        return
-      })
-      if (bayesCategories) {
-        article.bayesCategories = bayesCategories
+          return
+        }),
+        ...article
       }
-      return article
     })
-
   default:
       return state
   }

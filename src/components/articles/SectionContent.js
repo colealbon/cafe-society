@@ -26,7 +26,7 @@ function getSelectionText() {
 
 const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers}) => {
   return {
-    selectedSection: !!selectedSection ? selectedSection : '',
+    selectedSection: selectedSection,
     classifiers: classifiers,
     articles: !!articles ? articles.filter((article) => [].concat(article.bayesCategories).filter((bayesCategory) => bayesCategory !== undefined && bayesCategory !== null && bayesCategory.category !== null && bayesCategory.category.predictedCategory === 'notgood').length === 0).filter(article => !article.muted).filter(article => article.visible).filter((article) => (!!article.title)).filter(article => (article.blockReasons || []).length < 1) : [],
     allArticles: !!articles ? articles : [],
@@ -103,7 +103,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
       dispatch(markArticleRead(article, articles))
-      dispatch(learn(category, selectedSection, article, classifiers.filter(classifier => classifier.field === 'title' || classifier.field === 'contentSnippet').filter((classifier) => classifier.section.id === selectedSection.id)))
+      dispatch(learn(category, selectedSection, article, classifiers))
     }
   }
 }

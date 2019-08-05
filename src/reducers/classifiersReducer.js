@@ -10,7 +10,6 @@ import {
 // import {
 //   CLASSIFIER_SECTION_SELECT_SECTION
 // } from '../actions/classifierSectionActions'
-
 // import {
 //   CLASSIFIER_FIELD_SELECT_FIELD
 // } from '../actions/classifierFieldActions'
@@ -53,20 +52,7 @@ export default (state = initialState, action) => {
       ]
     
     case CLASSIFIERS_LEARN_SUCCESS:
-      return state.map((stateClassifierItem) => {
-        const overwrite = action.payload.filter((payloadClassifierItem) => payloadClassifierItem.id === stateClassifierItem.id)[0]
-        return (!!overwrite) ? overwrite : stateClassifierItem
-      }).concat(action.payload.filter((payloadItem) => {
-        let itemExists = false
-        state.map((stateItem) => {
-          if (stateItem.id === payloadItem.id) {
-            itemExists = true
-          }
-          return 'o'
-        })
-        return !itemExists
-      }))
-  
+      return action.payload
 
     case CLASSIFIERS_REMOVE_CLASSIFIER:
       return state.filter(stateItem => {
@@ -82,4 +68,4 @@ export default (state = initialState, action) => {
   }
 }
 
-const initialState = [{id: 'placeholder'}]
+const initialState = [{id: 'home'}]

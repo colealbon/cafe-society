@@ -153,34 +153,23 @@ export const learn = (category, selectedSection, article, classifiers) => {
       }
     })
     try {
-      classifiers = (classifiers.length !== 0) ? classifiers :  [
-        {
-          id: `title${selectedSection.id}`,
-          field: 'title',
-          section:  selectedSection,
-          category: category
-        },
-        {
-          id: `contentSnippet${selectedSection.id}`,
-          field: 'contentSnippet',
-          section: selectedSection,
-          category: category
-        }
-      ]
+      const overwrite = classifiers.filter((classifier) => classifier !== null).filter((classifier) => classifier.id === selectedSection.id)
+      classifiers = (overwrite.length !== 0) ? 
+        classifiers : 
+        classifiers.concat({id: selectedSection.id})
+
       dispatch({
         type: CLASSIFIERS_LEARN_SUCCESS,
-        payload: 
-        classifiers.map((classifier) => {
-          return Object.keys(article).map((articleField) => {
-            if (classifier.id === `${articleField}${selectedSection.id}`) {
+        payload: classifiers.filter((classifier) => classifier !== null)
+          .filter((classifier) => classifier.id === selectedSection.id)
+          .map((classifier) => {
+            if (classifier.id === selectedSection.id) {
               let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) : bayes()
-              bayesClassifier.learn(article[`${classifier.field}`], category)
+              bayesClassifier.learn(article.title.concat(article.contentSnippet), category)
               classifier.bayesJSON = bayesClassifier.toJson()
               return classifier
             }
-          })
-        }).reduce((a, b) => a.concat(b))
-        .filter((x) => !!x)
+          }).concat(classifiers.filter((classifier) => classifier.id !== selectedSection.id))
       })
     } catch(error) {
       dispatch({

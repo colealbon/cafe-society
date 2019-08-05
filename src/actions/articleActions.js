@@ -6,7 +6,10 @@ var memoize = require("memoizee")
 const slow_fetchFeedContent = feedUrl => {
   return !feedUrl ? 
   Promise.reject('slow_fetchFeedContent requires feed url') :
-  parser.parseURL(`/.netlify/functions/node-fetch?url=${feedUrl}`)
+  parser.parseURL(feedUrl)  // should only work with a browser cors plugin
+  .catch((error) => {
+    parser.parseURL(`/.netlify/functions/node-fetch?url=${feedUrl}`) // cors relay
+  })
 }
 
 const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000 })

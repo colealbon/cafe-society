@@ -16,7 +16,9 @@ import JSONTree from 'react-json-tree'
 
 const mapStateToProps = ({ classifiers }) => {
   return {
-    classifiers: classifiers ? classifiers : []
+    classifiers: classifiers ? 
+      classifiers.filter((classifier) => classifier !== null) : 
+      []
   }
 }
 
@@ -54,7 +56,7 @@ export const ClassifierList = ({ handleClickRemoveClassifier, handleClickToggleC
                   }}
                 />
               </ListItemIcon>
-              {(classifier.id !== 'placeholder') ? <Typography variant="h6" >{classifier.id}: <JSONTree hideRoot={true} data={classifier} /></Typography> : ''}
+              {(classifier.id !== 'placeholder') ? <Typography variant="h6" >{(classifier.id === '') ? 'home' : classifier.id} <JSONTree hideRoot={true} data={JSON.parse(classifier.bayesJSON)} /></Typography> : ''}
             </ListItem>
           )
         }).reverse()
