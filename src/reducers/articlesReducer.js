@@ -316,12 +316,20 @@ export default (state = [], action) => {
         classifiers: action.payload,
         ...article
       }
-    }).map((article) => {
-      delete article.classifiers
+    })
+    .map((article) => {
+      try {
+        delete article.classifiers
+      } catch (error) {
+        // pass
+      }
       return {
         classifiers: action.payload.filter((classifier) => {
-          if (classifier.id === '' && !article.feed.sections) {
+          if (classifier.id === ''){
             return true
+          }
+          if (!article.feed.sections) {
+            return false
           }
           return article.feed.sections.filter((articleSection) => {
             return articleSection.id === classifier.id
@@ -330,23 +338,27 @@ export default (state = [], action) => {
         ...article
       }
     })
-    .map((article) => {
+  .map((article) => {
+    try {
       delete article.bayesCategories
+    } catch {
+      // pass
+    }
       return {
         bayesCategories: article.classifiers.map((classifier) => {
-          if (classifier.bayesJSON) {
-            let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) :  bayes()
-            let bayesCategory = bayesClassifier.categorize(article.title.concat(article.contentSnippet))
-            return {
-              classifier: classifier.id,
-              category: bayesCategory
-            }
+          if (!classifier.bayesJSON) {
+            return 
           }
-          return
-        }),
+          let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) :  bayes()
+          let bayesCategory = bayesClassifier.categorize(article.title.concat(article.contentSnippet))
+          return {
+            classifier: classifier.id,
+            category: bayesCategory
+          }
+        }).filter((classifier) => classifier.category !== undefined),
         ...article
       }
-    })
+   })
   default:
       return state
   }

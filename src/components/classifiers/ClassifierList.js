@@ -45,7 +45,7 @@ export const ClassifierList = ({ handleClickRemoveClassifier, handleClickToggleC
         <DeleteSweep></DeleteSweep>
       </IconButton>
       <List subheader={<ListSubheader>Review/Delete Classifiers</ListSubheader>} >
-        {classifiers.map((classifier) => {
+        {classifiers.filter((classifier) => !!classifier.bayesJSON).map((classifier) => {
           return (
             <ListItem key={classifier.id}>
               <ListItemIcon>
@@ -56,7 +56,7 @@ export const ClassifierList = ({ handleClickRemoveClassifier, handleClickToggleC
                   }}
                 />
               </ListItemIcon>
-              {(classifier.id !== 'placeholder') ? <Typography variant="h6" >{(classifier.id === '') ? 'home' : classifier.id} <JSONTree hideRoot={true} data={JSON.parse(classifier.bayesJSON)} /></Typography> : ''}
+              {(classifier.id !== 'placeholder') ? <Typography variant="h6" >{(classifier.id === '') ? 'home' : classifier.id} <JSONTree hideRoot={true} data={!!classifier.bayesJSON ? JSON.parse(classifier.bayesJSON) : ''} /></Typography> : ''}
             </ListItem>
           )
         }).reverse()
