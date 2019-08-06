@@ -40,7 +40,7 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
       .filter(article => !article.muted)
       .filter(article => article.visible)
       .filter((article) => (!!article.title))
-      .filter(article => (article.blockReasons || []).length < 1).slice(0, 10) : [],
+      .filter(article => (article.blockReasons || []).length < 1) : [],
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
     filters: !!filters ? filters : [{
