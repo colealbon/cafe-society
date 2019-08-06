@@ -312,12 +312,18 @@ export default (state = [], action) => {
 
   case CLASSIFIERS_LEARN_SUCCESS:
     return state.map((article) => {
+      if (article.muted === true) {
+        return article
+      }
       return {
         classifiers: action.payload,
         ...article
       }
     })
     .map((article) => {
+      if (article.muted === true) {
+        return article
+      }
       try {
         delete article.classifiers
       } catch (error) {
@@ -339,6 +345,9 @@ export default (state = [], action) => {
       }
     })
   .map((article) => {
+    if (article.muted === true) {
+      return article
+    }
     try {
       delete article.bayesCategories
     } catch {
