@@ -125,6 +125,8 @@ export const fetchArticles = (feeds, filters) => {
               })
             }
           }
+        }).catch((error) => {
+          //pass
         })
       }
       return 'o'
