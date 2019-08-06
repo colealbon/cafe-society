@@ -96,6 +96,9 @@ export const fetchArticles = (feeds, filters) => {
           }
         })
       })
+      .catch((error) => {
+        // pass
+      })
     )
     feeds.map((feed) => {
       if (feed.muted !== true && feed.url) { 

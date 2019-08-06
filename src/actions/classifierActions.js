@@ -169,7 +169,9 @@ export const learn = (category, selectedSection, article, classifiers) => {
               classifier.bayesJSON = bayesClassifier.toJson()
               return classifier
             }
-          }).concat(classifiers.filter((classifier) => classifier.id !== selectedSection.id))
+            return null
+          }).filter((classifier) => classifier !== null)
+          .concat(classifiers.filter((classifier) => classifier.id !== selectedSection.id))
       })
     } catch(error) {
       dispatch({

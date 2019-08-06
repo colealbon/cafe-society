@@ -1,3 +1,4 @@
+import 'react-app-polyfill/stable';
 import * as serviceWorker from './serviceWorker';
 import React from 'react'
 import ReactDOM from 'react-dom'

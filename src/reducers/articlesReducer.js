@@ -347,7 +347,7 @@ export default (state = [], action) => {
       return {
         bayesCategories: article.classifiers.map((classifier) => {
           if (!classifier.bayesJSON) {
-            return 
+            return  null
           }
           let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) :  bayes()
           let bayesCategory = bayesClassifier.categorize(article.title.concat(article.contentSnippet))
@@ -355,7 +355,9 @@ export default (state = [], action) => {
             classifier: classifier.id,
             category: bayesCategory
           }
-        }).filter((classifier) => classifier.category !== undefined),
+        })
+        .filter((classifier) => classifier !== null)
+        .filter((classifier) => classifier.category !== undefined),
         ...article
       }
    })
