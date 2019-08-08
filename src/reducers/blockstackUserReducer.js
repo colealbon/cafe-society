@@ -24,8 +24,6 @@ import {
     PUBLISH_ARTICLES_SUCCESS
   } from '../actions/articleActions'
 
-
-
   const initialState = {
     isAuthenticated: false,
     isLoginPending: false,
@@ -36,15 +34,15 @@ import {
   export default (state = initialState, action) => {
     switch (action.type) {
       case FETCH_USER_DATA:
-        return action.payload ;
+        return action.payload
       case USER_LOGIN:
-        return { ...state, isLoginPending: true };
+        return { ...state, isLoginPending: true }
       case USER_LOGIN_SUCCESS:
-        return { ...state, isAuthenticated: true };
+        return { ...state, isAuthenticated: true }
       case USER_LOGOUT:
-        return { ...initialState };
+        return { ...initialState }
       case USER_HANDLE_LOGIN:
-        return { ...state, isLoginPending: false };
+        return { ...state, isLoginPending: false }
       case USER_LOGGED_IN:
         return {
           ...state,
@@ -53,7 +51,7 @@ import {
           profile: action.payload
         };
       case USER_LOGIN_ERROR:
-        return { ...state, error: action.payload };
+        return { ...state, error: action.payload }
       case PUBLISH_FEEDS_SUCCESS:
         return {...state, feedsUrl: action.payload.response}
       case PUBLISH_FILTERS_SUCCESS:
@@ -63,7 +61,7 @@ import {
       case PUBLISH_ARTICLES_SUCCESS:
         return {...state, articlesUrl: action.payload.response}
       default:
-        return state;
+        return state
     }
-  };
+  }
   

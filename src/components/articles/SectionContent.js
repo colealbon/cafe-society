@@ -13,7 +13,6 @@ import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
 import { addFilter, updateFilter} from '../../actions/filterActions'
 
-
 function getSelectionText() {
   var text = ""
   if (window.getSelection) {
@@ -31,11 +30,14 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
     articles: !!articles ? 
       articles.filter((article) => {
         return [].concat(article.bayesCategories)
-        .filter((bayesCategory) => {
-          return !!bayesCategory && 
-          !!bayesCategory.category && 
-          bayesCategory.category.predictedCategory === 'notgood'
-        }).length === 0
+        .filter(bayesCategory => !!bayesCategory)
+        .filter(bayesCategory => !!bayesCategory.category)
+        .filter(bayesCategory => bayesCategory.category.predictedCategory === 'notgood')
+        .filter(bayesCategory => !!bayesCategory.likelihoods)
+        .filter(bayesCategory => bayesCategory.likelihoods
+          .filter(likelihood =>  likelihood.category === 'notgood')
+          .filter(likelihood => 0.0 + likelihood.proba > .98).length === 0
+        ).length === 0
       })
       .filter(article => !article.muted)
       .filter(article => article.visible)
@@ -43,46 +45,7 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
       .filter(article => (article.blockReasons || []).length < 1) : [],
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
-    filters: !!filters ? filters : [{
-      id: 'Car Detailer',
-      text: 'Car Detailer',
-      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
-      fields: [
-        'title',
-        {
-          id: 'title',
-          name: 'title',
-          muted: false
-        }
-      ],
-      lastUsed: 1557619427441,
-      sections: [
-        {
-          id: 'classifieds',
-          name: 'classifieds'
-        }
-      ]
-    },
-    {
-      id: 'DoorDash',
-      text: 'DoorDash',
-      feedUrl: 'https://bend.craigslist.org/search/jjj?format=rss',
-      fields: [
-        'title',
-        {
-          id: 'title',
-          name: 'title',
-          muted: false
-        }
-      ],
-      lastUsed: 1557619427441,
-      sections: [
-        {
-          id: 'classifieds',
-          name: 'classifieds'
-        }
-      ]
-    }]
+    filters: !!filters ? filters : []
   }
 }
 
@@ -114,8 +77,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateFilter(''))
     },
     handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
+      setTimeout(dispatch(learn(category, selectedSection, article, classifiers), 1000))
       dispatch(markArticleRead(article, articles))
-      dispatch(learn(category, selectedSection, article, classifiers))
+      return
     }
   }
 }
@@ -141,27 +105,26 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
             <Card>
               <CardContent>
                 <Typography variant="h6" >
-
                   <a href={article.link} target="newsfeed-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>
                 </Typography>
                 <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
               </CardContent>
               <Typography><IconButton title="train as not-good, add filter from selected text" onClick={() => {
-                    if (getSelectionText().length !== 0) {
-                      handleClickAddFilter(getSelectionText(), filters, selectedSection)
-                    }
-                    handleClickLearn(selectedSection, article, 'notgood', classifiers, articles)
-                  }}>
-                    <ThumbDown id='addFilter'/>
-                  </IconButton>
-                  <IconButton title="train as good" onClick={() => {
-                    handleClickLearn(selectedSection, article, 'good', classifiers, articles)
-                  }}>
-                    <ThumbUp id='train-good'/>
-                  </IconButton>
-                  <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
+                  if (getSelectionText().length !== 0) {
+                    handleClickAddFilter(getSelectionText(), filters, selectedSection)
+                  }
+                  handleClickLearn(selectedSection, article, 'notgood', classifiers, articles)
+                }}>
+                  <ThumbDown id='addFilter'/>
+                </IconButton>
+                <IconButton title="train as good" onClick={() => {
+                  handleClickLearn(selectedSection, article, 'good', classifiers, articles)
+                }}>
+                  <ThumbUp id='train-good'/>
+                </IconButton>
+                <IconButton title={banDomainTitle} onClick={() => handleClickShadowBanDomain(parse(article.link).domain, selectedSection, filters)} >
                   <VoiceOverOff></VoiceOverOff>
-                  </IconButton>
+                </IconButton>
               </Typography>                
             </Card>
           </Grid>
