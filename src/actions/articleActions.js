@@ -144,15 +144,16 @@ export const publishArticles = (articles) => {
       payload: articles
     })
     const fileContent = JSON.stringify(articles)
-    return blockstack.putFile('articles.json', fileContent, {encrypt: false})
+    return blockstack.putFile('articles.json', fileContent, {encrypt: true})
     .then((response) => {
+      alert(JSON.stringify(response))
       dispatch({
         type: PUBLISH_ARTICLES_SUCCESS,
         payload: {
           response: response
         }
       })
-    }).catch((error) => {
+    }).catch((error, fileContent) => {
       dispatch({
         type: 'PUBLISH_ARTICLES_FAILED',
         payload: {
