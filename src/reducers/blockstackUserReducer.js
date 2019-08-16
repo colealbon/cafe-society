@@ -7,22 +7,6 @@ import {
     USER_LOGGED_IN,
     USER_LOGIN_ERROR
   } from '../actions/blockstackUserActions';
-  
-  import {
-    PUBLISH_FEEDS_SUCCESS
-  } from '../actions/feedActions'
-
-  import {
-    PUBLISH_FILTERS_SUCCESS
-  } from '../actions/filterActions'
-
-  import {
-    PUBLISH_CONTACTS_SUCCESS
-  } from '../actions/contactActions'
-
-  import {
-    PUBLISH_ARTICLES_SUCCESS
-  } from '../actions/articleActions'
 
   const initialState = {
     isAuthenticated: false,
@@ -52,14 +36,6 @@ import {
         };
       case USER_LOGIN_ERROR:
         return { ...state, error: action.payload }
-      case PUBLISH_FEEDS_SUCCESS:
-        return {...state, feedsUrl: action.payload.response}
-      case PUBLISH_FILTERS_SUCCESS:
-          return {...state, filtersUrl: action.payload.response}
-      case PUBLISH_CONTACTS_SUCCESS:
-        return {...state, contactsUrl: action.payload.response}
-      case PUBLISH_ARTICLES_SUCCESS:
-        return {...state, articlesUrl: action.payload.response}
       default:
         return state
     }
