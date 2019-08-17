@@ -18,20 +18,9 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case 'RESET_APP':
       return initialState
+
     case FETCH_SAVED_CLASSIFIERS_SUCCESS:
-      return state.map((stateClassifierItem) => {
-        const overwrite = action.payload.filter((payloadClassifierItem) => payloadClassifierItem.id === stateClassifierItem.id)[0]
-        return (!!overwrite) ? overwrite : stateClassifierItem
-      }).concat(action.payload.filter((payloadItem) => {
-        let itemExists = false
-        state.map((stateItem) => {
-          if (stateItem.id === payloadItem.id) {
-            itemExists = true
-          }
-          return 'o'
-        })
-        return !itemExists
-      }))
+      return [].concat(action.payload)
 
     case FETCH_CLASSIFIERS_SUCCESS:
       return state.concat(action.payload.filter((payloadItem) => {
