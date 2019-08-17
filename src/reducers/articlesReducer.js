@@ -40,7 +40,7 @@ export default (state = [], action) => {
       return []
 
     case FETCH_SAVED_ARTICLES_SUCCESS:
-      return action.payload.articles
+      return [].concat(action.payload.articles)
 
     case FETCH_ARTICLES_SUCCESS:
       return state.concat(action.payload.articles.filter((newArticle) => {
