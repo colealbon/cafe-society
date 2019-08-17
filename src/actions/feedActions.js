@@ -107,7 +107,6 @@ export const toggleFeed = (feed, feeds) => {
 export const FETCH_FEEDS_START = 'FETCH_FEEDS_START'
 export const FETCH_FEEDS_SUCCESS = 'FETCH_FEEDS_SUCCESS'
 export const FETCH_FEEDS_ERROR = 'FETCH_FEEDS_ERROR'
-export const FETCH_SAVED_FEEDS_SUCCESS = 'FETCH_SAVED_FEEDS_SUCCESS'
 
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
