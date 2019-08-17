@@ -108,7 +108,7 @@ export const fetchBlockstackFilters = (contacts) => {
     dispatch(() => {
       blockstackGetFile('filters.json')
       .then((fileContents) => {
-        if (JSON.stringify(fileContents) === null && JSON.stringify(fileContents) === [null]) {
+        if (JSON.parse(fileContents)) {
           return
         }
         dispatch({
