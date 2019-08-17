@@ -145,8 +145,9 @@ export const publishArticles = (articles) => {
     const fileContent = JSON.stringify(articles)
     return blockstack.putFile('articles.json', fileContent)
     .then((response) => {
+      alert(JSON.stringify(response))
       dispatch({
-        type: PUBLISH_ARTICLES_SUCCESS,
+        type: 'PUBLISH_ARTICLES_SUCCESS',
         payload: {
           response: response
         }
