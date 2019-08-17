@@ -116,6 +116,7 @@ export const fetchBlockstackFilters = (filters) => {
             }]
           }]
         })
+        return
       }
       dispatch({
         type: FETCH_SAVED_FILTERS_SUCCESS,
