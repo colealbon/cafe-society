@@ -119,7 +119,7 @@ export const fetchBlockstackFilters = (contacts) => {
         .catch((error) =>{
           dispatch({
             type: FETCH_SAVED_FILTERS_FAIL,
-            payload: {error: error}
+            payload: error
           })
         })
       }))

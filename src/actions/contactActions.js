@@ -132,6 +132,7 @@ export const fetchBlockstackContacts = (contacts) => {
           type: FETCH_SAVED_CONTACTS_ERROR,
           payload: error
         })
+        resolve(contacts)
       })
     }))
     // // fetch feeds from each contact
@@ -163,7 +164,7 @@ export const fetchBlockstackContacts = (contacts) => {
     //   })
     // }
 
-    Promise.all(fetchContactFileQueue)
+    return Promise.all(fetchContactFileQueue)
     .then((fetchedContacts) => {
       const flattenedContacts = fetchedContacts.reduce((a, b) => !a ? b : [].concat(a).concat(b))
       let dedup = {}
@@ -188,15 +189,15 @@ export const fetchBlockstackContacts = (contacts) => {
         dispatch({
           type: FETCH_CONTACTS_SUCCESS,
           payload: uniqueContacts
-        })
-        dispatch(publishContacts(uniqueContacts))
-        dispatch(fetchBlockstackFilters(uniqueContacts))
+        })        
       }
+      return uniqueContacts
     }).catch((error) => {
       dispatch({
         type: FETCH_CONTACTS_ERROR,
         payload: error
       })
+      return
     })
   }
 }
