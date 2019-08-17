@@ -42,8 +42,7 @@ export const markArticleRead = (articles, allArticles) => {
       payload: articles
     })
     dispatch(publishArticles(allArticles.map(allArticlesItem => {
-      let payload = [].concat(articles)
-      let muteArticle = payload.filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
+      let muteArticle = articles.filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
       return (muteArticle === true) ? { ...allArticlesItem, muted: true} : allArticlesItem
     })))
   }
@@ -144,9 +143,9 @@ export const publishArticles = (articles) => {
       payload: articles
     })
     const fileContent = JSON.stringify(articles)
-    return blockstack.putFile('articles.json', fileContent, {encrypt: true})
+    alert(fileContent)
+    return blockstack.putFile('articles.json', fileContent, {encrypt: 'true'})
     .then((response) => {
-      alert(JSON.stringify(response))
       dispatch({
         type: PUBLISH_ARTICLES_SUCCESS,
         payload: {
