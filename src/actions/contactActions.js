@@ -115,7 +115,7 @@ export const fetchBlockstackContacts = (contacts) => {
   return (dispatch) => {
     dispatch({ 
       type: FETCH_CONTACTS_START,
-      payload: {contacts: contacts}
+      payload: contacts
      })
     const fetchContactFileQueue = []
     fetchContactFileQueue.push(new Promise((resolve) => {
@@ -132,7 +132,10 @@ export const fetchBlockstackContacts = (contacts) => {
           type: FETCH_SAVED_CONTACTS_ERROR,
           payload: error
         })
-        resolve(contacts)
+        dispatch({
+          type: FETCH_SAVED_CONTACTS_SUCCESS,
+          payload: contacts
+        })
       })
     }))
     // // fetch feeds from each contact
