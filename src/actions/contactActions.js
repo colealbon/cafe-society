@@ -136,34 +136,34 @@ export const fetchBlockstackContacts = (contacts) => {
         })
       })
     }))
-    // fetch feeds from each contact
-    if (!!contacts && contacts.length > 0) {
-      contacts.filter((contactItem) => !contactItem.muted).map((contactItem) => {
-        return fetchContactFileQueue.push(new Promise((resolve) => {
-          blockstackGetFile('contacts.json', {
-            decrypt: false,
-            username: contactItem.name
-          })
-          .then((fileContents) => {
-            if (fileContents === null) {
-              resolve([])
-            } else {
-              resolve(
-                JSON.parse(fileContents)
-                .map((fetchedContact) => {
-                  fetchedContact.source_contact = Object.assign(contactItem)
-                  fetchedContact.muted = true
-                  return(fetchedContact)
-                }).concat(contacts)
-              )
-            }
-          })
-          .catch(() => {
-            resolve([])
-          })
-        }))
-      })
-    }
+    // // fetch feeds from each contact
+    // if (!!contacts && contacts.length > 0) {
+    //   contacts.filter((contactItem) => !contactItem.muted).map((contactItem) => {
+    //     return fetchContactFileQueue.push(new Promise((resolve) => {
+    //       blockstackGetFile('contacts.json', {
+    //         decrypt: false,
+    //         username: contactItem.name
+    //       })
+    //       .then((fileContents) => {
+    //         if (fileContents === null) {
+    //           resolve([])
+    //         } else {
+    //           resolve(
+    //             JSON.parse(fileContents)
+    //             .map((fetchedContact) => {
+    //               fetchedContact.source_contact = Object.assign(contactItem)
+    //               fetchedContact.muted = true
+    //               return(fetchedContact)
+    //             }).concat(contacts)
+    //           )
+    //         }
+    //       })
+    //       .catch(() => {
+    //         resolve([])
+    //       })
+    //     }))
+    //   })
+    // }
 
     Promise.all(fetchContactFileQueue)
     .then((fetchedContacts) => {

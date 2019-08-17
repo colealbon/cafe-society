@@ -60,7 +60,7 @@ export const publishFilters = (filters) => {
       payload: filters
     })
     const fileContent = JSON.stringify(filters)
-    return blockstack.putFile('filters.json', fileContent, {encrypt: false})
+    return blockstack.putFile('filters.json', fileContent)
       .then((response) => {
         dispatch({
           type: PUBLISH_FILTERS_SUCCESS,
@@ -108,9 +108,7 @@ export const fetchBlockstackFilters = (contacts) => {
     dispatch(() => {
       const fetchFilterFileQueue = []
       fetchFilterFileQueue.push(new Promise((resolve, reject) => {
-        blockstack.getFile('filters.json', {
-          decrypt: false
-        })
+        blockstack.getFile('filters.json')
         .then((fileContents) => {
           dispatch({
             type: FETCH_SAVED_FILTERS_SUCCESS,
@@ -125,32 +123,32 @@ export const fetchBlockstackFilters = (contacts) => {
           })
         })
       }))
-      if (contacts.length > 0) {
-        contacts.filter((contact) => !contact.muted).map((contact) => {
-          return fetchFilterFileQueue.push(new Promise((resolve) => {
-              blockstackGetFile('filters.json', {
-                decrypt: false,
-                username: contact.name
-              })
-              .then((fileContents) => {
-                if (fileContents === null) {
-                  resolve([])
-                } else {
-                  resolve(
-                    JSON.parse(fileContents)
-                    .map((filter) => {
-                      filter.muted = false
-                      return(filter)
-                    })
-                  )
-                }
-              })
-              .catch(() => {
-                resolve([])
-              })
-          }))
-        })
-      }
+      // if (contacts.length > 0) {
+      //   contacts.filter((contact) => !contact.muted).map((contact) => {
+      //     return fetchFilterFileQueue.push(new Promise((resolve) => {
+      //         blockstackGetFile('filters.json', {
+      //           decrypt: false,
+      //           username: contact.name
+      //         })
+      //         .then((fileContents) => {
+      //           if (fileContents === null) {
+      //             resolve([])
+      //           } else {
+      //             resolve(
+      //               JSON.parse(fileContents)
+      //               .map((filter) => {
+      //                 filter.muted = false
+      //                 return(filter)
+      //               })
+      //             )
+      //           }
+      //         })
+      //         .catch(() => {
+      //           resolve([])
+      //         })
+      //     }))
+      //   })
+      // }
   
       Promise.all(fetchFilterFileQueue)
       .then((fetchedFilters) => {

@@ -73,9 +73,7 @@ export const fetchClassifiers = (contacts) => {
   return (dispatch) => {
     const classifiersRequestQueue = []
     classifiersRequestQueue.push(
-      blockstackGetFile('classifiers.json', {
-        decrypt: false
-      })
+      blockstackGetFile('classifiers.json')
       .then((savedClassifiers) => {
         if (!JSON.parse(savedClassifiers)) {
           return
@@ -117,7 +115,7 @@ export const publishClassifiers = (classifiers) => {
       payload: classifiers
     })
     const fileContent = JSON.stringify(classifiers)
-    return blockstack.putFile('classifiers.json', fileContent, {encrypt: false})
+    return blockstack.putFile('classifiers.json', fileContent)
     .then((response) => {
       dispatch({
         type: PUBLISH_CLASSIFIERS_SUCCESS,

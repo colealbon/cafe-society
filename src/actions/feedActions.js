@@ -3,7 +3,6 @@ import { fetchArticles } from './articleActions'
 
 var memoize = require("memoizee")
 
-
 export const FEED_SELECT_FEED = 'FEED_SELECT_FEED'
 
 export const selectFeed = feed => {
@@ -31,14 +30,13 @@ export const PUBLISH_FEEDS_SUCCESS = 'PUBLISH_FEEDS_SUCCESS'
 export const PUBLISH_FEEDS_ERROR = 'PUBLISH_FEEDS_ERROR'
 
 export const publishFeeds = (feeds) => {
-  // if (!!feeds) {
   return (dispatch) => {
     dispatch({
       type: PUBLISH_FEEDS_START,
       payload: feeds
     })
     const fileContent = JSON.stringify(feeds)
-    blockstack.putFile('feeds.json', fileContent, {encrypt: false})
+    blockstack.putFile('feeds.json', fileContent)
     .then((response) => {
       dispatch({
         type: PUBLISH_FEEDS_SUCCESS,
@@ -58,7 +56,6 @@ export const publishFeeds = (feeds) => {
     })
   }
 }
-// }
 
 export const FEEDS_ADD_FEED = 'FEEDS_ADD_FEED'
 
@@ -128,9 +125,7 @@ export const fetchBlockstackFeeds = (contacts, filters) => {
      })
     const fetchFeedFileQueue = []
     fetchFeedFileQueue.push(new Promise((resolve) => {
-      blockstackGetFile('feeds.json', {
-        decrypt: false,
-      })
+      blockstackGetFile('feeds.json')
       .then((fileContents) => {
         if (fileContents === null) {
           resolve([])
@@ -145,33 +140,33 @@ export const fetchBlockstackFeeds = (contacts, filters) => {
       })
     }))
     // fetch feeds from each contact
-    if (!!contacts && contacts.length > 0) {
-      contacts.filter((contact) => !contact.muted).map((contact) => {
-        return fetchFeedFileQueue.push(new Promise((resolve) => {
-          blockstackGetFile('feeds.json', {
-            decrypt: false,
-            username: contact.name
-          })
-          .then((fileContents) => {
-            if (fileContents === null) {
-              resolve([])
-            } else {
-              resolve(
-                JSON.parse(fileContents)
-                .map((feed) => {
-                  feed.source_contact = Object.assign(contact)
-                  feed.muted = true
-                  return(feed)
-                })
-              )
-            }
-          })
-          .catch(() => {
-            resolve([])
-          })
-        }))
-      })
-    }
+    // if (!!contacts && contacts.length > 0) {
+    //   contacts.filter((contact) => !contact.muted).map((contact) => {
+    //     return fetchFeedFileQueue.push(new Promise((resolve) => {
+    //       blockstackGetFile('feeds.json', {
+    //         decrypt: false,
+    //         username: contact.name
+    //       })
+    //       .then((fileContents) => {
+    //         if (fileContents === null) {
+    //           resolve([])
+    //         } else {
+    //           resolve(
+    //             JSON.parse(fileContents)
+    //             .map((feed) => {
+    //               feed.source_contact = Object.assign(contact)
+    //               feed.muted = true
+    //               return(feed)
+    //             })
+    //           )
+    //         }
+    //       })
+    //       .catch(() => {
+    //         resolve([])
+    //       })
+    //     }))
+    //   })
+    // }
 
     Promise.all(fetchFeedFileQueue)
     .then((fetchedFeeds) => {
