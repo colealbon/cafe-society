@@ -42,7 +42,7 @@ export const markArticleRead = (articles, allArticles) => {
       payload: articles
     })
     dispatch(publishArticles(allArticles.map(allArticlesItem => {
-      let muteArticle = articles.filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
+      let muteArticle = [].concat(articles).filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
       return (muteArticle === true) ? { ...allArticlesItem, muted: true} : allArticlesItem
     })))
   }
