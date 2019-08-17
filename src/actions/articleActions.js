@@ -83,6 +83,7 @@ export const fetchArticles = (feeds, filters) => {
       blockstackGetFile('articles.json')
       .then((savedArticles) => {
         if (!JSON.parse(savedArticles)) {
+          alert(savedArticles)
           return
         }
         dispatch({
