@@ -114,7 +114,37 @@ const slowBlockstackGetFile = (filename, options) => {
 }
 const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
 
-export const fetchBlockstackFeeds = (contacts, filters) => {
+export const FETCH_SAVED_FEEDS_START = 'FETCH_SAVED_FEEDS_START'
+export const FETCH_SAVED_FEEDS_SUCCESS = 'FETCH_SAVED_FEEDS_SUCCESS'
+export const FETCH_SAVED_FEEDS_FAIL = 'FETCH_SAVED_FEEDS_FAIL'
+
+export const fetchBlockstackFeeds = (feeds) => {
+  return (dispatch) => {
+    blockstackGetFile('feeds.json')
+    .then((savedFeeds) => {
+      if (!JSON.parse(savedFeeds)) {
+        return
+      }
+      dispatch({
+        type: FETCH_SAVED_FEEDS_SUCCESS,
+        payload: savedFeeds
+      })
+    })
+    .catch((error) => {
+      dispatch({
+        type: FETCH_SAVED_FEEDS_FAIL,
+        payload: error
+      })
+      dispatch({
+        type: FETCH_SAVED_FEEDS_SUCCESS,
+        payload: feeds
+      })
+    })
+  }
+}
+
+
+export const fetchFeeds = (contacts, filters) => {
   return (dispatch) => {
     dispatch({ 
       type: FETCH_FEEDS_START,

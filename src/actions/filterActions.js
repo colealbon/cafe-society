@@ -1,5 +1,5 @@
 import * as blockstack from 'blockstack'
-import { fetchBlockstackFeeds } from './feedActions'
+import { fetchFeeds } from './feedActions'
 var memoize = require("memoizee");
 
 export const FILTER_UPDATE_FILTER = 'FILTER_UPDATE_FILTER'
@@ -178,7 +178,7 @@ export const fetchBlockstackFilters = (contacts) => {
             payload: uniqueFilters
           })
           dispatch(publishFilters(uniqueFilters))
-          dispatch(fetchBlockstackFeeds(contacts, uniqueFilters))
+          // dispatch(fetchFeeds(contacts, uniqueFilters))
         }
       }).catch((error) => {
         dispatch({
