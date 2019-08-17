@@ -88,11 +88,11 @@ const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
     store.dispatch(
       fetchBlockstackContacts(store.getState().contacts)
-      .then((blockstackContacts) => {
-        alert(JSON.stringify(blockstackContacts))
-        // publishContacts(blockstackContacts || store.getState().contacts)
-        return fetchBlockstackFilters(blockstackContacts  || store.getState().contacts )
-      })
+      // .then((blockstackContacts) => {
+      //   alert(JSON.stringify(blockstackContacts))
+      //   // publishContacts(blockstackContacts || store.getState().contacts)
+      //   return fetchBlockstackFilters(blockstackContacts  || store.getState().contacts )
+      // })
     )
   } else {
     let deezFeeds = !!store.getState().feeds ? store.getState().feeds :  [{
