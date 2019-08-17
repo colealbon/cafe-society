@@ -82,8 +82,8 @@ export const fetchArticles = (feeds, filters) => {
     articlesRequestQueue.push(
       blockstackGetFile('articles.json')
       .then((savedArticles) => {
+        alert(savedArticles)
         if (!JSON.parse(savedArticles)) {
-          alert(savedArticles)
           return
         }
         dispatch({
@@ -95,7 +95,10 @@ export const fetchArticles = (feeds, filters) => {
         })
       })
       .catch((error) => {
-        // pass
+        dispatch({
+          type: FETCH_SAVED_ARTICLES_FAIL,
+          payload: error
+        })
       })
     )
     feeds.map((feed) => {
@@ -124,7 +127,10 @@ export const fetchArticles = (feeds, filters) => {
             }
           }
         }).catch((error) => {
-          //pass
+          dispatch({
+            type: FETCH_ARTICLES_FAIL,
+            payload: error
+          })
         })
       }
       return 'o'
