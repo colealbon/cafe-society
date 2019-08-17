@@ -126,7 +126,7 @@ export const fetchBlockstackFeeds = (feeds) => {
       }
       dispatch({
         type: FETCH_SAVED_FEEDS_SUCCESS,
-        payload: savedFeeds
+        payload: JSON.parse(savedFeeds)
       })
     })
     .catch((error) => {
