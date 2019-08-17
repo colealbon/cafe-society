@@ -119,7 +119,7 @@ export const fetchBlockstackFilters = (filters) => {
       }
       dispatch({
         type: FETCH_SAVED_FILTERS_SUCCESS,
-        payload: savedFilters
+        payload: JSON.parse(savedFilters)
       })
     })
   }
