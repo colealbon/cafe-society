@@ -117,6 +117,7 @@ export const fetchBlockstackContacts = (contacts) => {
       payload: contacts
      })
     const fetchContactFileQueue = []
+    blockstack.listFiles((filename) => {alert(filename); return !!filename})
     fetchContactFileQueue.push(new Promise((resolve) => {
       blockstackGetFile('contacts.json')
       .then((fileContents) => {
