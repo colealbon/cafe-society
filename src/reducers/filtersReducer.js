@@ -17,7 +17,7 @@ import {
 const initialState = [
   {
     id: 'placeholder',
-    url: 'placeholder',
+    text: 'placeholder',
     sections: [
       {
         id: 'world',

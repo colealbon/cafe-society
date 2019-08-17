@@ -97,7 +97,7 @@ export const FETCH_SAVED_FILTERS_SUCCESS = 'FETCH_SAVED_FILTERS_SUCCESS'
 export const FETCH_SAVED_FILTERS_FAIL = 'FETCH_SAVED_FILTERS_FAIL'
 
 const slowBlockstackGetFile = (filename, options) => blockstack.getFile(filename, options)
-const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: (1000 * 60 * 60) }) //  miliseconds * seconds * minutes
+const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: (1000 * 10) }) //  miliseconds * seconds * minutes
 
 export const fetchBlockstackFilters = (contacts) => {
   return (dispatch) => {
@@ -108,7 +108,7 @@ export const fetchBlockstackFilters = (contacts) => {
     dispatch(() => {
       blockstackGetFile('filters.json')
       .then((fileContents) => {
-        if (JSON.stringify(fileContents) === null) {
+        if (JSON.stringify(fileContents) === null && JSON.stringify(fileContents) === [null]) {
           return
         }
         dispatch({
