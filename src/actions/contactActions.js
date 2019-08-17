@@ -117,7 +117,6 @@ export const fetchBlockstackContacts = (contacts) => {
       payload: contacts
      })
     const fetchContactFileQueue = []
-    blockstack.listFiles((filename) => {alert(filename); return !!filename})
     fetchContactFileQueue.push(new Promise((resolve) => {
       blockstackGetFile('contacts.json')
       .then((fileContents) => {
@@ -135,35 +134,6 @@ export const fetchBlockstackContacts = (contacts) => {
         resolve(contacts)
       })
     }))
-    // // fetch feeds from each contact
-    // if (!!contacts && contacts.length > 0) {
-    //   contacts.filter((contactItem) => !contactItem.muted).map((contactItem) => {
-    //     return fetchContactFileQueue.push(new Promise((resolve) => {
-    //       blockstackGetFile('contacts.json', {
-    //         decrypt: false,
-    //         username: contactItem.name
-    //       })
-    //       .then((fileContents) => {
-    //         if (fileContents === null) {
-    //           resolve([])
-    //         } else {
-    //           resolve(
-    //             JSON.parse(fileContents)
-    //             .map((fetchedContact) => {
-    //               fetchedContact.source_contact = Object.assign(contactItem)
-    //               fetchedContact.muted = true
-    //               return(fetchedContact)
-    //             }).concat(contacts)
-    //           )
-    //         }
-    //       })
-    //       .catch(() => {
-    //         resolve([])
-    //       })
-    //     }))
-    //   })
-    // }
-
     return Promise.all(fetchContactFileQueue)
     .then((fetchedContacts) => {
       const flattenedContacts = fetchedContacts.reduce((a, b) => !a ? b : [].concat(a).concat(b))

@@ -15,7 +15,6 @@ export const fetchUserData = () => {
   const type = FETCH_USER_DATA
 
   if (userSession.isUserSignedIn()) {
-    blockstack.listFiles((filename) => {console.log(filename); return true})
     return {
       type,
       payload: {

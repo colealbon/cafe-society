@@ -21,6 +21,10 @@ import { fetchAccounts } from './actions/contractActions'
 import { fetchArticles } from './actions/articleActions'
 import { fetchBlockstackContacts } from './actions/contactActions'
 import { fetchBlockstackFilters } from './actions/filterActions'
+import { fetchBlockstackFeeds } from './actions/feedActions'
+import { fetchBlockstackArticles } from './actions/articleActions'
+import { fetchBlockstackClassifiers } from './actions/classifierActions'
+import { fetchBlockstackSections } from './actions/sectionActions'
 
 import developerFundReducer from './reducers/developerFundReducer'
 import sectionsReducer from './reducers/sectionsReducer'
@@ -86,14 +90,16 @@ const store = createStore(
 
 const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
-    store.dispatch(
-      fetchBlockstackContacts(store.getState().contacts)
-      // .then((blockstackContacts) => {
-      //   alert(JSON.stringify(blockstackContacts))
-      //   // publishContacts(blockstackContacts || store.getState().contacts)
-      //   return fetchBlockstackFilters(blockstackContacts  || store.getState().contacts )
-      // })
-    )
+    store.dispatch(fetchBlockstackContacts(store.getState().contacts))
+    store.dispatch(fetchBlockstackFeeds(store.getState().feeds))
+    store.dispatch(fetchBlockstackFilters(store.getState().filters))
+    store.dispatch(fetchBlockstackArticles(store.getState().articles))
+    // store.dispatch(fetchBlockstackClassifiers(store.getState().classifiers))
+    // store.dispatch(fetchBlockstackSections(store.getState().sections))
+    store.dispatch(fetchArticles(
+      store.getState().feeds, 
+      store.getState().filters
+    ))
   } else {
     let deezFeeds = !!store.getState().feeds ? store.getState().feeds :  [{
       id: 'https://theintercept.com/feed/?lang=en',

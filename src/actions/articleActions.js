@@ -132,7 +132,61 @@ export const fetchArticles = (feeds, filters) => {
       }
       return 'o'
     })
-  }}
+  }
+}
+
+export const fetchBlockstackArticles = (articles) => {
+  return (dispatch) => {
+    dispatch({ 
+      type: 'FETCH_BLOCKSTACK_ARTICLES_START',
+      payload: articles
+      })
+    const fetchArticleFileQueue = []
+    fetchArticleFileQueue.push(new Promise((resolve) => {
+      blockstackGetFile('articles.json')
+      .then((fileContents) => {
+        dispatch({
+          type: FETCH_SAVED_ARTICLES_SUCCESS,
+          payload: JSON.parse(fileContents)
+        })
+        resolve(JSON.parse(fileContents))
+      })
+      .catch((error) =>{
+        dispatch({
+          type: FETCH_SAVED_ARTICLES_FAIL,
+          payload: error
+        })
+        resolve(articles)
+      })
+    }))
+    Promise.all(fetchArticleFileQueue)
+    .then((fetchedArticles) => {
+      const flattenedArticles = fetchedArticles.reduce((a, b) => !a ? b : [].concat(a).concat(b))
+      let dedup = {}
+      const uniqueArticles = []
+      if ((flattenedArticles || []).length === 0) {
+        flattenedArticles.filter((article) => {
+          if (dedup[article.id] === undefined) {
+            dedup[article.id] = {}
+            uniqueArticles.push(article)
+            return true
+          }
+          return false
+        })
+        dispatch({
+          type: FETCH_SAVED_ARTICLES_SUCCESS,
+          payload: uniqueArticles
+        })        
+      }
+      return uniqueArticles
+    }).catch((error) => {
+      dispatch({
+        type: FETCH_ARTICLES_FAIL,
+        payload: error
+      })
+    })
+  }
+}
 
 export const PUBLISH_ARTICLES_START = 'PUBLISH_ARTICLES_START'
 export const PUBLISH_ARTICLES_SUCCESS = 'PUBLISH_ARTICLES_SUCCESS'
