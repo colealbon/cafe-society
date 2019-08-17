@@ -132,6 +132,7 @@ export const fetchBlockstackContacts = (contacts) => {
           type: FETCH_SAVED_CONTACTS_ERROR,
           payload: error
         })
+        resolve(contacts)
       })
     }))
     // // fetch feeds from each contact
