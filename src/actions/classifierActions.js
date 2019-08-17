@@ -68,16 +68,16 @@ export const FETCH_CLASSIFIERS_FAIL = 'FETCH_CLASSIFIERS_FAIL'
 export const FETCH_SAVED_CLASSIFIERS_SUCCESS = 'FETCH_SAVED_CLASSIFIERS_SUCCESS'
 export const FETCH_SAVED_CLASSIFIERS_FAIL = 'FETCH_SAVED_CLASSIFIERS_FAIL'
 
-export const fetchBlockstackClassifiers = (contacts) => {
+export const fetchBlockstackClassifiers = (classifiers) => {
   return (dispatch) => {
     blockstackGetFile('classifiers.json')
     .then((savedClassifiers) => {
-      if (!JSON.parse(savedClassifiers)) {
-        return
+      if (JSON.parse(savedClassifiers) === null) {
+        return 
       }
       dispatch({
         type: FETCH_SAVED_CLASSIFIERS_SUCCESS,
-        payload: savedClassifiers
+        payload: JSON.parse(savedClassifiers)
       })
     })
   }
