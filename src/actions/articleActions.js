@@ -80,9 +80,7 @@ export const fetchArticles = (feeds, filters) => {
   return (dispatch) => {
     const articlesRequestQueue = []
     articlesRequestQueue.push(
-      blockstackGetFile('articles.json', {
-        decrypt: false
-      })
+      blockstackGetFile('articles.json')
       .then((savedArticles) => {
         if (!JSON.parse(savedArticles)) {
           return
@@ -150,7 +148,6 @@ export const publishArticles = (articles) => {
         payload: response
       })
     }).catch((error, fileContent) => {
-      alert(JSON.stringify(fileContent))
       dispatch({
         type: 'PUBLISH_ARTICLES_FAILED',
         payload: {
