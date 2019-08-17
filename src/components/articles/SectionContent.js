@@ -76,9 +76,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(addFilter(newFilter, filters))
       dispatch(updateFilter(''))
     },
-    handleClickLearn: (selectedSection, article, category, classifiers, articles) => {
+    handleClickLearn: (selectedSection, article, category, classifiers, allArticles) => {
       setTimeout(dispatch(learn(category, selectedSection, article, classifiers), 1000))
-      dispatch(markArticleRead(article, articles))
+      dispatch(markArticleRead(article, allArticles))
       return
     }
   }
@@ -113,12 +113,12 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'notgood', classifiers, articles)
+                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles)
                 }}>
                   <ThumbDown id='addFilter'/>
                 </IconButton>
                 <IconButton title="train as good" onClick={() => {
-                  handleClickLearn(selectedSection, article, 'good', classifiers, articles)
+                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles)
                 }}>
                   <ThumbUp id='train-good'/>
                 </IconButton>
