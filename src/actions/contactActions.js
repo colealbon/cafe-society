@@ -37,7 +37,7 @@ export const publishContacts = (contacts) => {
         payload: contacts
       })
       const fileContent = JSON.stringify(contacts)
-      return blockstack.putFile('contacts.json', fileContent, {encrypt: false})
+      return blockstack.putFile('contacts.json', fileContent)
       .then((response) => {
         dispatch({
           type: PUBLISH_CONTACTS_SUCCESS,
@@ -131,10 +131,6 @@ export const fetchBlockstackContacts = (contacts) => {
         dispatch({
           type: FETCH_SAVED_CONTACTS_ERROR,
           payload: error
-        })
-        dispatch({
-          type: FETCH_SAVED_CONTACTS_SUCCESS,
-          payload: contacts
         })
       })
     }))
