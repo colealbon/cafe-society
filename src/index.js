@@ -94,8 +94,8 @@ const runInitialAppStartActions = () => {
     store.dispatch(fetchBlockstackFeeds(store.getState().feeds))
     store.dispatch(fetchBlockstackFilters(store.getState().filters))
     store.dispatch(fetchBlockstackArticles(store.getState().articles))
-    // store.dispatch(fetchBlockstackClassifiers(store.getState().classifiers))
-    // store.dispatch(fetchBlockstackSections(store.getState().sections))
+    store.dispatch(fetchBlockstackClassifiers(store.getState().classifiers))
+    store.dispatch(fetchBlockstackSections(store.getState().sections))
     store.dispatch(fetchArticles(
       store.getState().feeds, 
       store.getState().filters

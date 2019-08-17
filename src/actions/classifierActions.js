@@ -14,7 +14,6 @@ export const addClassifier = (classifier, classifiers) => {
         classifiers: classifiers
       }
     })
-    // dispatch(updateFeed(''))
     dispatch(publishClassifiers(classifiers.filter((filterClassifier) => filterClassifier.id !== classifier.id).concat(classifier)))
   }
 }
@@ -69,40 +68,20 @@ export const FETCH_CLASSIFIERS_FAIL = 'FETCH_CLASSIFIERS_FAIL'
 export const FETCH_SAVED_CLASSIFIERS_SUCCESS = 'FETCH_SAVED_CLASSIFIERS_SUCCESS'
 export const FETCH_SAVED_CLASSIFIERS_FAIL = 'FETCH_SAVED_CLASSIFIERS_FAIL'
 
-export const fetchClassifiers = (contacts) => {
+export const fetchBlockstackClassifiers = (contacts) => {
   return (dispatch) => {
-    const classifiersRequestQueue = []
-    classifiersRequestQueue.push(
-      blockstackGetFile('classifiers.json')
-      .then((savedClassifiers) => {
-        if (!JSON.parse(savedClassifiers)) {
-          return
-        }
-        dispatch({
-          type: FETCH_SAVED_CLASSIFIERS_SUCCESS,
-          payload: savedClassifiers
-        })
+    blockstackGetFile('classifiers.json')
+    .then((savedClassifiers) => {
+      if (!JSON.parse(savedClassifiers)) {
+        return
+      }
+      dispatch({
+        type: FETCH_SAVED_CLASSIFIERS_SUCCESS,
+        payload: savedClassifiers
       })
-    )
-    // contacts.map((contact) => {
-    //   if (classifier.muted !== true && classifier.url) { 
-    //     dispatch({
-    //       type: FETCH_CLASSIFIERS_START,
-    //       payload: {
-    //         classifier: classifier,
-    //         filters: filters
-    //       }
-    //     })
-    //     fetchClassifierContent(classifier.url).then((fetchedContent) => {
-    //       dispatch({
-    //         type: 'FETCH_CLASSIFIERS_COMPLETE',
-    //         payload: fetchedContent
-    //       })
-    //     })
-    //   }
-    //   return 'o'
-    // })
-  }}
+    })
+  }
+}
 
 export const PUBLISH_CLASSIFIERS_START = 'PUBLISH_CLASSIFIERS_START'
 export const PUBLISH_CLASSIFIERS_SUCCESS = 'PUBLISH_CLASSIFIERS_SUCCESS'
