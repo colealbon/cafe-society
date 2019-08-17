@@ -14,7 +14,19 @@ import {
   FILTER_FIELD_SELECT_FIELD
 } from '../actions/filterFieldActions'
 
-const initialState = []
+const initialState = [
+  {
+    id: 'placeholder',
+    url: 'placeholder',
+    sections: [
+      {
+        id: 'world',
+        name: 'world'
+      }
+    ],
+    muted: false
+  }
+]
 
 export default (state = initialState, action) => {
   switch (action.type) {
