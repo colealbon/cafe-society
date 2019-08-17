@@ -60,8 +60,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickToggleArticle: (article, articles) => {
       dispatch(toggleArticle(article, articles))
     },
-    handleClickMarkAllRead: (articles) => {
-      dispatch(markArticleRead(articles, articles))
+    handleClickMarkAllRead: (articles, allArticles) => {
+      dispatch(markArticleRead(articles, allArticles))
     },
     handleClickAddFilter: (text, filters, selectedSection) => {
       if (text === '') {
