@@ -119,9 +119,7 @@ export const fetchBlockstackContacts = (contacts) => {
      })
     const fetchContactFileQueue = []
     fetchContactFileQueue.push(new Promise((resolve) => {
-      blockstackGetFile('contacts.json', {
-        decrypt: false,
-      })
+      blockstackGetFile('contacts.json')
       .then((fileContents) => {
         dispatch({
           type: FETCH_SAVED_CONTACTS_SUCCESS,
@@ -132,7 +130,7 @@ export const fetchBlockstackContacts = (contacts) => {
       .catch((error) =>{
         dispatch({
           type: FETCH_SAVED_CONTACTS_ERROR,
-          payload: {error: error}
+          payload: error
         })
       })
     }))
