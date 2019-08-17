@@ -106,83 +106,19 @@ export const fetchBlockstackFilters = (contacts) => {
       payload: contacts 
     })
     dispatch(() => {
-      const fetchFilterFileQueue = []
-      fetchFilterFileQueue.push(new Promise((resolve, reject) => {
-        blockstackGetFile('filters.json')
-        .then((fileContents) => {
-          dispatch({
-            type: FETCH_SAVED_FILTERS_SUCCESS,
-            payload: JSON.parse(fileContents)
-          })
-          resolve(JSON.parse(fileContents))
-        })
-        .catch((error) =>{
-          dispatch({
-            type: FETCH_SAVED_FILTERS_FAIL,
-            payload: error
-          })
-        })
-      }))
-      // if (contacts.length > 0) {
-      //   contacts.filter((contact) => !contact.muted).map((contact) => {
-      //     return fetchFilterFileQueue.push(new Promise((resolve) => {
-      //         blockstackGetFile('filters.json', {
-      //           decrypt: false,
-      //           username: contact.name
-      //         })
-      //         .then((fileContents) => {
-      //           if (fileContents === null) {
-      //             resolve([])
-      //           } else {
-      //             resolve(
-      //               JSON.parse(fileContents)
-      //               .map((filter) => {
-      //                 filter.muted = false
-      //                 return(filter)
-      //               })
-      //             )
-      //           }
-      //         })
-      //         .catch(() => {
-      //           resolve([])
-      //         })
-      //     }))
-      //   })
-      // }
-  
-      Promise.all(fetchFilterFileQueue)
-      .then((fetchedFilters) => {
-        const flattenedFilters = fetchedFilters.reduce((a, b) => !a ? b : a.concat(b))
-        const uniqueFilters = []
-        let dedup = {}
-        if ((flattenedFilters || []).length < 1) {
-          dispatch({
-            type: FETCH_FILTERS_SUCCESS,
-            payload: [{
-              id: 'measles',
-              text: 'measles',
-              fields: [{id:'title', name:'title', muted: false}]
-            }]
-          })
-        } else {
-          flattenedFilters.filter((filter) => {
-            if (dedup[filter.id] === undefined) {
-              dedup[filter.id] = {}
-              uniqueFilters.push(filter)
-              return true
-            }
-            return false
-          })
-          dispatch({
-            type: FETCH_FILTERS_SUCCESS,
-            payload: uniqueFilters
-          })
-          dispatch(publishFilters(uniqueFilters))
-          // dispatch(fetchFeeds(contacts, uniqueFilters))
+      blockstackGetFile('filters.json')
+      .then((fileContents) => {
+        if (JSON.stringify(fileContents) === null) {
+          return
         }
-      }).catch((error) => {
         dispatch({
-          type: FETCH_FILTERS_ERROR,
+          type: FETCH_SAVED_FILTERS_SUCCESS,
+          payload: JSON.parse(fileContents)
+        })
+      })
+      .catch((error) =>{
+        dispatch({
+          type: FETCH_SAVED_FILTERS_FAIL,
           payload: error
         })
       })

@@ -121,7 +121,7 @@ export const fetchBlockstackFeeds = (feeds) => {
   return (dispatch) => {
     blockstackGetFile('feeds.json')
     .then((savedFeeds) => {
-      if (!JSON.parse(savedFeeds)) {
+      if (JSON.parse(savedFeeds === null)) {
         return
       }
       dispatch({
