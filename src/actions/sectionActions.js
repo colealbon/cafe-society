@@ -1,12 +1,10 @@
 import * as blockstack from 'blockstack'
 var memoize = require('memoizee')
 
-
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
 }
 const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
-
 
 export const FETCH_SAVED_SECTIONS_START = 'FETCH_SAVED_SECTIONS_START'
 export const FETCH_SAVED_SECTIONS_SUCCESS = 'FETCH_SAVED_SECTIONS_SUCCESS'
