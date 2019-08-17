@@ -103,12 +103,19 @@ export const fetchBlockstackFilters = (filters) => {
   return (dispatch) => {
     blockstackGetFile('filters.json')
     .then((savedFilters) => {
-      if (!JSON.parse(savedFilters)) {
+      if (JSON.parse(savedFilters) === null) {
         dispatch({
           type: FETCH_SAVED_FILTERS_SUCCESS,
-          payload: [{id: 'placeholder', text:'placeholder'}]
+          payload: [{
+            id: 'placeholder', 
+            text:'placeholder', 
+            fields: [{
+              id: "title",
+              name: "title",
+              muted: false
+            }]
+          }]
         })
-        return
       }
       dispatch({
         type: FETCH_SAVED_FILTERS_SUCCESS,
