@@ -78,7 +78,7 @@ export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 
 export const fetchArticles = (feeds, filters) => {
   return (dispatch) => {
-    const articlesRequestQueue = []
+    // const articlesRequestQueue = []
     // articlesRequestQueue.push(
     //   blockstackGetFile('articles.json')
     //   .then((savedArticles) => {
@@ -142,50 +142,50 @@ export const fetchBlockstackArticles = (articles) => {
       type: 'FETCH_BLOCKSTACK_ARTICLES_START',
       payload: articles
       })
-    const fetchArticleFileQueue = []
-    fetchArticleFileQueue.push(new Promise((resolve) => {
+    //const fetchArticleFileQueue = []
+    // fetchArticleFileQueue.push(new Promise((resolve) => {
       blockstackGetFile('articles.json')
       .then((fileContents) => {
-        dispatch({
-          type: FETCH_SAVED_ARTICLES_SUCCESS,
-          payload: JSON.parse(fileContents)
-        })
-        resolve(JSON.parse(fileContents))
+        if (JSON.parse(fileContents) !== null) {
+          dispatch({
+            type: FETCH_SAVED_ARTICLES_SUCCESS,
+            payload: JSON.parse(fileContents)
+          })
+        }
       })
       .catch((error) =>{
         dispatch({
           type: FETCH_SAVED_ARTICLES_FAIL,
           payload: error
         })
-        resolve(articles)
       })
-    }))
-    Promise.all(fetchArticleFileQueue)
-    .then((fetchedArticles) => {
-      const flattenedArticles = fetchedArticles.reduce((a, b) => !a ? b : [].concat(a).concat(b))
-      let dedup = {}
-      const uniqueArticles = []
-      if ((flattenedArticles || []).length === 0) {
-        flattenedArticles.filter((article) => {
-          if (dedup[article.id] === undefined) {
-            dedup[article.id] = {}
-            uniqueArticles.push(article)
-            return true
-          }
-          return false
-        })
-        dispatch({
-          type: FETCH_SAVED_ARTICLES_SUCCESS,
-          payload: uniqueArticles
-        })        
-      }
-      return uniqueArticles
-    }).catch((error) => {
-      dispatch({
-        type: FETCH_ARTICLES_FAIL,
-        payload: error
-      })
-    })
+    //}))
+    // Promise.all(fetchArticleFileQueue)
+    // .then((fetchedArticles) => {
+    //   const flattenedArticles = fetchedArticles.reduce((a, b) => !a ? b : [].concat(a).concat(b))
+    //   let dedup = {}
+    //   const uniqueArticles = []
+    //   if ((flattenedArticles || []).length === 0) {
+    //     flattenedArticles.filter((article) => {
+    //       if (dedup[article.id] === undefined) {
+    //         dedup[article.id] = {}
+    //         uniqueArticles.push(article)
+    //         return true
+    //       }
+    //       return false
+    //     })
+    //     dispatch({
+    //       type: FETCH_SAVED_ARTICLES_SUCCESS,
+    //       payload: uniqueArticles
+    //     })        
+    //   }
+    //   return uniqueArticles
+    // }).catch((error) => {
+    //   dispatch({
+    //     type: FETCH_ARTICLES_FAIL,
+    //     payload: error
+    //   })
+    // })
   }
 }
 
