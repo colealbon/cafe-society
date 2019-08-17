@@ -99,28 +99,20 @@ export const FETCH_SAVED_FILTERS_FAIL = 'FETCH_SAVED_FILTERS_FAIL'
 const slowBlockstackGetFile = (filename, options) => blockstack.getFile(filename, options)
 const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: (1000 * 10) }) //  miliseconds * seconds * minutes
 
-export const fetchBlockstackFilters = (contacts) => {
+export const fetchBlockstackFilters = (filters) => {
   return (dispatch) => {
-    dispatch({ 
-      type: FETCH_FILTERS_START,
-      payload: contacts 
-    })
-    dispatch(() => {
-      blockstackGetFile('filters.json')
-      .then((fileContents) => {
-        if (JSON.parse(fileContents)) {
-          return
-        }
+    blockstackGetFile('filters.json')
+    .then((savedFilters) => {
+      if (!JSON.parse(savedFilters)) {
         dispatch({
           type: FETCH_SAVED_FILTERS_SUCCESS,
-          payload: JSON.parse(fileContents)
+          payload: [{id: 'placeholder', text:'placeholder'}]
         })
-      })
-      .catch((error) =>{
-        dispatch({
-          type: FETCH_SAVED_FILTERS_FAIL,
-          payload: error
-        })
+        return
+      }
+      dispatch({
+        type: FETCH_SAVED_FILTERS_SUCCESS,
+        payload: savedFilters
       })
     })
   }
