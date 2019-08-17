@@ -108,7 +108,7 @@ export const fetchBlockstackFilters = (contacts) => {
     dispatch(() => {
       const fetchFilterFileQueue = []
       fetchFilterFileQueue.push(new Promise((resolve, reject) => {
-        blockstack.getFile('filters.json')
+        blockstackGetFile('filters.json')
         .then((fileContents) => {
           dispatch({
             type: FETCH_SAVED_FILTERS_SUCCESS,

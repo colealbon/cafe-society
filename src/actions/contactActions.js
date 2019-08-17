@@ -1,5 +1,4 @@
 import * as blockstack from 'blockstack'
-import { fetchBlockstackFilters } from './filterActions'
 
 var memoize = require("memoizee")
 

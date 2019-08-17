@@ -20,6 +20,7 @@ import { fetchUserData } from './actions/blockstackUserActions'
 import { fetchAccounts } from './actions/contractActions'
 import { fetchArticles } from './actions/articleActions'
 import { fetchBlockstackContacts } from './actions/contactActions'
+import { fetchBlockstackFilters } from './actions/filterActions'
 
 import developerFundReducer from './reducers/developerFundReducer'
 import sectionsReducer from './reducers/sectionsReducer'
@@ -89,7 +90,7 @@ const runInitialAppStartActions = () => {
       fetchBlockstackContacts(store.getState().contacts)
       .then((blockstackContacts) => {
         alert(JSON.stringify(blockstackContacts))
-        publishContacts(blockstackContacts || store.getState().contacts)
+        // publishContacts(blockstackContacts || store.getState().contacts)
         return fetchBlockstackFilters(blockstackContacts  || store.getState().contacts )
       })
     )
