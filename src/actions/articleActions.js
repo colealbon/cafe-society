@@ -79,26 +79,26 @@ export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 export const fetchArticles = (feeds, filters) => {
   return (dispatch) => {
     const articlesRequestQueue = []
-    articlesRequestQueue.push(
-      blockstackGetFile('articles.json')
-      .then((savedArticles) => {
-        if (savedArticles !== null) {
-          dispatch({
-            type: FETCH_SAVED_ARTICLES_SUCCESS,
-            payload: {
-              articles: JSON.parse(savedArticles),
-              filters: filters
-            }
-          })
-        }
-      })
-      .catch((error) => {
-        dispatch({
-          type: FETCH_SAVED_ARTICLES_FAIL,
-          payload: error
-        })
-      })
-    )
+    // articlesRequestQueue.push(
+    //   blockstackGetFile('articles.json')
+    //   .then((savedArticles) => {
+    //     if (savedArticles !== null) {
+    //       dispatch({
+    //         type: FETCH_SAVED_ARTICLES_SUCCESS,
+    //         payload: {
+    //           articles: JSON.parse(savedArticles),
+    //           filters: filters
+    //         }
+    //       })
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     dispatch({
+    //       type: FETCH_SAVED_ARTICLES_FAIL,
+    //       payload: error
+    //     })
+    //   })
+    // )
     feeds.map((feed) => {
       if (feed.muted !== true && feed.url) { 
         dispatch({
