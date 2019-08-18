@@ -96,8 +96,9 @@ export const addSection = (section, sections) => {
       payload: {
         id: section.toLowerCase().replace(' ', '-'),
         name: section
+      }
     })
-    updateSection('')
+    dispatch(updateSection(''))
 
     dispatch(publishSections(sections.filter((sectionItem) => sectionItem.id !== section.toLowerCase().replace(' ', '-')).concat({ id: section.toLowerCase().replace(' ', '-'), name: section,  muted: false })))
   }
