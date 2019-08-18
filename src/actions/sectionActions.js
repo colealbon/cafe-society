@@ -19,7 +19,7 @@ export const fetchBlockstackSections = (sections) => {
       }
       dispatch({
         type: FETCH_SAVED_SECTIONS_SUCCESS,
-        payload: savedSections
+        payload: JSON.parse(savedSections)
       })
     })
     .catch((error) => {
