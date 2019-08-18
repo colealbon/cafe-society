@@ -12,6 +12,10 @@ import {
           ...state.filter(section => section.id !== action.payload.id),
           action.payload
         ]
+
+      case FETCH_SAVED_SECTIONS_SUCCESS:
+        return [].concat(action.payload)
+
       case SECTIONS_REMOVE_SECTION:
         return state.filter(stateItem => {
           let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
@@ -25,6 +29,7 @@ import {
         return state
     }
   }
+  
   const initialState = [
     {
     id: 'politics',
