@@ -97,8 +97,8 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
         {sectionTitle}
       </Typography>
       <p />
-      {articles
-        .map((article) => {
+      {(articles.length) === 0 ? <Fragment>(select a section above)</Fragment> : 
+      articles.map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
         return (
           <Grid item xs={12} key={article.id}>
