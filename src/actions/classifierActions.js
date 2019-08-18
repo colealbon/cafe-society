@@ -134,10 +134,7 @@ export const learn = (category, selectedSection, article, classifiers) => {
       classifiers = (overwrite.length !== 0) ? 
         classifiers : 
         classifiers.concat({id: selectedSection.id})
-
-      dispatch({
-        type: CLASSIFIERS_LEARN_SUCCESS,
-        payload: classifiers.filter((classifier) => classifier !== null)
+      const newClassifiers = classifiers.filter((classifier) => classifier !== null)
           .filter((classifier) => classifier.id === selectedSection.id)
           .map((classifier) => {
             if (classifier.id === selectedSection.id) {
@@ -149,6 +146,10 @@ export const learn = (category, selectedSection, article, classifiers) => {
             return null
           }).filter((classifier) => classifier !== null)
           .concat(classifiers.filter((classifier) => classifier.id !== selectedSection.id))
+      dispatch(publishClassifiers(newClassifiers))
+      dispatch({
+        type: CLASSIFIERS_LEARN_SUCCESS,
+        payload: newClassifiers
       })
     } catch(error) {
       dispatch({
