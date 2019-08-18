@@ -5,19 +5,23 @@ import { Add } from '@material-ui/icons'
 import { addSection, updateSection} from '../../actions/sectionActions'
 import IconButton from '@material-ui/core/IconButton'
 
-const mapStateToProps = ({section}) => {
+const mapStateToProps = ({section, sections}) => {
   if (!section) {
-    return {name: ''}
+    return {
+      name: '',
+      sections
+    }
   }
   return {
-    name: section.name
+    name: section.name,
+    sections: sections
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickAddSection: (name) => {
-      dispatch(addSection(name))
+    handleClickAddSection: (name, sections) => {
+      dispatch(addSection(name, sections))
       dispatch(updateSection(''))
     },
     handleInputChange: (evt) => {
@@ -27,10 +31,10 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const AddSection = ({ handleClickAddSection, handleInputChange, name, ...rest}) => {
+const AddSection = ({ handleClickAddSection, handleInputChange, name, sections, ...rest}) => {
   return (
     <Fragment>
-      <IconButton title="add new rss section" onClick={() => handleClickAddSection(name)} >
+      <IconButton title="add new rss section" onClick={() => handleClickAddSection(name, sections)} >
         <Add id='addSection' />
       </IconButton>
       <TextField
