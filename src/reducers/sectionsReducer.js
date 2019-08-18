@@ -1,7 +1,8 @@
 import {
     SECTIONS_ADD_SECTION,
     SECTIONS_REMOVE_SECTION,
-    SECTIONS_TOGGLE_SECTION
+    SECTIONS_TOGGLE_SECTION,
+    FETCH_SAVED_SECTIONS_SUCCESS
   } from '../actions/sectionActions'
   export default (state = initialState, action) => {
     switch (action.type) {
