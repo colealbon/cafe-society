@@ -6,6 +6,7 @@ import RemoveSection from './RemoveSection'
 import { removeSection, toggleSection } from '../../actions/sectionActions'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
+import VerticalSpace from '../VerticalSpace'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -22,14 +23,14 @@ const mapStateToProps = ({ sections }) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleClickRemoveSection: (section) => {
-      dispatch(removeSection(section))
+    handleClickRemoveSection: (section, sections) => {
+      dispatch(removeSection(section, sections))
     },
-    handleClickToggleSection: (section) => {
-      dispatch(toggleSection(section))
+    handleClickToggleSection: (section, sections) => {
+      dispatch(toggleSection(section, sections))
     },
     handleClickRemoveAllSections: (sections) => {
-      sections.map((section) => dispatch(removeSection(section)))
+      sections.map((section) => dispatch(removeSection(section, sections)))
     }
   }
 }
@@ -38,14 +39,11 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
   const deleteSweepSection = `delete: ${[].concat(sections).length}`
   return (
     <Fragment>
-      <br />
-      <br />
-      <br />
-      <br />
+      <VerticalSpace/>
       <List subheader={<ListSubheader>Edit/Save Sections</ListSubheader>} >
         <ListItem key='addItem'>
           <ListItemIcon>
-            <IconButton title={deleteSweepSection} onClick={() => { handleClickRemoveAllSections(sections) }}>
+            <IconButton title={deleteSweepSection} onClick={() => { handleClickRemoveAllSections(sections, sections) }}>
               <DeleteSweepIcon></DeleteSweepIcon>
             </IconButton>
           </ ListItemIcon>
@@ -57,12 +55,12 @@ export const SectionList = ({ handleClickRemoveSection, handleClickToggleSection
               <RemoveSection
                 {...section}
                 onClick={() => {
-                  handleClickRemoveSection(section)
+                  handleClickRemoveSection(section, sections)
                 }}
               />
               <span
                 onClick={() => {
-                  handleClickToggleSection(section)
+                  handleClickToggleSection(section, sections)
                 }}
                 title={section.muted ? `enable ${section.name}` : `disable {section.name}` }
               >

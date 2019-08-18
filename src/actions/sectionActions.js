@@ -31,6 +31,40 @@ export const fetchBlockstackSections = (sections) => {
   }
 }
 
+export const PUBLISH_SECTIONS_START = 'PUBLISH_SECTIONS_START'
+export const PUBLISH_SECTIONS_SUCCESS = 'PUBLISH_SECTIONS_SUCCESS'
+export const PUBLISH_SECTIONS_ERROR = 'PUBLISH_SECTIONS_ERROR'
+
+export const publishSections = (sections) => {
+  if (!!sections) {
+    return (dispatch) => {
+      dispatch({
+        type: PUBLISH_SECTIONS_START,
+        payload: sections
+      })
+      const fileContent = JSON.stringify(sections)
+      return blockstack.putFile('sections.json', fileContent)
+      .then((response) => {
+        dispatch({
+          type: PUBLISH_SECTIONS_SUCCESS,
+          payload: {
+            response: response,
+            sections: sections
+          }
+        })
+      })
+      .catch((error) => {
+        dispatch({
+          type: PUBLISH_SECTIONS_ERROR,
+          payload: {
+            error: error
+          }
+        })
+      })
+    }
+  }
+}
+
 export const SECTION_SELECT_SECTION = 'SECTION_SELECT_SECTION'
 
 export const selectSection = section => {
@@ -55,37 +89,40 @@ export const updateSection = text => {
 
 export const SECTIONS_ADD_SECTION = 'SECTIONS_ADD_SECTION'
 
-export const addSection = name => {
+export const addSection = (section, sections) => {
   return (dispatch) => {
     dispatch({
       type: SECTIONS_ADD_SECTION,
       payload: {
-        id: name.toLowerCase().replace(' ', '-'),
-        name: name
+        id: section.toLowerCase().replace(' ', '-'),
+        name: section
       }
     })
     updateSection({name: ''})
+    dispatch(publishSections(sections.filter((sectionItem) => sectionItem.id !== section.toLowerCase().replace(' ', '-')).concat({ id: section.toLowerCase().replace(' ', '-'), name: section,  muted: false })))
   }
 }
 
 export const SECTIONS_REMOVE_SECTION = 'SECTIONS_REMOVE_SECTION'
 
-export const removeSection = section => {
+export const removeSection = (section, sections) => {
   return (dispatch) => {
     dispatch({
       type: SECTIONS_REMOVE_SECTION,
       payload: section
     })
+    dispatch(publishSections(sections.filter((filterSection) => filterSection.id !== section.id)))
   }
 }
 
 export const SECTIONS_TOGGLE_SECTION = 'SECTIONS_TOGGLE_SECTION'
 
-export const toggleSection = section => {
+export const toggleSection = (section, sections) => {
   return (dispatch) => {
     dispatch({
       type: SECTIONS_TOGGLE_SECTION,
       payload: section
     })
+    dispatch(publishSections(sections.map(sectionItem => sectionItem.id === section.id ? { ...sectionItem, muted: !sectionItem.muted || false } : sectionItem)))
   }
 }

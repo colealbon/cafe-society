@@ -1,5 +1,4 @@
 import * as blockstack from 'blockstack'
-
 var memoize = require("memoizee")
 
 export const CONTACT_SELECT_CONTACT = 'CONTACT_SELECT_CONTACT'
