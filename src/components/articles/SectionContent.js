@@ -4,6 +4,7 @@ import { PlaylistAddCheck, VoiceOverOff, ThumbDown, ThumbUp } from '@material-ui
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import { removeArticle, toggleArticle, markArticleRead } from '../../actions/articleActions'
+import { toggleSection } from '../../actions/sectionActions'
 import { learn } from '../../actions/classifierActions'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
@@ -12,6 +13,7 @@ import {parse} from 'tldjs'
 import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
 import { addFilter, updateFilter} from '../../actions/filterActions'
+import Link from '@material-ui/core/Link';
 
 function getSelectionText() {
   var text = ""
@@ -23,9 +25,10 @@ function getSelectionText() {
   return text
 }
 
-const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers}) => {
+const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers, sections}) => {
   return {
     selectedSection: selectedSection,
+    sections: sections,
     classifiers: classifiers,
     articles: !!articles ? 
       articles.filter((article) => {
@@ -51,6 +54,9 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    handleClickToggleSection: (section, sections) => {
+      dispatch(toggleSection(section, sections))
+    },
     handleClickShadowBanDomain: (link, selectedSection, filters) => {
       dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
@@ -84,7 +90,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickRemoveArticle, handleClickMarkAllRead, handleClickToggleArticle, articles, allArticles, selectedSection, filters, classifiers, handleClickLearn}) => {
+export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'home'
   const readTitle = `mark ${articles.length} articles as read`
   return (
@@ -97,7 +103,11 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
         {sectionTitle}
       </Typography>
       <p />
-      {(articles.length) === 0 ? <Fragment>(select a section above)</Fragment> : 
+      {(articles.length) === 0 ? 
+      <Fragment>
+        no unread items 
+        &nbsp;{<Link onClick={() => {handleClickToggleSection(selectedSection, sections)}}>{selectedSection.id !== '' ? `hide ${selectedSection.id} tab`: ''}</Link>}
+      </Fragment> :
       articles.map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
         return (

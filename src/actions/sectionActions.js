@@ -123,6 +123,14 @@ export const toggleSection = (section, sections) => {
       type: SECTIONS_TOGGLE_SECTION,
       payload: section
     })
-    dispatch(publishSections(sections.map(sectionItem => sectionItem.id === section.id ? { ...sectionItem, muted: !sectionItem.muted || false } : sectionItem)))
+    dispatch(
+      publishSections(
+        sections.map(sectionItem => {
+          return sectionItem.id === section.id ?
+          { ...sectionItem, muted: !sectionItem.muted || false } : 
+          sectionItem
+        })
+      )
+    )
   }
 }

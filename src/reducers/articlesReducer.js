@@ -43,7 +43,7 @@ export default (state = [], action) => {
       return [].concat(action.payload)
 
     case FETCH_ARTICLES_SUCCESS:
-      return state.concat(action.payload.articles.filter((newArticle) => {
+      return (state.concat(action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
       })).filter((articleItem) => articleItem.title !== '')
@@ -77,6 +77,14 @@ export default (state = [], action) => {
           }).length !== 0
         })
         return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
+      })).filter(stateArticle => {
+        // delete articles no longer active in feed
+        if (stateArticle.feed.id !== action.payload.feed.id) {
+          return true
+        }
+        return action.payload.articles.filter(payloadArticle => {
+          return stateArticle.id === payloadArticle.id
+        }).length !== 0
       })
 
     case ARTICLES_MARK_READ:

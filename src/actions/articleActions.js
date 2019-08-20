@@ -93,6 +93,7 @@ export const fetchArticles = (feeds, filters) => {
               dispatch({
                 type: FETCH_ARTICLES_SUCCESS,
                 payload: {
+                  feed: feed,
                   articles: fetchedContent.items.map((item) => {
                     return !item.guid ? 
                     Object.assign({id: item.link, feed: feed}, item) :
