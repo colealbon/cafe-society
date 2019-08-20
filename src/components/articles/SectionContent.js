@@ -84,7 +84,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     handleClickLearn: (selectedSection, article, category, classifiers, allArticles) => {
       setTimeout(dispatch(learn(category, selectedSection, article, classifiers), 1000))
-      dispatch(markArticleRead(article, allArticles))
+      setTimeout(dispatch(markArticleRead(article, allArticles), 100))
       return
     }
   }
