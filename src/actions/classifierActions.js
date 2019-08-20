@@ -146,12 +146,11 @@ export const learn = (category, selectedSection, article, classifiers) => {
             return null
           }).filter((classifier) => classifier !== null)
           .concat(classifiers.filter((classifier) => classifier.id !== selectedSection.id))
-
-      dispatch(publishClassifiers(newClassifiers))
       dispatch({
         type: CLASSIFIERS_LEARN_SUCCESS,
         payload: newClassifiers
       })
+      dispatch(publishClassifiers(newClassifiers))
     } catch(error) {
       dispatch({
         type: CLASSIFIERS_LEARN_FAIL,
