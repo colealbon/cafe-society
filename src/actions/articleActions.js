@@ -161,7 +161,9 @@ export const publishArticles = (articles) => {
         uploadQueue.push(new Promise((resolve, reject) => {
           blockstackPutFile(`articles-${articleItem.id}.json`, JSON.stringify(articleItem))
           .then((result) => resolve(result.response))
-          .catch((error) => reject(error))
+          .catch((error) => {
+            reject(error)
+          })
         }))
         return 'o'
       })
@@ -169,18 +171,16 @@ export const publishArticles = (articles) => {
       return Promise.all(uploadQueue, (responses) => {
         dispatch({
           type: 'PUBLISH_ARTICLES_SUCCESS',
+          payload: responses
+        })
+      }).catch((error) => {
+        dispatch({
+          type: 'PUBLISH_ARTICLES_FAILED',
           payload: {
-            responses: responses.response
+            error: error
           }
         })
-      }).catch((error, fileContent) => {
-          dispatch({
-            type: 'PUBLISH_ARTICLES_FAILED',
-            payload: {
-              error: error
-            }
-          })
-        })
+      })
     })
   }
 }

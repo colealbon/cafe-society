@@ -15,9 +15,9 @@ export default (state = [], action) => {
     case 'RESET_APP':
       return []
 
-      case  PUBLISH_ARTICLES_SUCCESS:
-        return action.payload 
-        
+      // case  PUBLISH_ARTICLES_SUCCESS:
+      //   return state.concat(action.payload)
+
 //     case GAIA_LINKS_ADD_GAIA_LINK:
 //       return [
 //         ...state.filter(gaiaLink => gaiaLink.id !== action.payload.id),
