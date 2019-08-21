@@ -135,7 +135,7 @@ export const fetchBlockstackArticles = (articles) => {
         type: 'FETCH_BLOCKSTACK_ARTICLE_START',
         payload: filename
       })
-      if (filename.indexOf('article') !== -0) {
+      if (filename.indexOf('.json') !== -1) {
         return
       }
       blockstackGetFile(filename)
@@ -171,8 +171,14 @@ export const publishArticles = (articles) => {
     dispatch(() => {
       articles.map((articleItem) => {
         const sha1Hash = hash(articleItem)
-        const filename = 'article' + sha1Hash
-        return blockstackPutFile(filename, JSON.stringify(articleItem))
+        dispatch({
+          type: 'PUBLISH_ARTICLE_START',
+          payload: {
+            sha1Hash: sha1Hash,
+            articleId: articleItem.id
+          }
+        })
+        return blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
         .then((gaiaUrl) => {
           dispatch({
             type: 'PUBLISH_ARTICLE_SUCCESS',
