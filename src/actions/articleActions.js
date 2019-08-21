@@ -158,14 +158,19 @@ export const publishArticles = (articles) => {
     dispatch(() => {
       let uploadQueue = []
       articles.map((articleItem) => {
-        return blockstackPutFile(`articles-${articleItem.id}.json`, JSON.stringify(articleItem))
+        uploadQueue.push(new Promise((resolve, reject) => {
+          blockstackPutFile(`articles-${articleItem.id}.json`, JSON.stringify(articleItem))
+          .then((result) => resolve(result.response))
+          .catch((error) => reject(error))
+        }))
+        return 'o'
       })
+
       return Promise.all(uploadQueue, (responses) => {
         dispatch({
           type: 'PUBLISH_ARTICLES_SUCCESS',
           payload: {
-            responses: responses,
-            articles: articles
+            responses: responses.response
           }
         })
       }).catch((error, fileContent) => {
