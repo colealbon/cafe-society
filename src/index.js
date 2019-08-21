@@ -40,6 +40,7 @@ import filterReducer from './reducers/filterReducer'
 import fieldsReducer from './reducers/fieldsReducer'
 import accountsReducer from './reducers/accountsReducer'
 import articlesReducer from './reducers/articlesReducer'
+import gaiaLinksReducer from './reducers/gaiaLinksReducer'
 import blockstackUserReducer from './reducers/blockstackUserReducer'
 import loadingReducer from './reducers/loadingReducer'
 import sectionReducer from './reducers/sectionReducer'
@@ -68,6 +69,7 @@ const rootReducer = combineReducers({
   contacts: contactsReducer,
   contact: contactReducer,
   loading: loadingReducer,
+  gaiaLinks: gaiaLinksReducer,
   blockstackUser: blockstackUserReducer,
   router: connectRouter(history)
 })

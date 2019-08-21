@@ -35,6 +35,11 @@ export const removeArticle = (removeArticle, articles) => {
 
 export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
 
+const slowBlockstackPutFile = (filename, options) => {
+  return blockstack.putFile(filename, options)
+}
+const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
+
 export const markArticleRead = (articles, allArticles) => {
   return (dispatch) => {
     dispatch({
@@ -150,22 +155,24 @@ export const publishArticles = (articles) => {
       type: 'PUBLISH_ARTICLES_START',
       payload: articles
     })
-    const fileContent = JSON.stringify(articles)
-    return setTimeout(
-      blockstack.putFile('articles.json', fileContent)
-      .then((response) => {
+    dispatch(() => {
+      let uploadQueue = []
+      articles.map((articleItem) => {
+        return blockstackPutFile(`articles-${articleItem.id}.json`, JSON.stringify(articleItem))
+      })
+      return Promise.all(uploadQueue, (gaiaLinks) => {
         dispatch({
           type: 'PUBLISH_ARTICLES_SUCCESS',
-          payload: response
+          payload: gaiaLinks
         })
       }).catch((error, fileContent) => {
-        dispatch({
-          type: 'PUBLISH_ARTICLES_FAILED',
-          payload: {
-            error: error
-          }
+          dispatch({
+            type: 'PUBLISH_ARTICLES_FAILED',
+            payload: {
+              error: error
+            }
+          })
         })
-      }), 1
-    )
+    })
   }
 }
