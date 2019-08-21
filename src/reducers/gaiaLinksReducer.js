@@ -1,10 +1,10 @@
-// import {
+import {
 //   GAIA_LINKS_ADD_GAIA_LINK,
-//   GAIA_LINKS_REMOVE_GAIA_LINK,
+  GAIA_LINKS_REMOVE_GAIA_LINK,
 //   GAIA_LINKS_TOGGLE_GAIA_LINK,
 //   FETCH_SAVED_GAIA_LINKS_SUCCESS,
 //   FETCH_GAIA_LINKS_SUCCESS
-// } from '../actions/gaiaLinkActions'
+} from '../actions/gaiaLinkActions'
 
 import {
   PUBLISH_ARTICLE_SUCCESS
@@ -24,11 +24,11 @@ export default (state = [], action) => {
 //         ...state.filter(gaiaLink => gaiaLink.id !== action.payload.id),
 //         action.payload
 //       ]
-//     case GAIA_LINKS_REMOVE_GAIA_LINK:
-//       return state.filter(stateItem => {
-//         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-//         return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
-//       })
+    case GAIA_LINKS_REMOVE_GAIA_LINK:
+      return state.filter(stateItem => {
+        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
+        return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
+      })
 
 //     case GAIA_LINKS_TOGGLE_GAIA_LINK:
 //       return state.map(gaiaLink => gaiaLink.id === action.payload.id ? { ...gaiaLink, muted: !gaiaLink.muted || false } : gaiaLink)

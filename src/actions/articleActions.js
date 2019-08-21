@@ -162,7 +162,7 @@ export const PUBLISH_ARTICLES_START = 'PUBLISH_ARTICLES_START'
 export const PUBLISH_ARTICLE_SUCCESS = 'PUBLISH_ARTICLE_SUCCESS'
 export const PUBLISH_ARTICLES_FAIL = 'PUBLISH_ARTICLES_FAIL'
 
-export const publishArticles = (articles) => {
+export const publishArticles = (articles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: 'PUBLISH_ARTICLES_START',
