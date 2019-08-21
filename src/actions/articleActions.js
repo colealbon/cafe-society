@@ -2,6 +2,7 @@ import * as blockstack from 'blockstack'
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
+var hash = require('object-hash');
 
 const slow_fetchFeedContent = feedUrl => {
   return !feedUrl ? 
@@ -156,24 +157,20 @@ export const publishArticles = (articles) => {
       payload: articles
     })
     dispatch(() => {
-      const uploadQueue = []
       articles.map((articleItem) => {
-        console.log(articleItem)
-        uploadQueue.push(blockstackPutFile(`articles_${articleItem.id}.json`, JSON.stringify(articleItem)))
-        return 'o'
-      })
-
-      return Promise.all(uploadQueue, (responses) => {
-        dispatch({
-          type: 'PUBLISH_ARTICLES_SUCCESS',
-          payload: responses
-        })
-      }).catch((error) => {
-        dispatch({
-          type: 'PUBLISH_ARTICLES_FAILED',
-          payload: {
-            error: error
-          }
+        return blockstackPutFile(hash(articleItem), JSON.stringify(articleItem))
+        .then((result) => {
+          dispatch({
+            type: 'PUBLISH_ARTICLES_SUCCESS',
+            payload: result
+          })
+        }).catch((error) => {
+          dispatch({
+            type: 'PUBLISH_ARTICLES_FAILED',
+            payload: {
+              error: error
+            }
+          })
         })
       })
     })
