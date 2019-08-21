@@ -80,6 +80,7 @@ export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
 export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
 export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
 export const FETCH_SAVED_ARTICLES_SUCCESS = 'FETCH_SAVED_ARTICLES_SUCCESS'
+export const FETCH_SAVED_ARTICLE_SUCCESS = 'FETCH_SAVED_ARTICLE_SUCCESS'
 export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 
 export const fetchArticles = (feeds, filters) => {
@@ -128,14 +129,21 @@ export const fetchBlockstackArticles = (articles) => {
       type: 'FETCH_BLOCKSTACK_ARTICLES_START',
       payload: articles
     })
-    blockstackGetFile('articles.json')
-    .then((fileContents) => {
-      if (JSON.parse(fileContents) !== null) {
-        dispatch({
-          type: FETCH_SAVED_ARTICLES_SUCCESS,
-          payload: JSON.parse(fileContents)
-        })
+
+    blockstack.listFiles((filename) => {
+      if (filename.indexOf('article') !== -0) {
+        return
       }
+      blockstackGetFile(filename)
+      .then((fileContents) => {
+        if (JSON.parse(fileContents) !== null) {
+          dispatch({
+            type: FETCH_SAVED_ARTICLE_SUCCESS,
+            payload: JSON.parse(fileContents)
+          })
+        }
+      })
+      return true
     })
     .catch((error) =>{
       dispatch({
@@ -159,7 +167,7 @@ export const publishArticles = (articles) => {
     dispatch(() => {
       articles.map((articleItem) => {
         const sha1Hash = hash(articleItem)
-        return blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
+        return blockstackPutFile(`article${sha1Hash}`, JSON.stringify(articleItem))
         .then((gaiaUrl) => {
           dispatch({
             type: 'PUBLISH_ARTICLE_SUCCESS',

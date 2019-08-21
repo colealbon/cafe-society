@@ -164,7 +164,7 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 )
-setTimeout(store.dispatch(fetchAccounts()), 4000)
+setTimeout(store.dispatch(fetchAccounts()), 2000)
 store.dispatch(fetchUserData())
 
 // Learn more about service workers: http://bit.ly/CRA-PWA
