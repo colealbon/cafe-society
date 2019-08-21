@@ -171,7 +171,8 @@ export const publishArticles = (articles) => {
     dispatch(() => {
       articles.map((articleItem) => {
         const sha1Hash = hash(articleItem)
-        return blockstackPutFile(`article${sha1Hash}`, JSON.stringify(articleItem))
+        const filename = 'article' + sha1Hash
+        return blockstackPutFile(filename, JSON.stringify(articleItem))
         .then((gaiaUrl) => {
           dispatch({
             type: 'PUBLISH_ARTICLE_SUCCESS',
