@@ -147,7 +147,7 @@ export const fetchBlockstackArticles = (articles) => {
 }
 
 export const PUBLISH_ARTICLES_START = 'PUBLISH_ARTICLES_START'
-export const PUBLISH_ARTICLES_SUCCESS = 'PUBLISH_ARTICLES_SUCCESS'
+export const PUBLISH_ARTICLE_SUCCESS = 'PUBLISH_ARTICLE_SUCCESS'
 export const PUBLISH_ARTICLES_FAIL = 'PUBLISH_ARTICLES_FAIL'
 
 export const publishArticles = (articles) => {
@@ -158,11 +158,16 @@ export const publishArticles = (articles) => {
     })
     dispatch(() => {
       articles.map((articleItem) => {
-        return blockstackPutFile(hash(articleItem), JSON.stringify(articleItem))
-        .then((result) => {
+        const sha1Hash = hash(articleItem)
+        return blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
+        .then((gaiaUrl) => {
           dispatch({
-            type: 'PUBLISH_ARTICLES_SUCCESS',
-            payload: result
+            type: 'PUBLISH_ARTICLE_SUCCESS',
+            payload: {
+              gaiaUrl: gaiaUrl,
+              sha1Hash: sha1Hash,
+              articleId: articleItem.id
+            }
           })
         }).catch((error) => {
           dispatch({

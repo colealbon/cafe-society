@@ -6,18 +6,18 @@
 //   FETCH_GAIA_LINKS_SUCCESS
 // } from '../actions/gaiaLinkActions'
 
-// import {
-//   PUBLISH_ARTICLES_SUCCESS
-// } from '../actions/articleActions'
+import {
+  PUBLISH_ARTICLE_SUCCESS
+} from '../actions/articleActions'
 
 export default (state = [], action) => {
   switch (action.type) {
-    
+
     case 'RESET_APP':
       return []
 
-      // case  PUBLISH_ARTICLES_SUCCESS:
-      //   return state
+      case  PUBLISH_ARTICLE_SUCCESS:
+        return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
 
 //     case GAIA_LINKS_ADD_GAIA_LINK:
 //       return [
