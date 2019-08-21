@@ -160,10 +160,13 @@ export const publishArticles = (articles) => {
       articles.map((articleItem) => {
         return blockstackPutFile(`articles-${articleItem.id}.json`, JSON.stringify(articleItem))
       })
-      return Promise.all(uploadQueue, (gaiaLinks) => {
+      return Promise.all(uploadQueue, (responses) => {
         dispatch({
           type: 'PUBLISH_ARTICLES_SUCCESS',
-          payload: gaiaLinks
+          payload: {
+            responses: responses,
+            articles: articles
+          }
         })
       }).catch((error, fileContent) => {
           dispatch({
