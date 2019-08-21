@@ -159,11 +159,9 @@ export const publishArticles = (articles) => {
       let uploadQueue = []
       articles.map((articleItem) => {
         uploadQueue.push(new Promise((resolve, reject) => {
-          blockstackPutFile(`articles-${articleItem.id}.json`, JSON.stringify(articleItem))
+          blockstackPutFile(`articles_${articleItem.id}.json`, JSON.stringify(articleItem))
           .then((result) => resolve(result))
-          .catch((error) => {
-            reject(error)
-          })
+          .catch((error) => reject(error))
         }))
         return 'o'
       })
