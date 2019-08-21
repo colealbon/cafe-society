@@ -131,6 +131,10 @@ export const fetchBlockstackArticles = (articles) => {
     })
 
     blockstack.listFiles((filename) => {
+      dispatch({ 
+        type: 'FETCH_BLOCKSTACK_ARTICLE_START',
+        payload: filename
+      })
       if (filename.indexOf('article') !== -0) {
         return
       }
