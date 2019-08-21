@@ -160,7 +160,7 @@ export const publishArticles = (articles) => {
       articles.map((articleItem) => {
         uploadQueue.push(new Promise((resolve, reject) => {
           blockstackPutFile(`articles-${articleItem.id}.json`, JSON.stringify(articleItem))
-          .then((result) => resolve(result.response))
+          .then((result) => resolve(result))
           .catch((error) => {
             reject(error)
           })
