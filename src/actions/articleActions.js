@@ -175,11 +175,15 @@ export const publishArticles = (articles, gaiaLinks) => {
         gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
         .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
         .map(gaiaLink => {
+          if (!gaiaLink) {
+            return 'o'
+          }
           dispatch({
             type: 'DELETE_GAIA_LINK_START',
             payload: gaiaLink
           })
-          dispatch(blockstack.deleteFile(gaiaLink.sha1Hash)
+          dispatch(
+            blockstack.deleteFile(gaiaLink.sha1Hash)
             .then((result) => {
               dispatch({
                 type: 'DELETE_GAIA_LINK_SUCCESS',
@@ -222,7 +226,7 @@ export const publishArticles = (articles, gaiaLinks) => {
           }).catch((error) => {
             dispatch({
               type: 'PUBLISH_ARTICLE_FAIL',
-              payload: error
+              payload: sha1Hash
             })
           })
         }
