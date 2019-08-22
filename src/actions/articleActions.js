@@ -2,6 +2,7 @@ import * as blockstack from 'blockstack'
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
+var hash = require('object-hash');
 
 const slow_fetchFeedContent = feedUrl => {
   return !feedUrl ? 
@@ -18,7 +19,7 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 
-export const removeArticle = (removeArticle, articles) => {
+export const removeArticle = (removeArticle, articles, gaiaLinks) => {
   const removeArticles = [].concat(removeArticle)
   return (dispatch) => {
     dispatch({
@@ -28,14 +29,19 @@ export const removeArticle = (removeArticle, articles) => {
     if (!!articles && articles !== undefined) {
       dispatch(publishArticles(articles.filter(articleItem => {
         return removeArticles.filter((removeArticleItem) => (removeArticleItem.id === articleItem.id)).length === 0
-      })))
+      }), gaiaLinks))
     }
   }
 }
 
 export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
 
-export const markArticleRead = (articles, allArticles) => {
+const slowBlockstackPutFile = (filename, options) => {
+  return blockstack.putFile(filename, options)
+}
+const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
+
+export const markArticleRead = (articles, allArticles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_MARK_READ,
@@ -44,13 +50,13 @@ export const markArticleRead = (articles, allArticles) => {
     dispatch(publishArticles(allArticles.map(allArticlesItem => {
       let muteArticle = [].concat(articles).filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
       return (muteArticle === true) ? { ...allArticlesItem, muted: true} : allArticlesItem
-    })))
+    }), gaiaLinks))
   }
 }
 
 export const ARTICLES_TOGGLE_ARTICLE = 'ARTICLES_TOGGLE_ARTICLE'
 
-export const toggleArticle = (articles, allArticles) => {
+export const toggleArticle = (articles, allArticles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_TOGGLE_ARTICLE,
@@ -66,7 +72,7 @@ export const toggleArticle = (articles, allArticles) => {
         return 'o'
       })
       return (articleMatched === true ) ? { ...stateArticle, muted: !stateArticle.muted || false } : stateArticle
-    })))
+    }), gaiaLinks ))
   }
 }
 
@@ -74,6 +80,7 @@ export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
 export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
 export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
 export const FETCH_SAVED_ARTICLES_SUCCESS = 'FETCH_SAVED_ARTICLES_SUCCESS'
+export const FETCH_SAVED_ARTICLE_SUCCESS = 'FETCH_SAVED_ARTICLE_SUCCESS'
 export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 
 export const fetchArticles = (feeds, filters) => {
@@ -122,14 +129,25 @@ export const fetchBlockstackArticles = (articles) => {
       type: 'FETCH_BLOCKSTACK_ARTICLES_START',
       payload: articles
     })
-    blockstackGetFile('articles.json')
-    .then((fileContents) => {
-      if (JSON.parse(fileContents) !== null) {
-        dispatch({
-          type: FETCH_SAVED_ARTICLES_SUCCESS,
-          payload: JSON.parse(fileContents)
-        })
+
+    blockstack.listFiles((filename) => {
+      dispatch({ 
+        type: 'FETCH_BLOCKSTACK_ARTICLE_START',
+        payload: filename
+      })
+      if (filename.indexOf('.json') !== -1) {
+        return
       }
+      blockstackGetFile(filename)
+      .then((fileContents) => {
+        if (JSON.parse(fileContents) !== null) {
+          dispatch({
+            type: FETCH_SAVED_ARTICLE_SUCCESS,
+            payload: JSON.parse(fileContents)
+          })
+        }
+      })
+      return true
     })
     .catch((error) =>{
       dispatch({
@@ -141,28 +159,49 @@ export const fetchBlockstackArticles = (articles) => {
 }
 
 export const PUBLISH_ARTICLES_START = 'PUBLISH_ARTICLES_START'
-export const PUBLISH_ARTICLES_SUCCESS = 'PUBLISH_ARTICLES_SUCCESS'
+export const PUBLISH_ARTICLE_SUCCESS = 'PUBLISH_ARTICLE_SUCCESS'
 export const PUBLISH_ARTICLES_FAIL = 'PUBLISH_ARTICLES_FAIL'
 
-export const publishArticles = (articles) => {
+export const publishArticles = (articles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: 'PUBLISH_ARTICLES_START',
       payload: articles
     })
-    const fileContent = JSON.stringify(articles)
-    return blockstack.putFile('articles.json', fileContent)
-    .then((response) => {
-      dispatch({
-        type: 'PUBLISH_ARTICLES_SUCCESS',
-        payload: response
-      })
-    }).catch((error, fileContent) => {
-      dispatch({
-        type: 'PUBLISH_ARTICLES_FAILED',
-        payload: {
-          error: error
+    dispatch(() => {
+      articles.map((articleItem) => {
+        const sha1Hash = hash(articleItem)
+        dispatch({
+          type: 'PUBLISH_ARTICLE_START',
+          payload: {
+            sha1Hash: sha1Hash,
+            articleId: articleItem.id
+          }
+        })
+
+        gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+          .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
+          .map(gaiaLink => dispatch(blockstack.deleteFile(gaiaLink.sha1Hash)))
+
+        if (gaiaLinks
+          .filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+          .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
+          .length !== 0) {
+          return 'o'
         }
+        return blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
+        .then((gaiaUrl) => {
+          dispatch({
+            type: 'PUBLISH_ARTICLE_SUCCESS',
+            payload: {
+              gaiaUrl: gaiaUrl,
+              sha1Hash: sha1Hash,
+              articleId: articleItem.id
+            }
+          })
+        }).catch((error) => {
+          //pass
+        })
       })
     })
   }

@@ -25,7 +25,7 @@ function getSelectionText() {
   return text
 }
 
-const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers, sections}) => {
+const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers, sections, gaiaLinks}) => {
   return {
     selectedSection: selectedSection,
     sections: sections,
@@ -48,7 +48,8 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
       .filter(article => (article.blockReasons || []).length < 1) : [],
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
-    filters: !!filters ? filters : []
+    filters: !!filters ? filters : [],
+    gaiaLinks: !!gaiaLinks ? gaiaLinks : []
   }
 }
 
@@ -60,14 +61,14 @@ const mapDispatchToProps = (dispatch) => {
     handleClickShadowBanDomain: (link, selectedSection, filters) => {
       dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
-    handleClickRemoveArticle: (article, articles) => {
-      dispatch(removeArticle(article, articles))
+    handleClickRemoveArticle: (article, articles, gaiaLinks) => {
+      dispatch(removeArticle(article, articles, gaiaLinks))
     },
-    handleClickToggleArticle: (article, articles) => {
-      dispatch(toggleArticle(article, articles))
+    handleClickToggleArticle: (article, articles, gaiaLinks) => {
+      dispatch(toggleArticle(article, articles, gaiaLinks))
     },
-    handleClickMarkAllRead: (articles, allArticles) => {
-      dispatch(markArticleRead(articles, allArticles))
+    handleClickMarkAllRead: (articles, allArticles, gaiaLinks) => {
+      dispatch(markArticleRead(articles, allArticles, gaiaLinks))
     },
     handleClickAddFilter: (text, filters, selectedSection) => {
       if (text === '') {
@@ -82,21 +83,21 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(addFilter(newFilter, filters))
       dispatch(updateFilter(''))
     },
-    handleClickLearn: (selectedSection, article, category, classifiers, allArticles) => {
+    handleClickLearn: (selectedSection, article, category, classifiers, allArticles, gaiaLinks) => {
       dispatch(learn(category, selectedSection, article, classifiers), 100)
-      dispatch(markArticleRead(article, allArticles), 100)
+      dispatch(markArticleRead(article, allArticles, gaiaLinks), 100)
     }
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn}) => {
+export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn, gaiaLinks}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'home'
   const readTitle = `mark ${articles.length} articles as read`
   return (
     <Fragment>
       <VerticalSpace/>
       <Typography variant="h4" >
-        <IconButton title={readTitle} onClick={() => {handleClickMarkAllRead(articles, allArticles)}} >
+        <IconButton title={readTitle} onClick={() => {handleClickMarkAllRead(articles, allArticles, gaiaLinks)}} >
           <PlaylistAddCheck></PlaylistAddCheck>
         </IconButton>
         {sectionTitle}
@@ -122,12 +123,12 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles)
+                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles, gaiaLinks)
                 }}>
                   <ThumbDown id='addFilter'/>
                 </IconButton>
                 <IconButton title="train as good" onClick={() => {
-                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles)
+                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles, gaiaLinks)
                 }}>
                   <ThumbUp id='train-good'/>
                 </IconButton>

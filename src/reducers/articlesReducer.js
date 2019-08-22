@@ -3,6 +3,7 @@ import {
   ARTICLES_TOGGLE_ARTICLE,
   FETCH_ARTICLES_SUCCESS,
   FETCH_SAVED_ARTICLES_SUCCESS,
+  FETCH_SAVED_ARTICLE_SUCCESS,
   ARTICLES_MARK_READ
 } from '../actions/articleActions'
 
@@ -38,6 +39,11 @@ export default (state = [], action) => {
 
     case 'RESET_APP':
       return []
+
+    case FETCH_SAVED_ARTICLE_SUCCESS:
+        return [].concat(action.payload).filter((payloadItem) => {
+          return state.filter(stateItem => stateItem.id === payloadItem.id).length === 0
+        }).concat(state)
 
     case FETCH_SAVED_ARTICLES_SUCCESS:
       return [].concat(action.payload)
