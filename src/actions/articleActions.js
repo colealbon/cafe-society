@@ -183,23 +183,23 @@ export const publishArticles = (articles, gaiaLinks) => {
           .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
           .map(gaiaLink => dispatch(blockstack.deleteFile(gaiaLink.sha1Hash)))
 
-        return (!gaiaLinks
+        if (gaiaLinks
           .filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
-          .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)) ?
-          blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
-          .then((gaiaUrl) => {
-            dispatch({
-              type: 'PUBLISH_ARTICLE_SUCCESS',
-              payload: {
-                gaiaUrl: gaiaUrl,
-                sha1Hash: sha1Hash,
-                articleId: articleItem.id
-              }
+          .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash).length === 0) {
+            blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
+            .then((gaiaUrl) => {
+              dispatch({
+                type: 'PUBLISH_ARTICLE_SUCCESS',
+                payload: {
+                  gaiaUrl: gaiaUrl,
+                  sha1Hash: sha1Hash,
+                  articleId: articleItem.id
+                }
+              })
+            }).catch((error) => {
+              //pass
             })
-          }).catch((error) => {
-            //pass
-          }) :
-          [];
+        }
       })
     })
   }
