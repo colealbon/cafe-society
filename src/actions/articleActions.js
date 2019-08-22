@@ -175,11 +175,15 @@ export const publishArticles = (articles, gaiaLinks) => {
         gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
         .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
         .map(gaiaLink => {
+          dispatch({
+            type: 'DELETE_GAIA_LINK_START',
+            payload: gaiaLink
+          })
           dispatch(blockstack.deleteFile(gaiaLink.sha1Hash)
             .then((result) => {
               dispatch({
                 type: 'DELETE_GAIA_LINK_SUCCESS',
-                payload: result
+                payload: gaiaLink.sha1Hash
               })
             })
             .catch((error) => {
