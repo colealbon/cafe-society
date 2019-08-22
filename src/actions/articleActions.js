@@ -184,7 +184,7 @@ export const publishArticles = (articles, gaiaLinks) => {
           })
           dispatch(
             blockstack.deleteFile(gaiaLink.sha1Hash)
-            .then((result) => {
+            .then(() => {
               dispatch({
                 type: 'DELETE_GAIA_LINK_SUCCESS',
                 payload: gaiaLink.sha1Hash
