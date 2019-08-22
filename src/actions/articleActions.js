@@ -41,7 +41,7 @@ const slowBlockstackPutFile = (filename, options) => {
 }
 const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
-export const markArticleRead = (articles, allArticles) => {
+export const markArticleRead = (articles, allArticles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_MARK_READ,
@@ -50,7 +50,7 @@ export const markArticleRead = (articles, allArticles) => {
     dispatch(publishArticles(allArticles.map(allArticlesItem => {
       let muteArticle = [].concat(articles).filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
       return (muteArticle === true) ? { ...allArticlesItem, muted: true} : allArticlesItem
-    })))
+    }), gaiaLinks))
   }
 }
 
@@ -178,6 +178,11 @@ export const publishArticles = (articles, gaiaLinks) => {
             articleId: articleItem.id
           }
         })
+
+        gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+          .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
+          .map(gaiaLink => dispatch(() => blockstack.deleteFile(gaiaLink.sha1Hash)))
+
         return blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
         .then((gaiaUrl) => {
           dispatch({
