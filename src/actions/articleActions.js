@@ -187,7 +187,7 @@ export const publishArticles = (articles, gaiaLinks) => {
           .filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
           .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
           .length !== 0) {
-          return
+          return 'o'
         }
         return blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
         .then((gaiaUrl) => {
