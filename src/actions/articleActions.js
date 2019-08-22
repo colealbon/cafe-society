@@ -19,7 +19,7 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 
-export const removeArticle = (removeArticle, articles) => {
+export const removeArticle = (removeArticle, articles, gaiaLinks) => {
   const removeArticles = [].concat(removeArticle)
   return (dispatch) => {
     dispatch({
@@ -29,7 +29,7 @@ export const removeArticle = (removeArticle, articles) => {
     if (!!articles && articles !== undefined) {
       dispatch(publishArticles(articles.filter(articleItem => {
         return removeArticles.filter((removeArticleItem) => (removeArticleItem.id === articleItem.id)).length === 0
-      })))
+      }), gaiaLinks))
     }
   }
 }
@@ -56,7 +56,7 @@ export const markArticleRead = (articles, allArticles, gaiaLinks) => {
 
 export const ARTICLES_TOGGLE_ARTICLE = 'ARTICLES_TOGGLE_ARTICLE'
 
-export const toggleArticle = (articles, allArticles) => {
+export const toggleArticle = (articles, allArticles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_TOGGLE_ARTICLE,
@@ -72,7 +72,7 @@ export const toggleArticle = (articles, allArticles) => {
         return 'o'
       })
       return (articleMatched === true ) ? { ...stateArticle, muted: !stateArticle.muted || false } : stateArticle
-    })))
+    }), gaiaLinks ))
   }
 }
 
@@ -181,8 +181,14 @@ export const publishArticles = (articles, gaiaLinks) => {
 
         gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
           .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
-          .map(gaiaLink => dispatch(() => blockstack.deleteFile(gaiaLink.sha1Hash)))
+          .map(gaiaLink => dispatch(blockstack.deleteFile(gaiaLink.sha1Hash)))
 
+        if (gaiaLinks
+          .filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+          .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
+          .length !== 0) {
+          return
+        }
         return blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
         .then((gaiaUrl) => {
           dispatch({
@@ -194,12 +200,7 @@ export const publishArticles = (articles, gaiaLinks) => {
             }
           })
         }).catch((error) => {
-          dispatch({
-            type: 'PUBLISH_ARTICLES_FAILED',
-            payload: {
-              error: error
-            }
-          })
+          //pass
         })
       })
     })
