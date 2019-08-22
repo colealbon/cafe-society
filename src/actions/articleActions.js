@@ -171,35 +171,58 @@ export const publishArticles = (articles, gaiaLinks) => {
     dispatch(() => {
       articles.map((articleItem) => {
         const sha1Hash = hash(articleItem)
-        dispatch({
-          type: 'PUBLISH_ARTICLE_START',
-          payload: {
-            sha1Hash: sha1Hash,
-            articleId: articleItem.id
-          }
-        })
-
+        // if article changed (ex. mark as read), delete its gaia file
         gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
-          .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
-          .map(gaiaLink => dispatch(blockstack.deleteFile(gaiaLink.sha1Hash)))
-
-        if (gaiaLinks
-          .filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
-          .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash).length === 0) {
-            blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
-            .then((gaiaUrl) => {
+        .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
+        .map(gaiaLink => {
+          dispatch(blockstack.deleteFile(gaiaLink.sha1Hash)
+            .then((result) => {
               dispatch({
-                type: 'PUBLISH_ARTICLE_SUCCESS',
-                payload: {
-                  gaiaUrl: gaiaUrl,
-                  sha1Hash: sha1Hash,
-                  articleId: articleItem.id
-                }
+                type: 'DELETE_GAIA_LINK_SUCCESS',
+                payload: result
               })
-            }).catch((error) => {
-              //pass
             })
+            .catch((error) => {
+              dispatch({
+                type: 'DELETE_GAIA_LINK_FAIL',
+                payload: error
+              })
+            })
+          )
+          return 'o'
+        })
+        //  if gaia link does not exist then create gaia link
+        if (
+          gaiaLinks
+          .filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+          .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
+          .length === 0
+        ) {
+          dispatch({
+            type: 'PUBLISH_ARTICLE_START',
+            payload: {
+              sha1Hash: sha1Hash,
+              articleId: articleItem.id
+            }
+          })
+          blockstackPutFile(sha1Hash, JSON.stringify(articleItem))
+          .then((gaiaUrl) => {
+            dispatch({
+              type: 'PUBLISH_ARTICLE_SUCCESS',
+              payload: {
+                gaiaUrl: gaiaUrl,
+                sha1Hash: sha1Hash,
+                articleId: articleItem.id
+              }
+            })
+          }).catch((error) => {
+            dispatch({
+              type: 'PUBLISH_ARTICLE_FAIL',
+              payload: error
+            })
+          })
         }
+        return 'o'
       })
     })
   }
