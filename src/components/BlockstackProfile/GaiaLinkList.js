@@ -9,8 +9,11 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
+import Typography from '@material-ui/core/Typography'
+import Link from '@material-ui/core/Link';
+
+
 
 const mapStateToProps = ({ gaiaLinks }) => {
   return {
@@ -50,7 +53,7 @@ export const GaiaLinkList = ({ handleClickRemoveGaiaLink, handleClickRemoveAllGa
                   handleClickRemoveGaiaLink(gaiaLink, gaiaLinks)
                 }}
               />
-              <ListItemText primary={gaiaLink.gaiaUrl} />
+              <Typography><Link href={gaiaLink.gaiaUrl}>{gaiaLink.articleId}</Link></Typography>
             </ListItem>
           )
         }).reverse()

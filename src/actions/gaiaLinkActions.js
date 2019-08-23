@@ -19,15 +19,16 @@ export const removeGaiaLink = (gaiaLink, gaiaLinks) => {
       type: 'DELETE_GAIA_LINK_START',
       payload: gaiaLink
     })
-    dispatch(
-      blockstack.deleteFile(`${gaiaLink.sha1Hash}`)
-      .catch((error) => {
-        dispatch({
-          type: 'DELETE_GAIA_LINK_FAIL',
-          payload: error
-        })
+    blockstack.deleteFile(`${gaiaLink.sha1Hash}`)
+    .then(() => dispatch(
+      {type: 'DELETE_GAIA_LINK_SUCCESS'}
+    ))
+    .catch((error) => {
+      dispatch({
+        type: 'DELETE_GAIA_LINK_FAIL',
+        payload: error
       })
-    )
+    })
   }
 }
 
