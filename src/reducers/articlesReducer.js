@@ -41,7 +41,7 @@ export default (state = [], action) => {
       return []
 
     case FETCH_SAVED_ARTICLE_SUCCESS:
-        return state.filter((stateItem) => stateItem.id === action.payload.id).concat(action.payload)
+      return state.filter((stateItem) => stateItem.id !== action.payload.id).concat(action.payload)
 
     case FETCH_SAVED_ARTICLES_SUCCESS:
       return [].concat(action.payload)
