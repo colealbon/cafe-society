@@ -169,17 +169,35 @@ export const publishArticles = (articles, gaiaLinks) => {
       articles.map((articleItem) => {
         const sha1Hash = hash(articleItem)
         // if article changed (ex. mark as read), delete its gaia file
-        [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
-        .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
-        .map(gaiaLink => {
-          if (!gaiaLink) {
+        if (gaiaLinks.length !== 0) {
+          gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+          .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
+          .map(gaiaLink => {
+            if (!gaiaLink) {
+              return 'o'
+            }
+            dispatch({
+              type: 'DELETE_GAIA_LINK_START',
+              payload: gaiaLink
+            })
+           // if cors errors persist for DELETE, publish empty file here.
+            dispatch(
+              blockstack.deleteFile(gaiaLink.sha1Hash)
+              .catch((error) => {
+                dispatch({
+                  type: 'DELETE_GAIA_LINK_FAIL',
+                  payload: error
+                })
+              })
+            )
             return 'o'
-          }
+          })
+        }
+        
           // dispatch({
           //   type: 'OBSOLETE_GAIA_LINK_START',
           //   payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
           // })
-
           // dispatch(blockstackPutFile(gaiaLink.sha1Hash, sha1Hash)
           // .then((gaiaUrl) => {
           //   dispatch({
@@ -196,23 +214,6 @@ export const publishArticles = (articles, gaiaLinks) => {
           //     payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
           //   })
           // }))
-
-          dispatch({
-            type: 'DELETE_GAIA_LINK_START',
-            payload: gaiaLink
-          })
-         // if cors errors persist for DELETE, publish empty file here.
-          dispatch(
-            blockstack.deleteFile(gaiaLink.sha1Hash)
-            .catch((error) => {
-              dispatch({
-                type: 'DELETE_GAIA_LINK_FAIL',
-                payload: error
-              })
-            })
-          )
-          return 'o'
-        })
         //  if gaia link does not exist then create gaia link
         if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink.articleId === articleItem.id).filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash).length === 0) {
           dispatch({
