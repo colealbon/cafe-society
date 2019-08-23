@@ -142,12 +142,27 @@ export const fetchBlockstackArticles = (articles) => {
             type: FETCH_SAVED_ARTICLE_SUCCESS,
             payload: JSON.parse(fileContents)
           })
-          dispatch({
-            type: 'FETCH_SAVED_GAIA_LINK_SUCCESS',
-            payload: JSON.parse(fileContents)
-          })
         }
       })
+      blockstack.getFileUrl(filename)
+      .then(fileUrl => blockstackGetFile(filename)
+        .then((fileContents) => {
+          if (JSON.parse(fileContents) !== null) {
+            dispatch({
+              type: FETCH_SAVED_ARTICLE_SUCCESS,
+              payload: JSON.parse(fileContents)
+            })
+            dispatch({
+              type: 'FETCH_SAVED_GAIA_LINK_SUCCESS',
+              payload: {
+                gaiaUrl: fileUrl,
+                sha1Hash: filename,
+                articleId: JSON.parse(fileContents).id
+              }
+            })
+          }
+        })
+      )
       return true
     })
     .catch((error) =>{
@@ -199,27 +214,6 @@ export const publishArticles = (articles, gaiaLinks) => {
             return 'o'
           })
         }
-          // dispatch({
-          //   type: 'OBSOLETE_GAIA_LINK_START',
-          //   payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
-          // })
-          // dispatch(blockstackPutFile(gaiaLink.sha1Hash, sha1Hash)
-          // .then((gaiaUrl) => {
-          //   dispatch({
-          //     type: 'OBSOLETE_GAIA_LINK_SUCCESS',
-          //     payload: {
-          //       gaiaUrl: gaiaUrl,
-          //       sha1Hash: sha1Hash,
-          //       articleId: articleItem.id
-          //     }
-          //   })
-          // }).catch((error) => {
-          //   dispatch({
-          //     type: 'OBSOLETE_GAIA_LINK_FAIL',
-          //     payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
-          //   })
-          // }))
-        //  if gaia link does not exist then create gaia link
 
         if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined).filter((gaiaLink) => gaiaLink.articleId === articleItem.id).filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash).length === 0) {
           dispatch({
