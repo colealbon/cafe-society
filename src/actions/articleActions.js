@@ -222,10 +222,10 @@ export const publishArticles = (articles, gaiaLinks) => {
         })
         //  if gaia link does not exist then create gaia link
         if (
-          gaiaLinks
+          (0 + gaiaLinks
           .filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
           .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
-          .length === 0
+          .length) === 0
         ) {
           dispatch({
             type: 'PUBLISH_ARTICLE_START',
