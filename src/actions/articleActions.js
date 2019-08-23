@@ -169,7 +169,7 @@ export const publishArticles = (articles, gaiaLinks) => {
       articles.map((articleItem) => {
         const sha1Hash = hash(articleItem)
         // if article changed (ex. mark as read), delete its gaia file
-        if (gaiaLinks.length !== 0) {
+        if (gaiaLinks !== undefined && gaiaLinks.length !== 0) {
           gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
           .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
           .map(gaiaLink => {
@@ -215,7 +215,8 @@ export const publishArticles = (articles, gaiaLinks) => {
           //   })
           // }))
         //  if gaia link does not exist then create gaia link
-        if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink.articleId === articleItem.id).filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash).length === 0) {
+
+        if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined).filter((gaiaLink) => gaiaLink.articleId === articleItem.id).filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash).length === 0) {
           dispatch({
             type: 'PUBLISH_ARTICLE_START',
             payload: {
