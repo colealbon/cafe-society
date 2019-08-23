@@ -183,7 +183,7 @@ export const publishArticles = (articles, gaiaLinks) => {
             })
            // if cors errors persist for DELETE, publish empty file here.
             dispatch(
-              blockstack.deleteFile(gaiaLink.sha1Hash)
+              blockstack.deleteFile(`${gaiaLink.sha1Hash}`)
               .catch((error) => {
                 dispatch({
                   type: 'DELETE_GAIA_LINK_FAIL',

@@ -1,4 +1,4 @@
-// import * as blockstack from 'blockstack'
+import * as blockstack from 'blockstack'
 
 // var memoize = require("memoizee")
 
@@ -9,40 +9,27 @@
 
 export const GAIA_LINKS_REMOVE_GAIA_LINK = 'GAIA_LINKS_REMOVE_GAIA_LINK'
 
-export const removeGaiaLink = (removeGaiaLink, gaiaLinks) => {
-  const removeGaiaLinks = [].concat(removeGaiaLink)
+export const removeGaiaLink = (gaiaLink, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: GAIA_LINKS_REMOVE_GAIA_LINK,
-      payload: removeGaiaLink
+      payload: gaiaLink
     })
-    if (!!gaiaLinks && gaiaLinks !== undefined) {
-      dispatch(publishGaiaLinks(gaiaLinks.filter(gaiaLinkItem => {
-        return removeGaiaLinks.filter((removeGaiaLinkItem) => (removeGaiaLink.id === gaiaLinkItem.id)).length === 0
-      })))
-    }
+    dispatch({
+      type: 'DELETE_GAIA_LINK_START',
+      payload: gaiaLink
+    })
+    dispatch(
+      blockstack.deleteFile(`${gaiaLink.sha1Hash}`)
+      .catch((error) => {
+        dispatch({
+          type: 'DELETE_GAIA_LINK_FAIL',
+          payload: error
+        })
+      })
+    )
   }
 }
-
-// export const GAIA_LINKS_MARK_READ = 'GAIA_LINKS_MARK_READ'
-
-// const slowBlockstackPutFile = (filename, options) => {
-//   return blockstack.putFile(filename, options)
-// }
-// const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
-
-// export const markGaiaLinkRead = (gaiaLinks, allGaiaLinks) => {
-//   return (dispatch) => {
-//     dispatch({
-//       type: GAIA_LINKS_MARK_READ,
-//       payload: gaiaLinks
-//     })
-//     dispatch(publishGaiaLinks(allGaiaLinks.map(allGaiaLinksItem => {
-//       let muteGaiaLink = [].concat(gaiaLinks).filter((payloadItem) => (payloadItem.id === allGaiaLinksItem.id)).length !== 0
-//       return (muteGaiaLink === true) ? { ...allGaiaLinksItem, muted: true} : allGaiaLinksItem
-//     })))
-//   }
-// }
 
 export const GAIA_LINKS_TOGGLE_GAIA_LINK = 'GAIA_LINKS_TOGGLE_GAIA_LINK'
 
