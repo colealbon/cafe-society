@@ -169,7 +169,7 @@ export const publishArticles = (articles, gaiaLinks) => {
       articles.map((articleItem) => {
         const sha1Hash = hash(articleItem)
         // if article changed (ex. mark as read), delete its gaia file
-        gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+        [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
         .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
         .map(gaiaLink => {
           if (!gaiaLink) {
