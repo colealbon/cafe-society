@@ -8,7 +8,7 @@ metanoia: change in one's way of life resulting from penitence or spiritual conv
 cafe-society.news provides the tools to support metanoia in your news feeds.  
 
 ### current features:  
-- sync your read items state between devices.  (requires free blockstack id)
+- not working but used to work, sync your read items state between devices.  (requires free blockstack id)
 - ability to add or delete unlimited news feeds
 - ability to add or delete news categories (sections)
 - thumbs up / thumbs down style machine learning per section

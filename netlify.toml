@@ -2,6 +2,17 @@
   command = "yarn build"
   functions = "functions"
   publish = "build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
+    
 [[headers]]
   for = "/index.html"
     [headers.values]
