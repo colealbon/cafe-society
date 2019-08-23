@@ -1,8 +1,8 @@
 /index.html
-  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Origin: "*"
   Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
   Access-Control-Allow-Methods: "POST, GET, DELETE, PUT, OPTIONS"
 /manifest.json
-  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Origin: "*"
   Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
   Access-Control-Allow-Methods: "POST, GET, DELETE, PUT, OPTIONS"
