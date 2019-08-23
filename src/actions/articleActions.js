@@ -142,6 +142,10 @@ export const fetchBlockstackArticles = (articles) => {
             type: FETCH_SAVED_ARTICLE_SUCCESS,
             payload: JSON.parse(fileContents)
           })
+          dispatch({
+            type: 'FETCH_SAVED_GAIA_LINK_SUCCESS',
+            payload: JSON.parse(fileContents)
+          })
         }
       })
       return true
