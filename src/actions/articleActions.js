@@ -10,12 +10,12 @@ const slow_fetchFeedContent = feedUrl => {
   parser.parseURL(`/.netlify/functions/node-fetch?url=${feedUrl}`) // cors relay
 }
 
-const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000 })
+const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true})
 
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
 }
-const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
+const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true })
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 
@@ -47,10 +47,7 @@ export const markArticleRead = (articles, allArticles, gaiaLinks) => {
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    dispatch(publishArticles(allArticles.map(allArticlesItem => {
-      let muteArticle = [].concat(articles).filter((payloadItem) => (payloadItem.id === allArticlesItem.id)).length !== 0
-      return (muteArticle === true) ? { ...allArticlesItem, muted: true} : allArticlesItem
-    }), gaiaLinks))
+    dispatch(publishArticles(articles.map(articleItem => Object.assign({muted: true}, articleItem), gaiaLinks)))
   }
 }
 
@@ -178,46 +175,42 @@ export const publishArticles = (articles, gaiaLinks) => {
           if (!gaiaLink) {
             return 'o'
           }
-          dispatch({
-            type: 'OBSOLETE_GAIA_LINK_START',
-            payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
-          })
-          blockstackPutFile(gaiaLink.sha1Hash, sha1Hash)
-          .then((gaiaUrl) => {
-            dispatch({
-              type: 'OBSOLETE_GAIA_LINK_SUCCESS',
-              payload: {
-                gaiaUrl: gaiaUrl,
-                sha1Hash: sha1Hash,
-                articleId: articleItem.id
-              }
-            })
-          }).catch((error) => {
-            dispatch({
-              type: 'OBSOLETE_GAIA_LINK_FAIL',
-              payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
-            })
-          })
           // dispatch({
-          //   type: 'DELETE_GAIA_LINK_START',
-          //   payload: gaiaLink
+          //   type: 'OBSOLETE_GAIA_LINK_START',
+          //   payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
           // })
-          // if cors errors persist for DELETE, publish empty file here.
-          // dispatch(
-          //   blockstack.deleteFile(gaiaLink.sha1Hash)
-          //   .then(() => {
-          //     dispatch({
-          //       type: 'DELETE_GAIA_LINK_SUCCESS',
-          //       payload: gaiaLink.sha1Hash
-          //     })
+
+          // dispatch(blockstackPutFile(gaiaLink.sha1Hash, sha1Hash)
+          // .then((gaiaUrl) => {
+          //   dispatch({
+          //     type: 'OBSOLETE_GAIA_LINK_SUCCESS',
+          //     payload: {
+          //       gaiaUrl: gaiaUrl,
+          //       sha1Hash: sha1Hash,
+          //       articleId: articleItem.id
+          //     }
           //   })
-          //   .catch((error) => {
-          //     dispatch({
-          //       type: 'DELETE_GAIA_LINK_FAIL',
-          //       payload: error
-          //     })
+          // }).catch((error) => {
+          //   dispatch({
+          //     type: 'OBSOLETE_GAIA_LINK_FAIL',
+          //     payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
           //   })
-          // )
+          // }))
+
+          dispatch({
+            type: 'DELETE_GAIA_LINK_START',
+            payload: gaiaLink
+          })
+         // if cors errors persist for DELETE, publish empty file here.
+          dispatch(
+            blockstack.deleteFile(gaiaLink.sha1Hash)
+            .catch((error) => {
+              dispatch({
+                type: 'DELETE_GAIA_LINK_FAIL',
+                payload: error
+              })
+            })
+          )
           return 'o'
         })
         //  if gaia link does not exist then create gaia link
