@@ -78,7 +78,7 @@ const rootPersistIndexedDbConfig = {
   key: "root",
   storage: createIdbStorage({name: 'cafe-society', storeName: 'idb-cafe-society-redux'}),
   stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
-  blacklist: ['router', 'leftDrawer'] //  will not be persisted
+  blacklist: ['router', 'leftDrawer', 'articles'] //  will not be persisted
 }
 
 let persistedRootReducer = persistReducer(rootPersistIndexedDbConfig, rootReducer)
