@@ -1,9 +1,6 @@
 import {
-//   GAIA_LINKS_ADD_GAIA_LINK,
   GAIA_LINKS_REMOVE_GAIA_LINK,
-//   GAIA_LINKS_TOGGLE_GAIA_LINK,
-//   FETCH_SAVED_GAIA_LINKS_SUCCESS,
-//   FETCH_GAIA_LINKS_SUCCESS
+  FETCH_SAVED_GAIA_LINK_SUCCESS,
 } from '../actions/gaiaLinkActions'
 
 import {
@@ -16,35 +13,15 @@ export default (state = [], action) => {
     case 'RESET_APP':
       return []
 
-      case  PUBLISH_ARTICLE_SUCCESS:
-        return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
+    case  PUBLISH_ARTICLE_SUCCESS:
+      return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
 
-//     case GAIA_LINKS_ADD_GAIA_LINK:
-//       return [
-//         ...state.filter(gaiaLink => gaiaLink.id !== action.payload.id),
-//         action.payload
-//       ]
     case GAIA_LINKS_REMOVE_GAIA_LINK:
       return state.filter(stateItem => action.payload.articleId !== stateItem.articleId)
-
-//     case GAIA_LINKS_TOGGLE_GAIA_LINK:
-//       return state.map(gaiaLink => gaiaLink.id === action.payload.id ? { ...gaiaLink, muted: !gaiaLink.muted || false } : gaiaLink)
-
-//     case FETCH_SAVED_GAIA_LINKS_SUCCESS:
-//       return [].concat(action.payload)
       
-//     case FETCH_GAIA_LINKS_SUCCESS:
-//       return state.filter((stateItem) => !Array.isArray(stateItem))
-//       .concat(action.payload.filter((payloadItem) => {
-//         let itemExists = false
-//         state.map((stateItem) => {
-//           if (stateItem.id === payloadItem.id) {
-//             itemExists = true
-//           }
-//           return 'o'
-//         })
-//         return !itemExists
-//       }))
+    case FETCH_SAVED_GAIA_LINK_SUCCESS:
+      return state.filter(stateItem => stateItem.articleId !== action.payload.articleId).concat(action.payload)
+
     default:
       return state
   }
