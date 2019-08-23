@@ -2,15 +2,13 @@
   command = "yarn build"
   functions = "functions"
   publish = "build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 [[headers]]
-  for = "/index.html"
+  for = "/*"
     [headers.values]
-      Access-Control-Allow-Origin = "*"
-      Access-Control-Allow-Headers = "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
-      Access-Control-Allow-Methods = "POST, GET, DELETE, PUT, OPTIONS"
-[[headers]]
-  for = "/manifest.json"
-    [headers.values]
-      Access-Control-Allow-Origin = "*"
-      Access-Control-Allow-Headers = "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
-      Access-Control-Allow-Methods = "POST, GET, DELETE, PUT, OPTIONS"
+    Access-Control-Allow-Origin = "*"
