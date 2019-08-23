@@ -47,7 +47,7 @@ export const markArticleRead = (articles, allArticles, gaiaLinks) => {
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    dispatch(publishArticles(articles.map(articleItem => Object.assign({muted: true}, articleItem), gaiaLinks)))
+    dispatch(publishArticles([].concat(articles).map(articleItem => Object.assign({muted: true}, articleItem), gaiaLinks)))
   }
 }
 
