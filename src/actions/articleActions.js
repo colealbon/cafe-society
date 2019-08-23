@@ -179,24 +179,45 @@ export const publishArticles = (articles, gaiaLinks) => {
             return 'o'
           }
           dispatch({
-            type: 'DELETE_GAIA_LINK_START',
-            payload: gaiaLink
+            type: 'OBSOLETE_GAIA_LINK_START',
+            payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
           })
-          dispatch(
-            blockstack.deleteFile(gaiaLink.sha1Hash)
-            .then(() => {
-              dispatch({
-                type: 'DELETE_GAIA_LINK_SUCCESS',
-                payload: gaiaLink.sha1Hash
-              })
+          blockstackPutFile(gaiaLink.sha1Hash, sha1Hash)
+          .then((gaiaUrl) => {
+            dispatch({
+              type: 'OBSOLETE_GAIA_LINK_SUCCESS',
+              payload: {
+                gaiaUrl: gaiaUrl,
+                sha1Hash: sha1Hash,
+                articleId: articleItem.id
+              }
             })
-            .catch((error) => {
-              dispatch({
-                type: 'DELETE_GAIA_LINK_FAIL',
-                payload: error
-              })
+          }).catch((error) => {
+            dispatch({
+              type: 'OBSOLETE_GAIA_LINK_FAIL',
+              payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
             })
-          )
+          })
+          // dispatch({
+          //   type: 'DELETE_GAIA_LINK_START',
+          //   payload: gaiaLink
+          // })
+          // if cors errors persist for DELETE, publish empty file here.
+          // dispatch(
+          //   blockstack.deleteFile(gaiaLink.sha1Hash)
+          //   .then(() => {
+          //     dispatch({
+          //       type: 'DELETE_GAIA_LINK_SUCCESS',
+          //       payload: gaiaLink.sha1Hash
+          //     })
+          //   })
+          //   .catch((error) => {
+          //     dispatch({
+          //       type: 'DELETE_GAIA_LINK_FAIL',
+          //       payload: error
+          //     })
+          //   })
+          // )
           return 'o'
         })
         //  if gaia link does not exist then create gaia link
