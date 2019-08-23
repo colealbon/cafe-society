@@ -25,10 +25,7 @@ export default (state = [], action) => {
 //         action.payload
 //       ]
     case GAIA_LINKS_REMOVE_GAIA_LINK:
-      return state.filter(stateItem => {
-        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
-      })
+      return state.filter(stateItem => action.payload.articleId !== stateItem.articleId)
 
 //     case GAIA_LINKS_TOGGLE_GAIA_LINK:
 //       return state.map(gaiaLink => gaiaLink.id === action.payload.id ? { ...gaiaLink, muted: !gaiaLink.muted || false } : gaiaLink)

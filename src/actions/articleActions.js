@@ -194,7 +194,6 @@ export const publishArticles = (articles, gaiaLinks) => {
             return 'o'
           })
         }
-        
           // dispatch({
           //   type: 'OBSOLETE_GAIA_LINK_START',
           //   payload: {old: gaiaLink.sha1Hash, new: sha1Hash}
