@@ -14,22 +14,22 @@ export default (state = initialState, action) => {
       return [
         ...state.filter(section => section.id !== action.payload.id),
         action.payload
-      ]
+      ].filter(sectionItem => !!sectionItem.id)
 
     case FETCH_SAVED_SECTIONS_SUCCESS:
-      return (Array.isArray(action.payload) && action.payload.length > 0) ? action.payload : state
+      return (Array.isArray(action.payload) && action.payload.length > 0) ? action.payload.filter(sectionItem => !!sectionItem.id) : state.filter(sectionItem => !!sectionItem.id)
 
     case SECTIONS_REMOVE_SECTION:
       return state.filter(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
         return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
-      })
+      }).filter(sectionItem => !!sectionItem.id)
 
     case SECTIONS_TOGGLE_SECTION:
-      return state.map(section => section.id === action.payload.id ? { ...section, muted: !section.muted || false } : section)
+      return state.map(section => section.id === action.payload.id ? { ...section, muted: !section.muted || false } : section).filter(sectionItem => !!sectionItem.id)
 
     default:
-      return state
+      return state.filter(sectionItem => !!sectionItem.id)
   }
 }
 
