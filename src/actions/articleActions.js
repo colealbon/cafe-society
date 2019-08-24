@@ -10,12 +10,12 @@ const slow_fetchFeedContent = feedUrl => {
   parser.parseURL(`/.netlify/functions/node-fetch?url=${feedUrl}`) // cors relay
 }
 
-const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 300000})
+const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000})
 
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
 }
-const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxage: 30000 })
+const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 

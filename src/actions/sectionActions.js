@@ -14,8 +14,8 @@ export const fetchBlockstackSections = (sections) => {
   return (dispatch) => {
     blockstackGetFile('sections.json')
     .then((savedSections) => {
-      if (!JSON.parse(savedSections)) {
-        return
+      if (!JSON.parse(savedSections) && JSON.parse(savedSections) === {}) {
+        return 'o'
       }
       dispatch({
         type: FETCH_SAVED_SECTIONS_SUCCESS,

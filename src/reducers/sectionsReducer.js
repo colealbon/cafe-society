@@ -6,8 +6,10 @@ import {
   } from '../actions/sectionActions'
 export default (state = initialState, action) => {
   switch (action.type) {
+
     case 'RESET_APP':
       return initialState
+
     case SECTIONS_ADD_SECTION:
       return [
         ...state.filter(section => section.id !== action.payload.id),
@@ -15,7 +17,7 @@ export default (state = initialState, action) => {
       ]
 
     case FETCH_SAVED_SECTIONS_SUCCESS:
-      return [].concat(action.payload)
+      return (Array.isArray(action.payload) && action.payload.length > 0) ? action.payload : state
 
     case SECTIONS_REMOVE_SECTION:
       return state.filter(stateItem => {
@@ -49,8 +51,12 @@ const initialState = [
   name: 'variety'
   },
   {
-  id: 'classifieds',
-  name: 'classifieds'
+  id: 'poltics',
+  name: 'politics'
+  },
+  {
+  id: 'recruiting',
+  name: 'recruiting'
   }
 ]
   
