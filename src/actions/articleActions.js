@@ -7,7 +7,8 @@ var hash = require('object-hash');
 const slow_fetchFeedContent = feedUrl => {
   return !feedUrl ? 
   Promise.reject('slow_fetchFeedContent requires feed url') :
-  parser.parseURL(`/.netlify/functions/node-fetch?url=${feedUrl}`) // cors relay
+  parser.parseURL(feedUrl)
+  .catch(() => parser.parseURL(`/.netlify/functions/node-fetch?url=${feedUrl}`)) // cors relay
 }
 
 const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000})

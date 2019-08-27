@@ -148,7 +148,7 @@ const initialState = [
         name: 'world'
       }
     ],
-    muted: true
+    muted: false
   },
   {
     id: 'https://theintercept.com/feed/?lang=en',
@@ -187,5 +187,16 @@ const initialState = [
       }
     ],
     muted: false
+  },
+  {
+  id: 'https://www.coindesk.com/feed',
+  url: 'https://www.coindesk.com/feed',
+  sections: [
+    {
+      id: 'business',
+      name: 'business'
+    }
+  ],
+  muted: false
   }
 ]
