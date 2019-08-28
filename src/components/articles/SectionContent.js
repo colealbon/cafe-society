@@ -112,7 +112,9 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
         no unread items 
         &nbsp;{<Link onClick={() => {handleClickToggleSection(selectedSection, sections)}}>{selectedSection.id !== '' ? `hide ${selectedSection.id} tab`: ''}</Link>}
       </Fragment> :
-      articles.map((article) => {
+      [].concat(articles)
+      .filter(article => !!article.link)
+      .map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
         return (
           <Grid item xs={12} key={article.id}>
