@@ -91,7 +91,11 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn, gaiaLinks}) => {
-  const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'home'
+  const sectionTitle = (selectedSection.id) ?
+    (selectedSection.id === 'logout') ? 
+    'home' :
+    `${selectedSection.id}` : 
+  'home'
   const readTitle = `mark ${articles.length} articles as read`
   return (
     <Fragment>
