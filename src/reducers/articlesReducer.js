@@ -192,7 +192,9 @@ export default (state = [], action) => {
         })
       }
       return state.map((article) => {
-        const matchedFilter = (action.payload.fields.map((filterField) => {
+        const matchedFilter = ([].concat(action.payload.fields)
+          .filter(filterField => !!filterField)
+          .map((filterField) => {
           if ((article[`${filterField.name}`]).indexOf(action.payload.text) !== -1) {
             return true
           }

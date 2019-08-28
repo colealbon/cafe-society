@@ -18,12 +18,7 @@ const initialState = [
   {
     id: 'placeholder',
     text: 'placeholder',
-    sections: [
-      {
-        id: 'world',
-        name: 'world'
-      }
-    ],
+    fields: [{id: 'title', name:'title', muted: true}],
     muted: false
   }
 ]
