@@ -1,4 +1,5 @@
 import * as blockstack from 'blockstack'
+import { reject } from 'q';
 var memoize = require("memoizee")
 
 export const CONTACT_SELECT_CONTACT = 'CONTACT_SELECT_CONTACT'
@@ -119,6 +120,9 @@ export const fetchBlockstackContacts = (contacts) => {
     fetchContactFileQueue.push(new Promise((resolve) => {
       blockstackGetFile('contacts.json')
       .then((fileContents) => {
+        if (JSON.parse(fileContents) === null) {
+          reject('empty file contacts.json')
+        }
         dispatch({
           type: FETCH_SAVED_CONTACTS_SUCCESS,
           payload: JSON.parse(fileContents)
