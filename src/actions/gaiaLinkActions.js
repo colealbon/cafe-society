@@ -1,12 +1,18 @@
 import * as blockstack from 'blockstack'
 
-// var memoize = require("memoizee")
+var memoize = require("memoizee")
 
-// const slowBlockstackGetFile = (filename, options) => {
-//   return blockstack.getFile(filename, options)
-// }
-// const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
-
+export const FETCH_GAIA_LINKS_START = 'FETCH_GAIA_LINKS_START'
+export const FETCH_GAIA_LINKS_SUCCESS = 'FETCH_GAIA_LINKS_SUCCESS'
+export const FETCH_GAIA_LINKS_ERROR = 'FETCH_GAIA_LINKS_ERROR'
+export const FETCH_SAVED_GAIA_LINKS_SUCCESS = 'FETCH_SAVED_GAIA_LINKS_SUCCESS'
+export const FETCH_SAVED_GAIA_LINK_SUCCESS = 'FETCH_SAVED_GAIA_LINK_SUCCESS'
+export const FETCH_SAVED_GAIA_LINKS_ERROR = 'FETCH_SAVED_GAIA_LINKS_ERROR'
+export const PUBLISH_GAIA_LINKS_START = 'PUBLISH_GAIA_LINKS_START'
+export const PUBLISH_GAIA_LINKS_SUCCESS = 'PUBLISH_GAIA_LINKS_SUCCESS'
+export const PUBLISH_GAIA_LINKS_ERROR = 'PUBLISH_GAIA_LINKS_ERROR'
+export const PUBLISH_GAIA_LINK_SUCCESS = 'PUBLISH_GAIA_LINK_SUCCESS'
+export const PUBLISH_GAIA_LINKS_FAIL = 'PUBLISH_GAIA_LINKS_FAIL'
 export const GAIA_LINKS_REMOVE_GAIA_LINK = 'GAIA_LINKS_REMOVE_GAIA_LINK'
 
 export const removeGaiaLink = (gaiaLink, gaiaLinks) => {
@@ -32,43 +38,92 @@ export const removeGaiaLink = (gaiaLink, gaiaLinks) => {
   }
 }
 
-export const GAIA_LINKS_TOGGLE_GAIA_LINK = 'GAIA_LINKS_TOGGLE_GAIA_LINK'
 
-export const toggleGaiaLink = (gaiaLinks, allGaiaLinks) => {
-  return (dispatch) => {
-    dispatch({
-      type: GAIA_LINKS_TOGGLE_GAIA_LINK,
-      payload: gaiaLinks
-    })
-    dispatch(publishGaiaLinks(allGaiaLinks.map((stateGaiaLink) => {
-      let gaiaLinkMatched = false
-      gaiaLinks = [].concat(gaiaLinks)
-      gaiaLinks.map((toggleGaiaLink) => {
-        if (toggleGaiaLink.id === stateGaiaLink.id) {
-          gaiaLinkMatched = true
-        }
-        return 'o'
+export const publishGaiaLinks = (gaiaLinks) => {
+  if (!!gaiaLinks) {
+    return (dispatch) => {
+      dispatch({
+        type: PUBLISH_GAIA_LINKS_START,
+        payload: gaiaLinks
       })
-      return (gaiaLinkMatched === true ) ? { ...stateGaiaLink, muted: !stateGaiaLink.muted || false } : stateGaiaLink
-    })))
+      const fileContent = JSON.stringify(gaiaLinks)
+      return blockstack.putFile('gaiaLinks.json', fileContent)
+      .then((response) => {
+        dispatch({
+          type: PUBLISH_GAIA_LINKS_SUCCESS,
+          payload: {
+            response: response,
+            gaiaLinks: gaiaLinks
+          }
+        })
+      })
+      .catch((error) => {
+        dispatch({
+          type: PUBLISH_GAIA_LINKS_ERROR,
+          payload: {
+            error: error
+          }
+        })
+      })
+    }
   }
 }
 
-export const FETCH_GAIA_LINKS_START = 'FETCH_GAIA_LINKS_START'
-export const FETCH_GAIA_LINKS_SUCCESS = 'FETCH_GAIA_LINKS_SUCCESS'
-export const FETCH_GAIA_LINKS_FAIL = 'FETCH_GAIA_LINKS_FAIL'
-export const FETCH_SAVED_GAIA_LINKS_SUCCESS = 'FETCH_SAVED_GAIA_LINKS_SUCCESS'
-export const FETCH_SAVED_GAIA_LINK_SUCCESS = 'FETCH_SAVED_GAIA_LINK_SUCCESS'
-export const FETCH_SAVED_GAIA_LINKS_FAIL = 'FETCH_SAVED_GAIA_LINKS_FAIL'
-export const PUBLISH_GAIA_LINKS_START = 'PUBLISH_GAIA_LINKS_START'
-export const PUBLISH_GAIA_LINK_SUCCESS = 'PUBLISH_GAIA_LINK_SUCCESS'
-export const PUBLISH_GAIA_LINKS_FAIL = 'PUBLISH_GAIA_LINKS_FAIL'
 
-export const publishGaiaLinks = (gaiaLinks) => {
+const slowBlockstackGetFile = (filename, options) => {
+  return blockstack.getFile(filename, options)
+}
+const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
+
+export const fetchBlockstackGaiaLinks = (gaiaLinks) => {
   return (dispatch) => {
-    dispatch({
-      type: 'PUBLISH_GAIA_LINKS_START',
+    
+    dispatch({ 
+      type: FETCH_GAIA_LINKS_START,
       payload: gaiaLinks
+     })
+    const fetchGaiaLinkFileQueue = []
+    fetchGaiaLinkFileQueue.push(new Promise((resolve) => {
+      blockstackGetFile('gaiaLinks.json')
+      .then((fileContents) => {
+        dispatch({
+          type: FETCH_SAVED_GAIA_LINKS_SUCCESS,
+          payload: JSON.parse(fileContents)
+        })
+        resolve(JSON.parse(fileContents))
+      })
+      .catch((error) =>{
+        dispatch({
+          type: FETCH_SAVED_GAIA_LINKS_ERROR,
+          payload: error
+        })
+        resolve(gaiaLinks)
+      })
+    }))
+    return Promise.all(fetchGaiaLinkFileQueue)
+    .then((fetchedGaiaLinks) => {
+      const flattenedGaiaLinks = fetchedGaiaLinks.reduce((a, b) => !a ? b : [].concat(a).concat(b))
+      let dedup = {}
+      const uniqueGaiaLinks = []
+      if ((flattenedGaiaLinks || []).length < 1) {
+        return
+      } else {
+        flattenedGaiaLinks.filter((gaiaLink) => {
+          if (dedup[gaiaLink.id] === undefined) {
+            dedup[gaiaLink.id] = {}
+            uniqueGaiaLinks.push(gaiaLink)
+            return true
+          }
+          return false
+        })      
+      }
+      return uniqueGaiaLinks
+    }).catch((error) => {
+      dispatch({
+        type: FETCH_GAIA_LINKS_ERROR,
+        payload: error
+      })
+      return
     })
   }
 }

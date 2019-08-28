@@ -110,7 +110,7 @@ export const FETCH_FEEDS_ERROR = 'FETCH_FEEDS_ERROR'
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
 }
-const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
+const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
 
 export const FETCH_SAVED_FEEDS_START = 'FETCH_SAVED_FEEDS_START'
 export const FETCH_SAVED_FEEDS_SUCCESS = 'FETCH_SAVED_FEEDS_SUCCESS'

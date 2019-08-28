@@ -107,7 +107,7 @@ export const FETCH_SAVED_CONTACTS_ERROR = 'FETCH_SAVED_CONTACTS_ERROR'
 const slowBlockstackGetFile = (filename, options) => {
   return blockstack.getFile(filename, options)
 }
-const blockstackGetFile = memoize(slowBlockstackGetFile, { maxAge: 10000 })
+const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
 
 export const fetchBlockstackContacts = (contacts) => {
   return (dispatch) => {

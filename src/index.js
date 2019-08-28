@@ -25,6 +25,7 @@ import { fetchBlockstackFeeds } from './actions/feedActions'
 import { fetchBlockstackArticles } from './actions/articleActions'
 import { fetchBlockstackClassifiers } from './actions/classifierActions'
 import { fetchBlockstackSections } from './actions/sectionActions'
+import { fetchBlockstackGaiaLinks } from './actions/gaiaLinkActions'
 
 import developerFundReducer from './reducers/developerFundReducer'
 import sectionsReducer from './reducers/sectionsReducer'
@@ -92,6 +93,7 @@ const store = createStore(
 
 const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
+    store.dispatch(fetchBlockstackGaiaLinks())
     store.dispatch(fetchBlockstackContacts())
     store.dispatch(fetchBlockstackFilters())
     store.dispatch(fetchBlockstackArticles())
