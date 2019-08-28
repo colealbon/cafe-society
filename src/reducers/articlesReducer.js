@@ -83,15 +83,6 @@ export default (state = [], action) => {
         })
         return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
       })
-      //.filter(stateArticle => {
-      //   // delete articles no longer active in feed
-      //   if (stateArticle.feed.id !== action.payload.feed.id) {
-      //     return true
-      //   }
-      //   return action.payload.articles.filter(payloadArticle => {
-      //     return stateArticle.id === payloadArticle.id
-      //   }).length !== 0
-      // })
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {

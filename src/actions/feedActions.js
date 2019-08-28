@@ -1,5 +1,4 @@
 import * as blockstack from 'blockstack'
-import { fetchArticles } from './articleActions'
 
 var memoize = require("memoizee")
 

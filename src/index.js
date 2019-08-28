@@ -92,21 +92,18 @@ const store = createStore(
 
 const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
-    // store.dispatch(fetchBlockstackContacts(store.getState().contacts))
-    // store.dispatch(fetchBlockstackFilters(store.getState().filters))
-    // store.dispatch(fetchBlockstackArticles(store.getState().articles))
-    // store.dispatch(fetchBlockstackClassifiers(store.getState().classifiers))
-    // store.dispatch(fetchBlockstackSections(store.getState().sections))
+    store.dispatch(fetchBlockstackContacts())
+    store.dispatch(fetchBlockstackFilters())
+    store.dispatch(fetchBlockstackArticles())
+    store.dispatch(fetchBlockstackClassifiers())
+    store.dispatch(fetchBlockstackSections())
     store.dispatch(fetchBlockstackFeeds())
-    return fetchBlockstackFeeds()
-    .then(feeds => {
-      store.dispatch(fetchBlockstackFilters())
-      return fetchBlockstackFilters()
-      .then(filters => {
-        store.dispatch(fetchArticles(feeds, filters))
-        return fetchArticles(feeds, filters)
-      })
-    })
+    setTimeout(() => {
+      fetchArticles(
+        store.getState().feeds, 
+        store.getState().filters
+      )
+    }, 2000)
   } else {
     store.dispatch(fetchArticles(
       store.getState().feeds, 
