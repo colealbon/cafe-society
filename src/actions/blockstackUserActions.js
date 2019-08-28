@@ -52,6 +52,7 @@ export const loginWithBlockstack = () => {
 export const userLogout = () => {
   userSession.signUserOut()
   window.location.replace(`${window.location.origin}/`)
+  dispatch( {type: USER_LOGOUT })
   return { type: USER_LOGOUT }
 }
 
