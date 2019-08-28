@@ -89,6 +89,13 @@ export const PUBLISH_CLASSIFIERS_FAIL = 'PUBLISH_CLASSIFIERS_FAIL'
 
 export const publishClassifiers = (classifiers) => {
   return (dispatch) => {
+    if ([].concat(classifiers).length === 0) {
+      dispatch({
+        type: PUBLISH_CLASSIFIERS_FAIL,
+        payload: {reason: 'empty classifier list'}
+      })
+      return
+    }
     dispatch({
       type: 'PUBLISH_CLASSIFIERS_START',
       payload: classifiers
