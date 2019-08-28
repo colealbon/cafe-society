@@ -117,22 +117,25 @@ export const FETCH_SAVED_FEEDS_START = 'FETCH_SAVED_FEEDS_START'
 export const FETCH_SAVED_FEEDS_SUCCESS = 'FETCH_SAVED_FEEDS_SUCCESS'
 export const FETCH_SAVED_FEEDS_FAIL = 'FETCH_SAVED_FEEDS_FAIL'
 
-export const fetchBlockstackFeeds = (feeds) => {
+export const fetchBlockstackFeeds = () => {
   return (dispatch) => {
-    blockstackGetFile('feeds.json')
-    .then((savedFeeds) => {
-      if (JSON.parse(savedFeeds === null)) {
-        return
-      }
-      dispatch({
-        type: FETCH_SAVED_FEEDS_SUCCESS,
-        payload: JSON.parse(savedFeeds)
+    return new Promise((resolve, reject) => {
+      blockstackGetFile('feeds.json')
+      .then((savedFeeds) => {
+        if (JSON.parse(savedFeeds === null)) {
+          reject()
+        }
+        dispatch({
+          type: FETCH_SAVED_FEEDS_SUCCESS,
+          payload: JSON.parse(savedFeeds)
+        })
+        return JSON.parse(savedFeeds)
       })
-    })
-    .catch((error) => {
-      dispatch({
-        type: FETCH_SAVED_FEEDS_FAIL,
-        payload: error
+      .catch((reason) => {
+        dispatch({
+          type: FETCH_SAVED_FEEDS_FAIL,
+          payload: reason
+        })
       })
     })
   }

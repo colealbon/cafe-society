@@ -51,10 +51,6 @@ const initialState = [
   name: 'variety'
   },
   {
-  id: 'poltics',
-  name: 'politics'
-  },
-  {
   id: 'recruiting',
   name: 'recruiting'
   }

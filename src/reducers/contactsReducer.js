@@ -7,7 +7,8 @@ import {
 } from '../actions/contactActions'
 
 const initialState = [
-  {id: 'astrologer.id', name: 'astrologer.id', muted: false}
+  {id: 'astrologer.id', name: 'astrologer.id', muted: false},
+  {id: 'cole_albon.id', name: 'cole_albon.id', muted: true}
 ]
 
 export default (state = initialState, action) => {

@@ -139,13 +139,7 @@ export const fetchBlockstackContacts = (contacts) => {
       let dedup = {}
       const uniqueContacts = []
       if ((flattenedContacts || []).length < 1) {
-        dispatch({
-          type: FETCH_CONTACTS_SUCCESS,
-          payload:  [
-            {id: 'astrologer.id', name: 'astrologer.id', muted: false},
-            {id: 'cole_albon.id', name: 'cole_albon.id', muted: true}
-          ]
-        })
+        return
       } else {
         flattenedContacts.filter((contact) => {
           if (dedup[contact.id] === undefined) {
@@ -154,11 +148,7 @@ export const fetchBlockstackContacts = (contacts) => {
             return true
           }
           return false
-        })
-        dispatch({
-          type: FETCH_CONTACTS_SUCCESS,
-          payload: uniqueContacts
-        })        
+        })      
       }
       return uniqueContacts
     }).catch((error) => {
