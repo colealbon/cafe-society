@@ -50,46 +50,47 @@ export default (state = [], action) => {
       return state.concat(action.payload.articles.filter((newArticle) => {
         const articleExists = state.filter((stateArticle) => stateArticle.id === newArticle.id).length !== 0
         return !articleExists
-      })).filter((articleItem) => articleItem.title !== '')
-      .map(articleItem => {
-        const blockReasons = action.payload.filters
-        .filter((filterItem) => !filterItem.muted )
-        .filter((filterItem) => {
-          return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
-          true :
-          filterItem.sections.filter((filterItemSectionItem) => {
-            if (articleItem.feed.sections === undefined) {
-              return false
-            }
-            return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
-          }).length !==0
-        })
-        .filter(filterItem => {
-          return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
-          Object.keys(articleItem)
-          .filter((articleField) => articleField !== 'id')
-          .filter((articleField) => articleField !== 'feed')
-          .filter((articleField) => articleField !== 'isoDate')
-          .filter((articleField) => articleField !== 'guid')
-          .filter((articleField) => articleField !== 'muted')
-          .filter((articleField) => articleField !== 'pubDate')
-          .filter((articleField) => {
-            return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
-          }).length !== 0 :
-          filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
-            return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
-          }).length !== 0
-        })
-        return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
-      }).filter(stateArticle => {
-        // delete articles no longer active in feed
-        if (stateArticle.feed.id !== action.payload.feed.id) {
-          return true
-        }
-        return action.payload.articles.filter(payloadArticle => {
-          return stateArticle.id === payloadArticle.id
-        }).length !== 0
-      })
+      }))
+      // .filter((articleItem) => articleItem.title !== '')
+      // .map(articleItem => {
+      //   const blockReasons = action.payload.filters
+      //   .filter((filterItem) => !filterItem.muted )
+      //   .filter((filterItem) => {
+      //     return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+      //     true :
+      //     filterItem.sections.filter((filterItemSectionItem) => {
+      //       if (articleItem.feed.sections === undefined) {
+      //         return false
+      //       }
+      //       return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+      //     }).length !==0
+      //   })
+      //   .filter(filterItem => {
+      //     return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+      //     Object.keys(articleItem)
+      //     .filter((articleField) => articleField !== 'id')
+      //     .filter((articleField) => articleField !== 'feed')
+      //     .filter((articleField) => articleField !== 'isoDate')
+      //     .filter((articleField) => articleField !== 'guid')
+      //     .filter((articleField) => articleField !== 'muted')
+      //     .filter((articleField) => articleField !== 'pubDate')
+      //     .filter((articleField) => {
+      //       return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+      //     }).length !== 0 :
+      //     filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+      //       return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+      //     }).length !== 0
+      //   })
+      //   return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
+      // }).filter(stateArticle => {
+      //   // delete articles no longer active in feed
+      //   if (stateArticle.feed.id !== action.payload.feed.id) {
+      //     return true
+      //   }
+      //   return action.payload.articles.filter(payloadArticle => {
+      //     return stateArticle.id === payloadArticle.id
+      //   }).length !== 0
+      // })
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
