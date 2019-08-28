@@ -50,11 +50,14 @@ export const loginWithBlockstack = () => {
 }
 
 export const userLogout = () => {
-  userSession.signUserOut()
-  window.location.replace(`${window.location.origin}/`)
-  return  (dispatch) => {
-    dispatch( {type: 'USER_LOGOUT' } )
-    // return { type: USER_LOGOUT }
+  return (dispatch) => {
+    dispatch({type: 'USER_LOGOUT'})
+    return userSession.signUserOut('/')
+    // window.location.replace(`${window.location.origin}/`)
+    // return  (dispatch) => {
+    //   dispatch( {type: 'USER_LOGOUT' } )
+    //   // return { type: USER_LOGOUT }
+    // }
   }
 }
 
