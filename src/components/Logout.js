@@ -13,9 +13,7 @@ const mapStateToProps = ({blockstackUser}) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleLogout: (() => {
-      dispatch({type: 'USER_LOGOUT'})
-      dispatch(userLogout('/home'))
-      return
+      dispatch(userLogout())
     })
   }
 }
