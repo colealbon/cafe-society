@@ -1,7 +1,7 @@
-import React , {Fragment} from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-// import Button from '@material-ui/core/Button'
-// import {Link} from 'react-router-dom'
+import Button from '@material-ui/core/Button'
+import {Link} from 'react-router-dom'
 
 const mapStateToProps = ({blockstackUser}) => {
   return {
@@ -11,14 +11,13 @@ const mapStateToProps = ({blockstackUser}) => {
 
 const BlockstackLogout = ({blockstackUser}) => {
 return (
-  <Fragment></Fragment>
-    // <Button
-    //   variant="outlined"
-    //   color="primary"
-    //   component={Link}
-    //   to='/logout'
-    // >Log out
-    // </Button>
+    <Button
+      variant="outlined"
+      color="primary"
+      component={Link}
+      to='/logout'
+    >Log out
+    </Button>
   )
 }
 

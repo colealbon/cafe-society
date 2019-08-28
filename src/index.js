@@ -8,7 +8,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { createLogger } from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
 import { createBrowserHistory } from 'history'
-import { ConnectedRouter, connectRouter, routerMiddleware} from 'connected-react-router'
+import { ConnectedRouter, connectRouter, routerMiddleware, push} from 'connected-react-router'
 import createIdbStorage from '@piotr-cz/redux-persist-idb-storage/src'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
 import { PersistGate } from 'redux-persist/lib/integration/react'
@@ -105,6 +105,7 @@ const runInitialAppStartActions = () => {
         store.getState().feeds, 
         store.getState().filters
       )
+      store.dispatch(push('/home'))
     }, 2000)
   } else {
     store.dispatch(fetchArticles(
