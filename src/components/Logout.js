@@ -2,7 +2,7 @@ import React from 'react'
 import SectionContent from './articles/SectionContent'
 import { userLogout } from '../actions/blockstackUserActions'
 import { connect } from 'react-redux'
-// import { push } from 'connected-react-router'
+
 
 const mapStateToProps = ({blockstackUser}) => {
   return {

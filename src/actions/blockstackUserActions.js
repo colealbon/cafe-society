@@ -1,5 +1,7 @@
 import * as blockstack from 'blockstack'
 
+import { push } from 'connected-react-router'
+
 export const FETCH_USER_DATA = 'FETCH_USER_DATA'
 export const USER_LOGIN = 'USER_LOGIN'
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS'
@@ -50,7 +52,8 @@ export const loginWithBlockstack = () => {
 }
 
 export const userLogout = () => {
-  userSession.signUserOut(`${window.location.origin}/`)
+  userSession.signUserOut()
+  push('/')
   return { type: 'USER_LOGOUT' }
 }
 
