@@ -134,7 +134,7 @@ export const fetchBlockstackContacts = (contacts) => {
           type: FETCH_SAVED_CONTACTS_ERROR,
           payload: error
         })
-        resolve(contacts)
+        reject(error)
       })
     }))
     return Promise.all(fetchContactFileQueue)
