@@ -54,7 +54,7 @@ export const userLogout = () => {
   window.location.replace(`${window.location.origin}/`)
   return  (dispatch) => {
     dispatch( {type: USER_LOGOUT } )
-    return { type: USER_LOGOUT }
+    // return { type: USER_LOGOUT }
   }
 }
 

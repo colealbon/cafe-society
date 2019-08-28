@@ -2,7 +2,7 @@ import React from 'react'
 import SectionContent from './articles/SectionContent'
 import { userLogout } from '../actions/blockstackUserActions'
 import { connect } from 'react-redux'
-import { push } from 'connected-react-router'
+// import { push } from 'connected-react-router'
 
 const mapStateToProps = ({blockstackUser}) => {
   return {
@@ -13,8 +13,9 @@ const mapStateToProps = ({blockstackUser}) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleLogout: (() => {
-      dispatch(userLogout())
-      dispatch(push('/'))
+      dispatch({type: USER_LOGOUT})
+      dispatch(userLogout('/home'))
+      return
     })
   }
 }
