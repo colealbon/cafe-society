@@ -119,23 +119,20 @@ export const FETCH_SAVED_FEEDS_FAIL = 'FETCH_SAVED_FEEDS_FAIL'
 
 export const fetchBlockstackFeeds = () => {
   return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      blockstackGetFile('feeds.json')
-      .then((savedFeeds) => {
-        if (JSON.parse(savedFeeds === null)) {
-          reject()
-        }
-        dispatch({
-          type: FETCH_SAVED_FEEDS_SUCCESS,
-          payload: JSON.parse(savedFeeds)
-        })
-        return JSON.parse(savedFeeds)
+    blockstackGetFile('feeds.json')
+    .then((savedFeeds) => {
+      if (JSON.parse(savedFeeds === null)) {
+        return
+      }
+      dispatch({
+        type: FETCH_SAVED_FEEDS_SUCCESS,
+        payload: JSON.parse(savedFeeds)
       })
-      .catch((reason) => {
-        dispatch({
-          type: FETCH_SAVED_FEEDS_FAIL,
-          payload: reason
-        })
+    })
+    .catch((error) => {
+      dispatch({
+        type: FETCH_SAVED_FEEDS_FAIL,
+        payload: error
       })
     })
   }
@@ -201,61 +198,20 @@ export const fetchFeeds = (contacts, filters) => {
       const flattenedFeeds = fetchedFeeds.reduce((a, b) => !a ? b : [].concat(a).concat(b))
       const uniqueFeeds = []
       let dedup = {}
-      if ((flattenedFeeds || []).length < 1) {
-        const theUniqueFeeds = [
-          {
-            id:'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
-            url: 'https://news.google.com/_/rss?hl=en-US&gl=US&ceid=US:en',
-            muted: false 
-          },
-          {
-            id:'https://lifehacker.com/rss',
-            url: 'lifehacker.com/rss',
-            muted: false ,
-            sections: [
-              {
-                id:'politics',
-                name: 'politics',
-                muted: false
-              }
-            ]
-          },
-          {
-            id:'https://www.democracynow.org/democracynow.rss',
-            url: 'https://www.democracynow.org/democracynow.rss',
-            muted: true ,
-            sections: [
-              {
-                id:'politics',
-                name: 'politics',
-                muted: false
-              }
-            ]
-          }
-        ]
-        dispatch(fetchArticles(theUniqueFeeds, filters))
-        dispatch({
-          type: FETCH_FEEDS_SUCCESS,
-          payload: theUniqueFeeds
-        })
-      } else {
-        flattenedFeeds.filter((feedItem) => !!feedItem)
-        .filter((feedItem) => !Array.isArray(feedItem))
-        .filter((feed) => {
-          if (dedup[feed.id] === undefined) {
-            dedup[feed.id] = {}
-            uniqueFeeds.push(feed)
-            return true
-          }
-          return false
-        })
-        dispatch({
-          type: FETCH_FEEDS_SUCCESS,
-          payload: uniqueFeeds
-        })
-        dispatch(publishFeeds(uniqueFeeds))
-        dispatch(fetchArticles(uniqueFeeds, filters))
-      }
+      flattenedFeeds.filter((feedItem) => !!feedItem)
+      .filter((feedItem) => !Array.isArray(feedItem))
+      .filter((feed) => {
+        if (dedup[feed.id] === undefined) {
+          dedup[feed.id] = {}
+          uniqueFeeds.push(feed)
+          return true
+        }
+        return false
+      })
+      dispatch({
+        type: FETCH_FEEDS_SUCCESS,
+        payload: uniqueFeeds
+      })
     })
   }
 }
