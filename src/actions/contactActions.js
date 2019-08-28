@@ -120,14 +120,14 @@ export const fetchBlockstackContacts = (contacts) => {
     fetchContactFileQueue.push(new Promise((resolve) => {
       blockstackGetFile('contacts.json')
       .then((fileContents) => {
-        if (JSON.parse(fileContents) === null) {
-          reject('empty file contacts.json')
+        if (JSON.parse(fileContents) !== null) {
+          dispatch({
+            type: FETCH_SAVED_CONTACTS_SUCCESS,
+            payload: JSON.parse(fileContents)
+          })
+          resolve(JSON.parse(fileContents))
         }
-        dispatch({
-          type: FETCH_SAVED_CONTACTS_SUCCESS,
-          payload: JSON.parse(fileContents)
-        })
-        resolve(JSON.parse(fileContents))
+        resolve()
       })
       .catch((error) =>{
         dispatch({
