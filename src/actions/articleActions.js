@@ -75,7 +75,8 @@ export const toggleArticle = (articles, allArticles, gaiaLinks) => {
 }
 
 export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
-export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
+// export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
+export const FETCHED_ARTICLES_DISCARD_IF_EXISTS = 'FETCHED_ARTICLES_DISCARD_IF_EXISTS'
 export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
 export const FETCH_SAVED_ARTICLES_SUCCESS = 'FETCH_SAVED_ARTICLES_SUCCESS'
 export const FETCH_SAVED_ARTICLE_SUCCESS = 'FETCH_SAVED_ARTICLE_SUCCESS'
@@ -92,23 +93,58 @@ export const fetchArticles = (feeds, filters) => {
             filters: filters
           }
         })
-        fetchFeedContent(feed.url).then((fetchedContent) => {
-          if (!!fetchedContent) {
-            if (!!fetchedContent.items) {
-              dispatch({
-                type: FETCH_ARTICLES_SUCCESS,
-                payload: {
-                  feed: feed,
-                  articles: fetchedContent.items.map((item) => {
-                    return !item.guid ? 
-                    Object.assign({id: item.link, feed: feed}, item) :
-                    Object.assign({id: item.guid, feed: feed}, item)
-                  }), 
-                  filters: filters
-                }
-              })
-            }
+        fetchFeedContent(feed.url)
+        .then((fetchedContent) => {
+          if (!fetchedContent.items) {
+            return
           }
+          dispatch({
+            type: 'FETCHED_ARTICLES_DISCARD_IF_EXISTS',
+            payload: fetchedContent.items.map((item) => {
+              return !item.guid ? 
+              Object.assign({id: item.link, feed: feed}, item) :
+              Object.assign({id: item.guid, feed: feed}, item)
+            })
+            .filter((articleItem) => articleItem.title !== '')
+            .map(articleItem => {
+              try {
+                const blockReasons = filters
+                .filter((filterItem) => !filterItem.muted )
+                .filter((filterItem) => {
+                  return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+                  true :
+                  filterItem.sections.filter((filterItemSectionItem) => {
+                    if (articleItem.feed.sections === undefined) {
+                      return false
+                    }
+                    return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+                  }).length !==0
+                })
+                .filter(filterItem => {
+                  return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+                  Object.keys(articleItem)
+                  .filter((articleField) => articleField !== 'id')
+                  .filter((articleField) => articleField !== 'feed')
+                  .filter((articleField) => articleField !== 'isoDate')
+                  .filter((articleField) => articleField !== 'guid')
+                  .filter((articleField) => articleField !== 'muted')
+                  .filter((articleField) => articleField !== 'pubDate')
+                  .filter((articleField) => {
+                    return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+                  }).length !== 0 :
+                  filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+                    return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+                  }).length !== 0
+                })
+                return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
+              } catch (error) {
+                dispatch({
+                  type: 'FETCH_ARTICLES_FAIL',
+                  payload: error
+                })
+              }
+            })
+          })
         }).catch((error) => {
           dispatch({
             type: FETCH_ARTICLES_FAIL,
@@ -116,7 +152,6 @@ export const fetchArticles = (feeds, filters) => {
           })
         })
       }
-      return 'o'
     })
   }
 }
