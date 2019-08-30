@@ -32,10 +32,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export const GaiaLinkList = ({ handleClickRemoveGaiaLink, handleClickRemoveAllGaiaLinks, gaiaLinks }) => {
-  const deleteSweepGaiaLink = `delete: ${[].concat(gaiaLinks).length}`
+  const deleteSweepGaiaLink = `delete: ${[].concat(gaiaLinks).length} links`
   return (
     <Fragment>
-      <List subheader={<ListSubheader>Edit/Save GaiaLinks</ListSubheader>} >
+      <List subheader={<ListSubheader>GaiaLinks</ListSubheader>} >
         <ListItem key='addItem'>
           <ListItemIcon>
             <IconButton title={deleteSweepGaiaLink} onClick={() => { handleClickRemoveAllGaiaLinks(gaiaLinks, gaiaLinks) }}>
@@ -53,7 +53,7 @@ export const GaiaLinkList = ({ handleClickRemoveGaiaLink, handleClickRemoveAllGa
                 }}
               />
               <Typography><Link href={gaiaLink.gaiaUrl}>{gaiaLink.articleId}</Link></Typography>
-              <JSONTree hideRoot={true} data={gaiaLink} />
+              <Typography><JSONTree hideRoot={true} data={gaiaLink} /></Typography>
             </ListItem>
           )
         }).reverse()
@@ -70,4 +70,3 @@ GaiaLinkList.propTypes = {
   gaiaLinks: PropTypes.array.isRequired,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(GaiaLinkList)
-// export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(GaiaLinkList));
