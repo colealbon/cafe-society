@@ -143,6 +143,7 @@ export const fetchArticles = (feeds, filters) => {
                   payload: error
                 })
               }
+              return 'o'
             })
           })
         }).catch((error) => {
@@ -224,7 +225,7 @@ export const publishArticles = (articles, gaiaLinks) => {
     dispatch(() => {
       articles = !Array.isArray(articles) ? [articles] : articles
       articles.filter((articleItem) => !!articleItem).map((articleItem) => {
-        const sha1Hash = hash(articleItem)
+        const sha1Hash = hash.sha1(articleItem.id)
         // if article changed (ex. mark as read), delete its gaia file
         if (!!gaiaLinks) {
           return gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
