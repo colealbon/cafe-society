@@ -99,10 +99,10 @@ const runInitialAppStartActions = () => {
     store.dispatch(fetchBlockstackSections())
     store.dispatch(fetchBlockstackFeeds())
     setTimeout(() => {
-      fetchArticles(
+     store.dispatch(fetchArticles(
         store.getState().feeds, 
         store.getState().filters
-      )
+      ))
       store.dispatch(push('/home'))
     }, 2000)
   } else {
