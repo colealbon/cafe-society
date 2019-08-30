@@ -152,6 +152,7 @@ export const fetchArticles = (feeds, filters) => {
           })
         })
       }
+      return 'o'
     })
   }
 }

@@ -48,8 +48,9 @@ export default (state = [], action) => {
 
     case  FETCHED_ARTICLES_DISCARD_IF_EXISTS:
       // don't overwrite
-      return state.concat(action.payload.filter((payloadItem) => {
-        return !state.filter((stateItem) => stateItem.id === payloadItem.id)
+      return state.concat(action.payload
+      .filter((payloadItem) => {
+        return [].concat(state).filter((stateItem) => stateItem.id === payloadItem.id).length === 0
       }))
 
     case ARTICLES_MARK_READ:
