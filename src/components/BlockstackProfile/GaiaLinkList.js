@@ -11,9 +11,8 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Typography from '@material-ui/core/Typography'
-import Link from '@material-ui/core/Link';
-
-
+import Link from '@material-ui/core/Link'
+import JSONTree from 'react-json-tree'
 
 const mapStateToProps = ({ gaiaLinks }) => {
   return {
@@ -54,6 +53,7 @@ export const GaiaLinkList = ({ handleClickRemoveGaiaLink, handleClickRemoveAllGa
                 }}
               />
               <Typography><Link href={gaiaLink.gaiaUrl}>{gaiaLink.articleId}</Link></Typography>
+              <JSONTree hideRoot={true} data={gaiaLink} />
             </ListItem>
           )
         }).reverse()
