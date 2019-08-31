@@ -268,7 +268,10 @@ export const publishArticles = (articles, gaiaLinks) => {
           })
         }
 
-        if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined).filter((gaiaLink) => gaiaLink.articleId === articleItem.cafeSocietyId).filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash).length === 0) {
+        if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
+        .filter((gaiaLink) => gaiaLink.articleId === articleItem.cafeSocietyId)
+        .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
+        .length === 0) {
           dispatch({
             type: 'PUBLISH_ARTICLE_START',
             payload: {
@@ -290,7 +293,7 @@ export const publishArticles = (articles, gaiaLinks) => {
               }
             })
             blockstackPutFile('gaiaLinks', 
-              gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== articleItem.cafeSocietyId).concat({
+              [].concat(gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== articleItem.cafeSocietyId)).concat({
                 gaiaUrl: gaiaUrl,
                 articleId: articleItem.cafeSocietyId,
                 muted: articleItem.muted,
