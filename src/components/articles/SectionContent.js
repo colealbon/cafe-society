@@ -134,6 +134,9 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   <ThumbDown id='addFilter'/>
                 </IconButton>
                 <IconButton title="train as good" onClick={() => {
+                  if (getSelectionText().length !== 0) {
+                    handleClickAddFilter(getSelectionText(), filters, selectedSection)
+                  }
                   handleClickLearn(selectedSection, article, 'good', classifiers, allArticles, gaiaLinks)
                 }}>
                   <ThumbUp id='train-good'/>
