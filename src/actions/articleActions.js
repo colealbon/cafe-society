@@ -50,16 +50,13 @@ const slowBlockstackPutFile = (filename, options) => {
 }
 const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
-export const markArticleRead = (articles, allArticles, gaiaLinks) => {
+export const markArticleRead = (articles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    dispatch(publishArticles(allArticles.filter(articleItem => {
-      return [].concat(articles)
-      .filter(readArticleItem => readArticleItem.articleId === articleItem.articleId).length !== 0
-    }).concat(articles.map(article => Object.assign({muted: true}, article), gaiaLinks))))
+    dispatch(publishArticles([].concat(articles).map(article => Object.assign({muted: true, article})), gaiaLinks))
   }
 }
 
@@ -306,7 +303,13 @@ export const publishArticles = (articles, gaiaLinks) => {
               payload: sha1Hash
             })
           })
+        } else {
+          dispatch({
+            type: 'DUPLICATE_NO_PUBLISH',
+            payload: articles
+          })
         }
+
         return 'o'
       })
     })
