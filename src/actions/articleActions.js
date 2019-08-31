@@ -274,7 +274,7 @@ export const publishArticles = (articles, gaiaLinks) => {
           })
         }
 
-        if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
+        if [].concat((gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
         .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
         .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
         .length === 0) {
@@ -282,7 +282,7 @@ export const publishArticles = (articles, gaiaLinks) => {
             type: 'PUBLISH_ARTICLE_START',
             payload: {
               sha1Hash: sha1Hash,
-              articleId: articleItem.cafeSicietyId
+              articleId: articleItem.articleId
             }
           })
           blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))

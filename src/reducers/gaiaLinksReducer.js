@@ -14,7 +14,17 @@ export default (state = [], action) => {
       return []
 
     case  PUBLISH_ARTICLE_SUCCESS:
-      return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
+        dispatch({
+          type: 'PUBLISH_ARTICLE_SUCCESS',
+          payload: {
+            gaiaUrl: gaiaUrl,
+            articleId: articleItem.articleId,
+            muted: articleItem.muted,
+            salt: articleItem.salt,
+            date: theDate
+          }
+        })
+      return [].concat(state).filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
 
     case GAIA_LINKS_REMOVE_GAIA_LINK:
       return state.filter(stateItem => action.payload.articleId !== stateItem.articleId)
