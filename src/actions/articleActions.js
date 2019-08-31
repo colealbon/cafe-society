@@ -273,11 +273,6 @@ export const publishArticles = (articles, gaiaLinks) => {
             return 'o'
           })
         }
-        alert (gaiaLinks)
-        // .filter((gaiaLink) => gaiaLink !== undefined)
-        // .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
-        // .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
-        // .length === 0 )
 
         if (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
         .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
@@ -303,15 +298,15 @@ export const publishArticles = (articles, gaiaLinks) => {
                 date: theDate
               }
             })
-            blockstackPutFile('gaiaLinks', 
-              [].concat(gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== articleItem.articleId)).concat({
-                gaiaUrl: gaiaUrl,
-                articleId: articleItem.articleId,
-                muted: articleItem.muted,
-                salt: articleItem.salt,
-                date: theDate
-              })
-            )
+            // blockstackPutFile('gaiaLinks', 
+            //   [].concat(gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== articleItem.articleId)).concat({
+            //     gaiaUrl: gaiaUrl,
+            //     articleId: articleItem.articleId,
+            //     muted: articleItem.muted,
+            //     salt: articleItem.salt,
+            //     date: theDate
+            //   })
+            // )
           }).catch((error) => {
             dispatch({
               type: 'PUBLISH_ARTICLE_FAIL',
