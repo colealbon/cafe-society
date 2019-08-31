@@ -114,19 +114,19 @@ export const fetchArticles = (feeds, filters, gaiaLinks) => {
               const salt = uuid()
               return Object.assign({articleId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
             }) 
-            .filter((articleItem) => articleItem.title !== '')
-            .map(articleItem => {
-              if (!gaiaLinks) {
-                return articleItem
-              }
-              return {
-                muted: gaiaLinks
-                .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
-                .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
-                || articleItem.muted || false,
-                ...articleItem
-              }
-            })
+            .filter(articleItem => articleItem.title !== '')
+            // .map(articleItem => {
+            //   if (!gaiaLinks) {
+            //     return articleItem
+            //   }
+            //   return {
+            //     muted: gaiaLinks
+            //     .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
+            //     .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
+            //     || articleItem.muted || false,
+            //     ...articleItem
+            //   }
+            // })
             .map(articleItem => {
               try {
                 const blockReasons = filters
