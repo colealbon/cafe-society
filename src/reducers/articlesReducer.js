@@ -36,7 +36,7 @@ export default (state = [], action) => {
       return []
 
     case FETCH_SAVED_ARTICLE_SUCCESS:
-      return state.filter((stateItem) => stateItem.cafeSocietyId !== action.payload.cafeSocietyId).concat(action.payload)
+      return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
 
     case FETCH_SAVED_ARTICLES_SUCCESS:
       return [].concat(action.payload)
@@ -45,24 +45,24 @@ export default (state = [], action) => {
       // don't overwrite
       return state.concat(action.payload
       .filter((payloadItem) => {
-        return [].concat(state).filter((stateItem) => stateItem.cafeSocietyId === payloadItem.cafeSocietyId).length === 0
+        return [].concat(state).filter((stateItem) => stateItem.articleId === payloadItem.articleId).length === 0
       }))
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        let muteArticle = payload.filter((payloadItem) => (payloadItem.cafeSocietyId === stateItem.cafeSocietyId)).length !== 0
+        let muteArticle = payload.filter((payloadItem) => (payloadItem.articleId === stateItem.articleId)).length !== 0
         return (muteArticle === true) ? { ...stateItem, muted: true} : stateItem
       })
 
     case ARTICLES_REMOVE_ARTICLE:
       return state.filter(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        return payload.filter((payloadItem) => (payloadItem.cafeSocietyId === stateItem.cafeSocietyId)).length === 0
+        return payload.filter((payloadItem) => (payloadItem.articleId === stateItem.articleId)).length === 0
       })
 
     case ARTICLES_TOGGLE_ARTICLE:
-      return state.map(article => article.cafeSocietyId === action.payload.cafeSocietyId ? { ...article, muted: !article.muted || false } : article )
+      return state.map(article => article.articleId === action.payload.articleId ? { ...article, muted: !article.muted || false } : article )
 
     case "@@router/LOCATION_CHANGE":
       return state.map(article => action.payload.location.pathname === "/" ? { ...article, visible: true } : article)

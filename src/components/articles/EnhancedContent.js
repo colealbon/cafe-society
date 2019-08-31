@@ -101,7 +101,7 @@ export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomai
         .map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
         return (
-          <Grid item xs={12} key={article.cafeSocietyId}>
+          <Grid item xs={12} key={article.articleId}>
             <Card>
               <CardContent>
                 <Typography variant="h6" >
@@ -119,7 +119,7 @@ export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomai
                   <VoiceOverOff></VoiceOverOff>
                   </IconButton>
                 </Typography>
-                <Typography>article id: {article.cafeSocietyId}</Typography>
+                <Typography>article id: {article.articleId}</Typography>
                 <Typography>{(article.contentSnippet) ? article.contentSnippet.replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/&nbsp;/g, " ") : '' }</Typography>
                 {(article.bayesCategories && article.bayesCategories.length !== 0) ? <Typography variant="h6" >bayes categories: <JSONTree hideRoot={true} data={article.bayesCategories} /></Typography> : ''}
                 {(article.bayes && article.bayes.length !== 0) ? <Typography variant="h6" >bayes: <JSONTree hideRoot={true} data={article.bayes} /></Typography> : ''}

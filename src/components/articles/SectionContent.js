@@ -117,7 +117,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
       .map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
         return (
-          <Grid item xs={12} key={article.cafeSocietyId}>
+          <Grid item xs={12} key={article.articleId}>
             <Card>
               <CardContent>
                 <Typography variant="h6" >

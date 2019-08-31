@@ -58,9 +58,8 @@ export const markArticleRead = (articles, allArticles, gaiaLinks) => {
     })
     dispatch(publishArticles(allArticles.filter(articleItem => {
       return [].concat(articles)
-      .filter(articleItem => !!articleItem)
-      .filter(readArticleItem => readArticleItem.cafeSocietyId === articleItem.cafeSocietyId).length !== 0
-    }), gaiaLinks)).concat(articles)
+      .filter(readArticleItem => readArticleItem.articleId === articleItem.articleId).length !== 0
+    }).concat(articles.map(article => Object.assign({muted: true}, article), gaiaLinks))))
   }
 }
 
@@ -106,7 +105,7 @@ export const fetchArticles = (feeds, filters, gaiaLinks) => {
             type: FETCH_ARTICLES_SUCCESS,
             payload: fetchedContent.items.map((item) => {
               const salt = uuid()
-              return Object.assign({cafeSocietyId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
+              return Object.assign({articleId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
             }) 
             .filter((articleItem) => articleItem.title !== '')
             .map(articleItem => {
@@ -115,7 +114,7 @@ export const fetchArticles = (feeds, filters, gaiaLinks) => {
               }
               return {
                 muted: gaiaLinks
-                .filter(gaiaLinkItem => articleItem.cafeSocietyId === gaiaLinkItem.articleId)
+                .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
                 .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
                 || articleItem.muted || false,
                 ...articleItem
@@ -243,7 +242,7 @@ export const publishArticles = (articles, gaiaLinks) => {
         const sha1Hash = hash.sha1(articleItem)
         // if article changed (ex. mark as read), delete its gaia file
         if (!!gaiaLinks) {
-          return gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.cafeSocietyId)
+          return gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
           .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
           .map(gaiaLink => {
             if (!gaiaLink) {
@@ -269,7 +268,7 @@ export const publishArticles = (articles, gaiaLinks) => {
         }
 
         if ([].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
-        .filter((gaiaLink) => gaiaLink.articleId === articleItem.cafeSocietyId)
+        .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
         .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
         .length === 0) {
           dispatch({
@@ -279,23 +278,23 @@ export const publishArticles = (articles, gaiaLinks) => {
               articleId: articleItem.cafeSicietyId
             }
           })
-          blockstackPutFile( articleItem.cafeSocietyId, JSON.stringify(articleItem))
+          blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))
           .then((gaiaUrl) => {
             const theDate = Date.now()
             dispatch({
               type: 'PUBLISH_ARTICLE_SUCCESS',
               payload: {
                 gaiaUrl: gaiaUrl,
-                articleId: articleItem.cafeSocietyId,
+                articleId: articleItem.articleId,
                 muted: articleItem.muted,
                 salt: articleItem.salt,
                 date: theDate
               }
             })
             blockstackPutFile('gaiaLinks', 
-              [].concat(gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== articleItem.cafeSocietyId)).concat({
+              [].concat(gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== articleItem.articleId)).concat({
                 gaiaUrl: gaiaUrl,
-                articleId: articleItem.cafeSocietyId,
+                articleId: articleItem.articleId,
                 muted: articleItem.muted,
                 salt: articleItem.salt,
                 date: theDate
