@@ -224,10 +224,10 @@ export const publishArticles = (articles, gaiaLinks) => {
     dispatch(() => {
       articles = !Array.isArray(articles) ? [articles] : articles
       articles.filter((articleItem) => !!articleItem).map((articleItem) => {
-        const sha1Hash = hash.sha1(articleItem.id)
+        const sha1Hash = hash.sha1(articleItem.cafeSocietyId)
         // if article changed (ex. mark as read), delete its gaia file
         if (!!gaiaLinks) {
-          return gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.id)
+          return gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.cafeSocietyId)
           .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
           .map(gaiaLink => {
             if (!gaiaLink) {
