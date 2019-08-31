@@ -267,7 +267,7 @@ export const publishArticles = (articles, gaiaLinks) => {
               payload: {
                 gaiaUrl: gaiaUrl,
                 sha1Hash: sha1Hash,
-                articleId: articleItem.id
+                articleId: articleItem.cafeSocietyId
               }
             })
           }).catch((error) => {
