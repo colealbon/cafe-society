@@ -58,7 +58,7 @@ export default (state = [], action) => {
     case ARTICLES_REMOVE_ARTICLE:
       return state.filter(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        return payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length === 0
+        return payload.filter((payloadItem) => (payloadItem.cafeSocietyId === stateItem.cafeSocietyId)).length === 0
       })
 
     case ARTICLES_TOGGLE_ARTICLE:
