@@ -244,8 +244,19 @@ export const publishArticles = (articles, gaiaLinks) => {
       payload: articles
     })
     dispatch(() => {
-      [].concat(articles).map((articleItem) => {
+      articles.map(articleItem => {
         const sha1Hash = hash.sha1(articleItem)
+        dispatch({
+          type: 'PUBLISH_ARTICLE_START',
+          payload: {
+            sha1Hash: sha1Hash,
+            articleId: articleItem.articleId
+          }
+        })
+      })
+    })
+  }
+}
     //     // if article changed (ex. mark as read), delete its gaia file
     //     if (!!gaiaLinks) {
     //       return gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
@@ -278,13 +289,6 @@ export const publishArticles = (articles, gaiaLinks) => {
     //     .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
     //     .length === 0)
     // {
-          dispatch({
-            type: 'PUBLISH_ARTICLE_START',
-            payload: {
-              sha1Hash: sha1Hash,
-              articleId: articleItem.articleId
-            }
-          })
     //       blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))
     //       .then((gaiaUrl) => {
     //         const theDate = Date.now()
@@ -320,8 +324,8 @@ export const publishArticles = (articles, gaiaLinks) => {
     //       })
     //     }
 
-        return 'o'
-      })
+      //   return 'o'
+      // })
     // })
-  }
-}
+//   }
+// }
