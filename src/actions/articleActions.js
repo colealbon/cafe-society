@@ -266,8 +266,9 @@ export const publishArticles = (articles, gaiaLinks) => {
               type: 'PUBLISH_ARTICLE_SUCCESS',
               payload: {
                 gaiaUrl: gaiaUrl,
-                sha1Hash: sha1Hash,
-                articleId: articleItem.cafeSocietyId
+                articleId: articleItem.cafeSocietyId,
+                muted: articleItem.muted,
+                date: Date.now()
               }
             })
           }).catch((error) => {
