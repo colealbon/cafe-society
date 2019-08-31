@@ -57,8 +57,10 @@ export const markArticleRead = (articles, allArticles, gaiaLinks) => {
       payload: articles
     })
     dispatch(publishArticles(allArticles.filter(articleItem => {
-      return articles.filter(readArticleItem => readArticleItem.cafeSocietyId === articleItem.cafeSocietyId).length !== 0
-    }), gaiaLinks))
+      return [].concat(articles)
+      .filter(articleItem => !!articleItem)
+      .filter(readArticleItem => readArticleItem.cafeSocietyId === articleItem.cafeSocietyId).length !== 0
+    }), gaiaLinks)).concat(articles)
   }
 }
 
