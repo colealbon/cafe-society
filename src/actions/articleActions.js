@@ -84,7 +84,7 @@ export const toggleArticle = (articles, allArticles, gaiaLinks) => {
   }
 }
 
-export const fetchArticles = (feeds, filters,  gaiaLinks) => {
+export const fetchArticles = (feeds, filters, gaiaLinks) => {
   return (dispatch) => {
     feeds.map((feed) => {
       if (feed.muted !== true && feed.url) { 
@@ -108,6 +108,9 @@ export const fetchArticles = (feeds, filters,  gaiaLinks) => {
             }) 
             .filter((articleItem) => articleItem.title !== '')
             .map(articleItem => {
+              if (!gaiaLinks) {
+                return articleItem
+              }
               return {
                 muted: gaiaLinks
                 .filter(gaiaLinkItem => articleItem.cafeSocietyId === gaiaLinkItem.articleId)
