@@ -273,10 +273,11 @@ export const publishArticles = (articles, gaiaLinks) => {
             return 'o'
           })
         }
-        alert (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
-        .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
-        .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
-        .length === 0 )
+        alert (gaiaLinks)
+        // .filter((gaiaLink) => gaiaLink !== undefined)
+        // .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
+        // .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
+        // .length === 0 )
 
         if (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
         .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
