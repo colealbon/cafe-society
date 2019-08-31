@@ -82,7 +82,7 @@ export const toggleArticle = (articles, allArticles, gaiaLinks) => {
   }
 }
 
-export const fetchArticles = (feeds, filters) => {
+export const fetchArticles = (feeds, filters,  gaiaLinks) => {
   return (dispatch) => {
     feeds.map((feed) => {
       if (feed.muted !== true && feed.url) { 
@@ -105,6 +105,16 @@ export const fetchArticles = (feeds, filters) => {
               return Object.assign({cafeSocietyId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
             }) 
             .filter((articleItem) => articleItem.title !== '')
+            .map(articleItem => {
+              return {
+                muted: gaiaLinks.map(gaiaLinkItem => {
+                  if (articleItem.cafeSocietyId === gaiaLinkItem.articleId) {
+                    return gaiaLinkItem.muted
+                  }
+                }).filter(readItem => !!readItem)[0], 
+                ...articleItem
+              }
+            })
             .map(articleItem => {
               try {
                 const blockReasons = filters
