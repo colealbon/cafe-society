@@ -115,18 +115,18 @@ export const fetchArticles = (feeds, filters, gaiaLinks) => {
               return Object.assign({articleId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
             }) 
             .filter(articleItem => articleItem.title !== '')
-            // .map(articleItem => {
-            //   if (!gaiaLinks) {
-            //     return articleItem
-            //   }
-            //   return {
-            //     muted: gaiaLinks
-            //     .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
-            //     .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
-            //     || articleItem.muted || false,
-            //     ...articleItem
-            //   }
-            // })
+            .map(articleItem => {
+              if (!gaiaLinks) {
+                return articleItem
+              }
+              return {
+                muted: gaiaLinks
+                .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
+                .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
+                || articleItem.muted || false,
+                ...articleItem
+              }
+            })
             .map(articleItem => {
               try {
                 const blockReasons = filters
@@ -273,6 +273,10 @@ export const publishArticles = (articles, gaiaLinks) => {
             return 'o'
           })
         }
+        alert (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
+        .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
+        .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
+        .length === 0 )
 
         if (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
         .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
