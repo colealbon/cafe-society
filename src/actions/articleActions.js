@@ -1,8 +1,16 @@
 import * as blockstack from 'blockstack'
+import uuid from 'uuidv4'
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
-var hash = require('object-hash');
+var hash = require('object-hash')
+
+export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
+export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
+export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
+export const FETCH_SAVED_ARTICLES_SUCCESS = 'FETCH_SAVED_ARTICLES_SUCCESS'
+export const FETCH_SAVED_ARTICLE_SUCCESS = 'FETCH_SAVED_ARTICLE_SUCCESS'
+export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 
 const slow_fetchFeedContent = feedUrl => {
   return !feedUrl ? 
@@ -74,14 +82,6 @@ export const toggleArticle = (articles, allArticles, gaiaLinks) => {
   }
 }
 
-export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
-// export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
-export const FETCHED_ARTICLES_DISCARD_IF_EXISTS = 'FETCHED_ARTICLES_DISCARD_IF_EXISTS'
-export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
-export const FETCH_SAVED_ARTICLES_SUCCESS = 'FETCH_SAVED_ARTICLES_SUCCESS'
-export const FETCH_SAVED_ARTICLE_SUCCESS = 'FETCH_SAVED_ARTICLE_SUCCESS'
-export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
-
 export const fetchArticles = (feeds, filters) => {
   return (dispatch) => {
     feeds.map((feed) => {
@@ -99,12 +99,11 @@ export const fetchArticles = (feeds, filters) => {
             return
           }
           dispatch({
-            type: 'FETCHED_ARTICLES_DISCARD_IF_EXISTS',
+            type: FETCH_ARTICLES_SUCCESS,
             payload: fetchedContent.items.map((item) => {
-              return !item.guid ? 
-              Object.assign({id: item.link, feed: feed}, item) :
-              Object.assign({id: item.guid, feed: feed}, item)
-            })
+              const salt = uuid()
+              return Object.assign({cafeSocietyId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
+            }) 
             .filter((articleItem) => articleItem.title !== '')
             .map(articleItem => {
               try {
@@ -153,7 +152,7 @@ export const fetchArticles = (feeds, filters) => {
           })
         })
       }
-      return 'o'
+      return  'o'
     })
   }
 }

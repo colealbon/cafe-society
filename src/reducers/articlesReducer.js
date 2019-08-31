@@ -1,16 +1,11 @@
 import {
   ARTICLES_REMOVE_ARTICLE,
   ARTICLES_TOGGLE_ARTICLE,
-  FETCHED_ARTICLES_DISCARD_IF_EXISTS,
+  FETCH_ARTICLES_SUCCESS,
   FETCH_SAVED_ARTICLES_SUCCESS,
   FETCH_SAVED_ARTICLE_SUCCESS,
   ARTICLES_MARK_READ
 } from '../actions/articleActions'
-
-// todo: replace the above actions with:
-// FETCHED_ARTICLES_OVERWRITE_IF_EXISTS
-// 
-// FETCHED_ARTICLES_REMOVE_IF_NOT_IN_FEED
 
 import {
   SECTION_SELECT_SECTION
@@ -41,22 +36,22 @@ export default (state = [], action) => {
       return []
 
     case FETCH_SAVED_ARTICLE_SUCCESS:
-      return state.filter((stateItem) => stateItem.id !== action.payload.id).concat(action.payload)
+      return state.filter((stateItem) => stateItem.cafeSocietyId !== action.payload.cafeSocietyId).concat(action.payload)
 
     case FETCH_SAVED_ARTICLES_SUCCESS:
       return [].concat(action.payload)
 
-    case  FETCHED_ARTICLES_DISCARD_IF_EXISTS:
+    case  FETCH_ARTICLES_SUCCESS:
       // don't overwrite
       return state.concat(action.payload
       .filter((payloadItem) => {
-        return [].concat(state).filter((stateItem) => stateItem.id === payloadItem.id).length === 0
+        return [].concat(state).filter((stateItem) => stateItem.cafeSocietyId === payloadItem.cafeSocietyId).length === 0
       }))
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        let muteArticle = payload.filter((payloadItem) => (payloadItem.id === stateItem.id)).length !== 0
+        let muteArticle = payload.filter((payloadItem) => (payloadItem.cafeSocietyId === stateItem.cafeSocietyId)).length !== 0
         return (muteArticle === true) ? { ...stateItem, muted: true} : stateItem
       })
 
@@ -67,7 +62,7 @@ export default (state = [], action) => {
       })
 
     case ARTICLES_TOGGLE_ARTICLE:
-      return state.map(article => article.id === action.payload.id ? { ...article, muted: !article.muted || false } : article )
+      return state.map(article => article.cafeSocietyId === action.payload.cafeSocietyId ? { ...article, muted: !article.muted || false } : article )
 
     case "@@router/LOCATION_CHANGE":
       return state.map(article => action.payload.location.pathname === "/" ? { ...article, visible: true } : article)
@@ -137,7 +132,6 @@ export default (state = [], action) => {
       })
 
     case FILTER_FIELD_SELECT_FIELD:
-
       const isToggleOffField = [].concat(action.payload.fields).filter((filterField) => {
         if (filterField === undefined) {
           return false

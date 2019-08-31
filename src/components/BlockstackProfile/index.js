@@ -13,7 +13,6 @@ const mapStateToProps = ({blockstackUser}) => {
 }
 
 export const BlockstackProfile = ({blockstackUser}) => {
-
   return (
     <Fragment>
       <VerticalSpace/>
