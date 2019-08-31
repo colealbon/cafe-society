@@ -50,13 +50,23 @@ const slowBlockstackPutFile = (filename, options) => {
 }
 const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
-export const markArticleRead = (articles, gaiaLinks) => {
+export const markArticleRead = (articles, allArticles, gaiaLinks) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    dispatch(publishArticles([].concat(articles).map(article => Object.assign({muted: true, article})), gaiaLinks))
+    dispatch(publishArticles(allArticles.map((stateArticle) => {
+      let articleMatched = false
+      articles = [].concat(articles)
+      articles.map((toggleArticle) => {
+        if (toggleArticle.id === stateArticle.id) {
+          articleMatched = true
+        }
+        return 'o'
+      })
+      return (articleMatched === true ) ? { ...stateArticle, muted: true || false } : stateArticle
+    }), gaiaLinks ))
   }
 }
 
