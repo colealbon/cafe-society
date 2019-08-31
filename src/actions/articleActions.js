@@ -253,6 +253,20 @@ export const publishArticles = (articles, gaiaLinks) => {
             articleId: articleItem.articleId
           }
         })
+        blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))
+        .then((gaiaUrl) => {
+          const theDate = Date.now()
+          dispatch({
+            type: 'PUBLISH_ARTICLE_SUCCESS',
+            payload: {
+              gaiaUrl: gaiaUrl,
+              articleId: articleItem.articleId,
+              muted: articleItem.muted,
+              salt: articleItem.salt,
+              date: theDate
+            }
+          })
+        })
       })
     })
   }
