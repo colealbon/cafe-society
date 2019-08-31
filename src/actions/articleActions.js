@@ -274,7 +274,7 @@ export const publishArticles = (articles, gaiaLinks) => {
           })
         }
 
-        if [].concat((gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
+        if (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
         .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
         .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
         .length === 0) {
