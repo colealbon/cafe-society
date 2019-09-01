@@ -56,7 +56,7 @@ export const markArticleRead = (articles, allArticles, gaiaLinks) => {
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    dispatch(publishArticles(articles.map((stateArticle) => {
+    dispatch(publishArticles([].concat(articles).map((stateArticle) => {
       let articleMatched = false
       articles = [].concat(articles)
       articles.map((toggleArticle) => {
@@ -292,6 +292,7 @@ export const publishArticles = (articles, gaiaLinks) => {
             }
           })
         })
+      return '0'
       })
     })
   }
