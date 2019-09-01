@@ -78,16 +78,8 @@ export const toggleArticle = (articles, allArticles, gaiaLinks) => {
       type: ARTICLES_TOGGLE_ARTICLE,
       payload: articles
     })
-    dispatch(publishArticles(allArticles.map((stateArticle) => {
-      let articleMatched = false
-      articles = [].concat(articles)
-      articles.map((toggleArticle) => {
-        if (toggleArticle.id === stateArticle.id) {
-          articleMatched = true
-        }
-        return 'o'
-      })
-      return (articleMatched === true ) ? { ...stateArticle, muted: !stateArticle.muted || false } : stateArticle
+    dispatch(publishArticles(articles.map((stateArticle) => {
+      return { ...stateArticle, muted: !stateArticle.muted || true }
     }), gaiaLinks ))
   }
 }
@@ -212,14 +204,6 @@ export const fetchBlockstackArticles = (articles) => {
               type: FETCH_SAVED_ARTICLE_SUCCESS,
               payload: JSON.parse(fileContents)
             })
-            dispatch({
-              type: 'FETCH_SAVED_GAIA_LINK_SUCCESS',
-              payload: {
-                gaiaUrl: fileUrl,
-                sha1Hash: filename,
-                articleId: JSON.parse(fileContents).id
-              }
-            })
           }
         })
       )
@@ -290,7 +274,8 @@ export const publishArticles = (articles, gaiaLinks) => {
               articleId: articleItem.articleId,
               muted: articleItem.muted,
               salt: articleItem.salt,
-              date: theDate
+              date: theDate,
+              sha1Hash: sha1Hash,
             }
             dispatch({
               type: 'PUBLISH_ARTICLE_SUCCESS',

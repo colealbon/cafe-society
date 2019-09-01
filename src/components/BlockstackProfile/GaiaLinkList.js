@@ -45,7 +45,7 @@ export const GaiaLinkList = ({ handleClickRemoveGaiaLink, handleClickRemoveAllGa
         </ListItem>
         {gaiaLinks.map((gaiaLink) => {
           return (
-            <ListItem key={gaiaLink.articleId}>
+            <ListItem key={gaiaLink.gaiaUrl}>
               <RemoveGaiaLink
                 {...gaiaLink}
                 onClick={() => {
@@ -53,6 +53,7 @@ export const GaiaLinkList = ({ handleClickRemoveGaiaLink, handleClickRemoveAllGa
                 }}
               />
               <Typography><Link href={gaiaLink.gaiaUrl}>{gaiaLink.articleId}</Link></Typography>
+              <br />
               <Typography><JSONTree hideRoot={true} data={gaiaLink} /></Typography>
             </ListItem>
           )
