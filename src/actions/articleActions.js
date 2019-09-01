@@ -103,82 +103,83 @@ export const fetchArticles = (feeds, filters, gaiaLinks) => {
             filters: filters
           }
         })
-        fetchFeedContent(feed.url)
-        .then((fetchedContent) => {
-          if (!fetchedContent.items) {
-            return
-          }
-          dispatch({
-            type: FETCH_ARTICLES_SUCCESS,
-            payload: fetchedContent.items.map((item) => {
-              const salt = uuid()
-              return Object.assign({articleId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
-            }) 
-            .filter(articleItem => articleItem.title !== '')
-            .map(articleItem => {
-              if (!gaiaLinks) {
-                return articleItem
-              }
-              return {
-                muted: gaiaLinks
-                .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
-                .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
-                || articleItem.muted || false,
-                ...articleItem
-              }
+        dispatch(() => {
+          fetchFeedContent(feed.url)
+          .then((fetchedContent) => {
+            if (!fetchedContent.items) {
+              return
+            }
+            dispatch({
+              type: FETCH_ARTICLES_SUCCESS,
+              payload: fetchedContent.items.map((item) => {
+                const salt = uuid()
+                return Object.assign({articleId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
+              })
+              .filter(articleItem => articleItem.title !== '')
+              .map(articleItem => {
+                if (!gaiaLinks) {
+                  return articleItem
+                }
+                return {
+                  muted: gaiaLinks
+                  .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
+                  .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
+                  || articleItem.muted || false,
+                  ...articleItem
+                }
+              })
+              .map(articleItem => {
+                try {
+                  const blockReasons = filters
+                  .filter((filterItem) => !filterItem.muted )
+                  .filter((filterItem) => {
+                    return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+                    true :
+                    filterItem.sections.filter((filterItemSectionItem) => {
+                      if (articleItem.feed.sections === undefined) {
+                        return false
+                      }
+                      return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+                    }).length !==0
+                  })
+                  .filter(filterItem => {
+                    return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+                    Object.keys(articleItem)
+                    .filter((articleField) => articleField !== 'id')
+                    .filter((articleField) => articleField !== 'feed')
+                    .filter((articleField) => articleField !== 'isoDate')
+                    .filter((articleField) => articleField !== 'guid')
+                    .filter((articleField) => articleField !== 'muted')
+                    .filter((articleField) => articleField !== 'pubDate')
+                    .filter((articleField) => {
+                      return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+                    }).length !== 0 :
+                    filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+                      return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+                    }).length !== 0
+                  })
+                  return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
+                } catch (error) {
+                  dispatch({
+                    type: 'FETCH_ARTICLES_FAIL',
+                    payload: error
+                  })
+                }
+                return 'o'
+              })
             })
-            .map(articleItem => {
-              try {
-                const blockReasons = filters
-                .filter((filterItem) => !filterItem.muted )
-                .filter((filterItem) => {
-                  return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
-                  true :
-                  filterItem.sections.filter((filterItemSectionItem) => {
-                    if (articleItem.feed.sections === undefined) {
-                      return false
-                    }
-                    return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
-                  }).length !==0
-                })
-                .filter(filterItem => {
-                  return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
-                  Object.keys(articleItem)
-                  .filter((articleField) => articleField !== 'id')
-                  .filter((articleField) => articleField !== 'feed')
-                  .filter((articleField) => articleField !== 'isoDate')
-                  .filter((articleField) => articleField !== 'guid')
-                  .filter((articleField) => articleField !== 'muted')
-                  .filter((articleField) => articleField !== 'pubDate')
-                  .filter((articleField) => {
-                    return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
-                  }).length !== 0 :
-                  filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
-                    return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
-                  }).length !== 0
-                })
-                return (blockReasons.length === 0) ? articleItem : Object.assign( articleItem, {blockReasons: blockReasons, muted: true})
-              } catch (error) {
-                dispatch({
-                  type: 'FETCH_ARTICLES_FAIL',
-                  payload: error
-                })
-              }
-              return 'o'
+          }).catch((error) => {
+            dispatch({
+              type: FETCH_ARTICLES_FAIL,
+              payload: error
             })
-          })
-        }).catch((error) => {
-          dispatch({
-            type: FETCH_ARTICLES_FAIL,
-            payload: error
           })
         })
       }
-      return  'o'
+      return 'o'
     })
   }
 }
-
 export const fetchBlockstackArticles = (articles) => {
   return (dispatch) => {
     dispatch({ 
@@ -278,70 +279,39 @@ export const publishArticles = (articles, gaiaLinks) => {
             articleId: articleItem.articleId
           }
         })
-        blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))
-        .then((gaiaUrl) => {
-          const theDate = Date.now()
-          dispatch({
-            type: 'PUBLISH_ARTICLE_SUCCESS',
-            payload: {
+        dispatch(() => {
+          blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))
+          .then((gaiaUrl) => {
+            const theDate = Date.now()
+            //articleId: hash.sha1(item.link, salt)
+            const thePayload = {
               gaiaUrl: gaiaUrl,
+              link: articleItem.link,
               articleId: articleItem.articleId,
               muted: articleItem.muted,
               salt: articleItem.salt,
               date: theDate
             }
+            dispatch({
+              type: 'PUBLISH_ARTICLE_SUCCESS',
+              payload: thePayload
+            })
+            
+            const newGaiaLinks = gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== thePayload.articleId).concat(thePayload)
+  
+            dispatch(() => {
+              blockstackPutFile('gaiaLinks.json', JSON.stringify(newGaiaLinks))
+              .then((gaiaLinksURL) => {
+                dispatch({
+                  type: 'PUBLISH_GAIA_LINKS_SUCCESS',
+                  payload: gaiaLinksURL
+                })
+              })
+            })
           })
         })
-      return '0'
+      return 'o'
       })
     })
   }
 }
-    //     // if article changed (ex. mark as read), delete its gaia file
-
-
-    //     if (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
-    //     .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
-    //     .filter((gaiaLink) => gaiaLink.sha1Hash === sha1Hash)
-    //     .length === 0)
-    // {
-    //       blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))
-    //       .then((gaiaUrl) => {
-    //         const theDate = Date.now()
-    //         dispatch({
-    //           type: 'PUBLISH_ARTICLE_SUCCESS',
-    //           payload: {
-    //             gaiaUrl: gaiaUrl,
-    //             articleId: articleItem.articleId,
-    //             muted: articleItem.muted,
-    //             salt: articleItem.salt,
-    //             date: theDate
-    //           }
-    //         })
-    //         // blockstackPutFile('gaiaLinks', 
-    //         //   [].concat(gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== articleItem.articleId)).concat({
-    //         //     gaiaUrl: gaiaUrl,
-    //         //     articleId: articleItem.articleId,
-    //         //     muted: articleItem.muted,
-    //         //     salt: articleItem.salt,
-    //         //     date: theDate
-    //         //   })
-    //         // )
-    //       }).catch((error) => {
-    //         dispatch({
-    //           type: 'PUBLISH_ARTICLE_FAIL',
-    //           payload: sha1Hash
-    //         })
-    //       })
-    //     } else {
-    //       dispatch({
-    //         type: 'DUPLICATE_NO_PUBLISH',
-    //         payload: articles
-    //       })
-    //     }
-
-      //   return 'o'
-      // })
-    // })
-//   }
-// }
