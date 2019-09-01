@@ -1,4 +1,10 @@
 import * as blockstack from 'blockstack'
+var memoize = require("memoizee")
+const slowBlockstackGetFile = (filename, options) => {
+  return blockstack.getFile(filename, options)
+}
+const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
+
 
 // export const FETCH_GAIA_LINKS_START = 'FETCH_GAIA_LINKS_START'
 // export const FETCH_GAIA_LINKS_SUCCESS = 'FETCH_GAIA_LINKS_SUCCESS'
@@ -18,6 +24,27 @@ export const DELETE_GAIA_LINK_START = 'DELETE_GAIA_LINK_START'
 export const DELETE_GAIA_LINK_SUCCESS = 'DELETE_GAIA_LINK_SUCCESS'
 export const DELETE_GAIA_LINK_ERROR = 'DELETE_GAIA_LINK_ERROR'
 export const GAIA_LINKS_REMOVE_GAIA_LINK = 'GAIA_LINKS_REMOVE_GAIA_LINK'
+
+export const fetchBlockstackGaiaLinks = () => {
+  return (dispatch) => {
+    blockstackGetFile('gaiaLinks.json')
+    .then((savedGaiaLinks) => {
+      if (JSON.parse(savedGaiaLinks === null)) {
+        return
+      }
+      dispatch({
+        type: FETCH_SAVED_GAIA_LINKS_SUCCESS,
+        payload: JSON.parse(savedGaiaLinks)
+      })
+    })
+    .catch((error) => {
+      dispatch({
+        type: FETCH_SAVED_GAIA_LINKS_ERROR,
+        payload: error
+      })
+    })
+  }
+}
 
 export const removeGaiaLink = (gaiaLink) => {
   return (dispatch) => {
