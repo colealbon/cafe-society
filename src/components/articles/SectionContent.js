@@ -43,6 +43,14 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
         ).length === 0
       })
       .filter(article => !article.muted)
+      .filter(article => {
+        if (!gaiaLinks) {
+          return true
+        }
+        return gaiaLinks.filter(gaiaLink => gaiaLink.articleId === article.articleId)
+        .filter(gaiaLink => gaiaLink.muted)
+        .length === 0
+      })
       .filter(article => article.visible)
       .filter((article) => (!!article.title))
       .filter(article => (article.blockReasons || []).length < 1) : [],
