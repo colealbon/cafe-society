@@ -246,6 +246,31 @@ export const publishArticles = (articles, gaiaLinks) => {
     dispatch(() => {
       articles.map(articleItem => {
         const sha1Hash = hash.sha1(articleItem)
+        dispatch(() => {
+          gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
+          .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
+          .map(gaiaLink => {
+            if (!gaiaLink) {
+              return 'o'
+            }
+            dispatch({
+              type: 'DELETE_GAIA_LINK_START',
+              payload: gaiaLink
+            })
+           // if cors errors persist for DELETE, publish empty file here.
+            blockstack.deleteFile(`${gaiaLink.sha1Hash}`)
+            .then(() => dispatch({
+              type: 'DELETE_GAIA_LINK_SUCCESS'
+            }))
+            .catch((error) => {
+              dispatch({
+                type: 'DELETE_GAIA_LINK_FAIL',
+                payload: error
+              })
+            })
+            return 'o'
+          })
+        })
         dispatch({
           type: 'PUBLISH_ARTICLE_START',
           payload: {
@@ -272,31 +297,7 @@ export const publishArticles = (articles, gaiaLinks) => {
   }
 }
     //     // if article changed (ex. mark as read), delete its gaia file
-    //     if (!!gaiaLinks) {
-    //       return gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
-    //       .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
-    //       .map(gaiaLink => {
-    //         if (!gaiaLink) {
-    //           return 'o'
-    //         }
-    //         dispatch({
-    //           type: 'DELETE_GAIA_LINK_START',
-    //           payload: gaiaLink
-    //         })
-    //        // if cors errors persist for DELETE, publish empty file here.
-    //         blockstack.deleteFile(`${gaiaLink.sha1Hash}`)
-    //         .then(() => dispatch({
-    //           type: 'DELETE_GAIA_LINK_SUCCESS'
-    //         }))
-    //         .catch((error) => {
-    //           dispatch({
-    //             type: 'DELETE_GAIA_LINK_FAIL',
-    //             payload: error
-    //           })
-    //         })
-    //         return 'o'
-    //       })
-    //     }
+
 
     //     if (!gaiaLinks || [].concat(gaiaLinks).filter((gaiaLink) => gaiaLink !== undefined)
     //     .filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
