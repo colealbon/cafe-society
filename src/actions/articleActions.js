@@ -28,7 +28,7 @@ const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 
-export const removeArticle = (removeArticle, articles, gaiaLinks) => {
+export const removeArticle = (removeArticle, articles, manifests) => {
   const removeArticles = [].concat(removeArticle)
   return (dispatch) => {
     dispatch({
@@ -38,7 +38,7 @@ export const removeArticle = (removeArticle, articles, gaiaLinks) => {
     if (!!articles && articles !== undefined) {
       dispatch(publishArticles(articles.filter(articleItem => {
         return removeArticles.filter((removeArticleItem) => (removeArticleItem.id === articleItem.id)).length === 0
-      }), gaiaLinks))
+      }), manifests))
     }
   }
 }
@@ -50,7 +50,7 @@ const slowBlockstackPutFile = (filename, options) => {
 }
 const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
-export const markArticleRead = (articles, allArticles, gaiaLinks) => {
+export const markArticleRead = (articles, allArticles, manifests) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_MARK_READ,
@@ -66,13 +66,13 @@ export const markArticleRead = (articles, allArticles, gaiaLinks) => {
         return 'o'
       })
       return (articleMatched === true ) ? { ...stateArticle, muted: true || false } : stateArticle
-    }), gaiaLinks ))
+    }), manifests ))
   }
 }
 
 export const ARTICLES_TOGGLE_ARTICLE = 'ARTICLES_TOGGLE_ARTICLE'
 
-export const toggleArticle = (articles, allArticles, gaiaLinks) => {
+export const toggleArticle = (articles, allArticles, manifests) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_TOGGLE_ARTICLE,
@@ -80,11 +80,11 @@ export const toggleArticle = (articles, allArticles, gaiaLinks) => {
     })
     dispatch(publishArticles(articles.map((stateArticle) => {
       return { ...stateArticle, muted: !stateArticle.muted || true }
-    }), gaiaLinks ))
+    }), manifests ))
   }
 }
 
-export const fetchArticles = (feeds, filters, gaiaLinks) => {
+export const fetchArticles = (feeds, filters, manifests) => {
   return (dispatch) => {
     feeds.map((feed) => {
       if (feed.muted !== true && feed.url) { 
@@ -109,13 +109,13 @@ export const fetchArticles = (feeds, filters, gaiaLinks) => {
               })
               .filter(articleItem => articleItem.title !== '')
               .map(articleItem => {
-                if (!gaiaLinks) {
+                if (!manifests) {
                   return articleItem
                 }
                 return {
-                  muted: gaiaLinks
-                  .filter(gaiaLinkItem => articleItem.articleId === gaiaLinkItem.articleId)
-                  .filter(gaiaLinkItem => gaiaLinkItem.muted)[0] 
+                  muted: manifests
+                  .filter(manifestItem => articleItem.articleId === manifestItem.articleId)
+                  .filter(manifestItem => manifestItem.muted)[0] 
                   || articleItem.muted || false,
                   ...articleItem
                 }
@@ -222,7 +222,7 @@ export const PUBLISH_ARTICLES_START = 'PUBLISH_ARTICLES_START'
 export const PUBLISH_ARTICLE_SUCCESS = 'PUBLISH_ARTICLE_SUCCESS'
 export const PUBLISH_ARTICLES_FAIL = 'PUBLISH_ARTICLES_FAIL'
 
-export const publishArticles = (articles, gaiaLinks) => {
+export const publishArticles = (articles, manifests) => {
   return (dispatch) => {
     dispatch({
       type: 'PUBLISH_ARTICLES_START',
@@ -232,24 +232,24 @@ export const publishArticles = (articles, gaiaLinks) => {
       articles.map(articleItem => {
         const sha1Hash = hash.sha1(articleItem)
         dispatch(() => {
-          gaiaLinks.filter((gaiaLink) => gaiaLink.articleId === articleItem.articleId)
-          .filter((gaiaLink) => (gaiaLink.sha1Hash !== sha1Hash))
-          .map(gaiaLink => {
-            if (!gaiaLink) {
+          manifests.filter((manifest) => manifest.articleId === articleItem.articleId)
+          .filter((manifest) => (manifest.sha1Hash !== sha1Hash))
+          .map(manifest => {
+            if (!manifest) {
               return 'o'
             }
             dispatch({
-              type: 'DELETE_GAIA_LINK_START',
-              payload: gaiaLink
+              type: 'DELETE_MANIFEST_START',
+              payload: manifest
             })
            // if cors errors persist for DELETE, publish empty file here.
-            blockstack.deleteFile(`${gaiaLink.sha1Hash}`)
+            blockstack.deleteFile(`${manifest.sha1Hash}`)
             .then(() => dispatch({
-              type: 'DELETE_GAIA_LINK_SUCCESS'
+              type: 'DELETE_MANIFEST_SUCCESS'
             }))
             .catch((error) => {
               dispatch({
-                type: 'DELETE_GAIA_LINK_FAIL',
+                type: 'DELETE_MANIFEST_FAIL',
                 payload: error
               })
             })
@@ -282,14 +282,17 @@ export const publishArticles = (articles, gaiaLinks) => {
               payload: thePayload
             })
             
-            const newGaiaLinks = gaiaLinks.filter((gaiaLinkItem) => gaiaLinkItem.articleId !== thePayload.articleId).concat(thePayload)
+            const newManifests = manifests.filter((manifestItem) => manifestItem.articleId !== thePayload.articleId).concat(thePayload)
   
             dispatch(() => {
-              blockstackPutFile('gaiaLinks.json', JSON.stringify(newGaiaLinks))
-              .then((gaiaLinksURL) => {
+              blockstackPutFile('manifests.json', JSON.stringify(newManifests))
+              .then((manifestsURL) => {
                 dispatch({
-                  type: 'PUBLISH_GAIA_LINKS_SUCCESS',
-                  payload: gaiaLinksURL
+                  type: 'PUBLISH_MANIFESTS_SUCCESS',
+                  payload: {
+                    gaiaUrl: manifestsURL,
+                    manifests: newManifests
+                  }
                 })
               })
             })

@@ -25,7 +25,7 @@ import { fetchBlockstackFeeds } from './actions/feedActions'
 import { fetchBlockstackArticles } from './actions/articleActions'
 import { fetchBlockstackClassifiers } from './actions/classifierActions'
 import { fetchBlockstackSections } from './actions/sectionActions'
-import { fetchBlockstackGaiaLinks } from './actions/gaiaLinkActions'
+import { fetchBlockstackManifests } from './actions/manifestActions'
 
 import developerFundReducer from './reducers/developerFundReducer'
 import sectionsReducer from './reducers/sectionsReducer'
@@ -41,7 +41,7 @@ import filterReducer from './reducers/filterReducer'
 import fieldsReducer from './reducers/fieldsReducer'
 import accountsReducer from './reducers/accountsReducer'
 import articlesReducer from './reducers/articlesReducer'
-import gaiaLinksReducer from './reducers/gaiaLinksReducer'
+import manifestsReducer from './reducers/manifestsReducer'
 import blockstackUserReducer from './reducers/blockstackUserReducer'
 import loadingReducer from './reducers/loadingReducer'
 import sectionReducer from './reducers/sectionReducer'
@@ -70,7 +70,7 @@ const rootReducer = combineReducers({
   contacts: contactsReducer,
   contact: contactReducer,
   loading: loadingReducer,
-  gaiaLinks: gaiaLinksReducer,
+  manifests: manifestsReducer,
   blockstackUser: blockstackUserReducer,
   router: connectRouter(history)
 })
@@ -93,7 +93,7 @@ const store = createStore(
 
 const runInitialAppStartActions = () => {
   if(!!store.getState().blockstackUser && store.getState().blockstackUser.isAuthenticated) {
-    store.dispatch(fetchBlockstackGaiaLinks())
+    store.dispatch(fetchBlockstackManifests())
     store.dispatch(fetchBlockstackContacts())
     store.dispatch(fetchBlockstackFilters())
     store.dispatch(fetchBlockstackArticles())

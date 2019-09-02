@@ -13,11 +13,11 @@ import PropTypes from 'prop-types'
 import VerticalSpace from '../VerticalSpace'
 import JSONTree from 'react-json-tree'
 
-const mapStateToProps = ({ selectedSection, articles, filters, gaiaLinks }) => {
+const mapStateToProps = ({ selectedSection, articles, filters, manifests }) => {
   return {
     selectedSection: !!selectedSection ? selectedSection :  {name: ''},
     articles: !!articles ? articles : [],
-    gaiaLinks: !!gaiaLinks ? gaiaLinks : [],
+    manifests: !!manifests ? manifests : [],
     filters: !!filters ? filters : [{
       id: 'Car Detailer',
       text: 'Car Detailer',
@@ -66,29 +66,29 @@ const mapDispatchToProps = (dispatch) => {
     handleClickShadowBanDomain: (link, selectedSection, filters) => {
       dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
-    handleClickRemoveArticle: (article, articles, gaiaLinks) => {
-      dispatch(removeArticle(article, articles, gaiaLinks))
+    handleClickRemoveArticle: (article, articles, manifests) => {
+      dispatch(removeArticle(article, articles, manifests))
     },
-    handleClickToggleArticle: (article, articles, gaiaLinks) => {
-      dispatch(toggleArticle(article, articles, gaiaLinks))
+    handleClickToggleArticle: (article, articles, manifests) => {
+      dispatch(toggleArticle(article, articles, manifests))
     },
     handleClickResetAppData: () => {
       dispatch({type: 'RESET_APP'})
     },
-    handleClickRemoveAllArticles: (articles, gaiaLinks) => {
-      dispatch(removeArticle(articles, articles, gaiaLinks))
+    handleClickRemoveAllArticles: (articles, manifests) => {
+      dispatch(removeArticle(articles, articles, manifests))
     }
   }
 }
 
-export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomain, handleClickRemoveAllArticles, handleClickToggleArticle, handleClickRemoveArticle, articles, selectedSection, filters, gaiaLinks}) => {
+export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomain, handleClickRemoveAllArticles, handleClickToggleArticle, handleClickRemoveArticle, articles, selectedSection, filters, manifests}) => {
   const sectionTitle = (selectedSection.id) ? `${selectedSection.id}` : 'enhanced'
   const deleteSweepTitle = `delete: ${articles.length} articles`
   return (
     <Fragment>
       <VerticalSpace/>
       <Typography variant="h4" >
-        <IconButton title={deleteSweepTitle} onClick={() => {handleClickRemoveAllArticles(articles, gaiaLinks)}}>
+        <IconButton title={deleteSweepTitle} onClick={() => {handleClickRemoveAllArticles(articles, manifests)}}>
           <DeleteSweep></DeleteSweep>
         </IconButton>
         <IconButton title='reset all app data' onClick={() => {handleClickResetAppData(articles)}}>
@@ -105,13 +105,13 @@ export const SectionPage = ({ handleClickResetAppData, handleClickShadowBanDomai
             <Card>
               <CardContent>
                 <Typography variant="h6" >
-                  <IconButton title="mark article as read" onClick={() => handleClickToggleArticle(article, articles, gaiaLinks)}>
+                  <IconButton title="mark article as read" onClick={() => handleClickToggleArticle(article, articles, manifests)}>
                     <Check
                       id='checkToggleArticle'
                       style={{ color: 'green' }}
                     />
                   </IconButton>
-                  <IconButton onClick={() => handleClickRemoveArticle(article, articles, gaiaLinks)}>
+                  <IconButton onClick={() => handleClickRemoveArticle(article, articles, manifests)}>
                     <RemoveCircle> </RemoveCircle>
                   </IconButton>
                   <a href={article.link} target="newsfeed-demo-article">{(!!article.title) ? article.title.replace(/&apos;/g, "'").replace(/&amp;/g, "&") : ''}</a>

@@ -8,6 +8,10 @@ import {
 } from '../actions/articleActions'
 
 import {
+  PUBLISH_MANIFESTS_SUCCESS
+} from '../actions/manifestActions'
+
+import {
   SECTION_SELECT_SECTION
 } from '../actions/sectionActions'
 
@@ -286,6 +290,18 @@ export default (state = [], action) => {
         ...article
       }
    })
+
+  case PUBLISH_MANIFESTS_SUCCESS:
+    return state.map(stateArticleItem => {
+      let muted = Object.assign(stateArticleItem.muted)
+      action.payload.manifests.map(payloadManifestItem => {
+        if (payloadManifestItem.articleId === stateArticleItem.articleId) {
+          muted = Object.assign(payloadManifestItem.muted)
+        }
+        return 'o'
+      })
+      return {...stateArticleItem, muted: muted}
+    })
   default:
       return state
   }

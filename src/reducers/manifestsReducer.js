@@ -1,8 +1,7 @@
 import {
-  GAIA_LINKS_REMOVE_GAIA_LINK,
-  FETCH_SAVED_GAIA_LINKS_SUCCESS,
-  FETCH_SAVED_GAIA_LINK_SUCCESS,
-} from '../actions/gaiaLinkActions'
+  MANIFESTS_REMOVE_MANIFEST,
+  FETCH_SAVED_MANIFESTS_SUCCESS
+} from '../actions/manifestActions'
 
 import {
   PUBLISH_ARTICLE_SUCCESS
@@ -14,13 +13,13 @@ export default (state = [], action) => {
     case 'RESET_APP':
       return []
 
-    case FETCH_SAVED_GAIA_LINKS_SUCCESS:
+    case FETCH_SAVED_MANIFESTS_SUCCESS:
       return [].concat(action.payload)
 
     case  PUBLISH_ARTICLE_SUCCESS:
       return [].concat(state).filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
 
-    case GAIA_LINKS_REMOVE_GAIA_LINK:
+    case MANIFESTS_REMOVE_MANIFEST:
       return state.filter(stateItem => action.payload.articleId !== stateItem.articleId)
 
     default:

@@ -25,7 +25,7 @@ function getSelectionText() {
   return text
 }
 
-const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers, sections, gaiaLinks}) => {
+const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, classifiers, sections, manifests}) => {
   return {
     selectedSection: selectedSection,
     sections: sections,
@@ -44,11 +44,11 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
       })
       .filter(article => !article.muted)
       .filter(article => {
-        if (!gaiaLinks) {
+        if (!manifests) {
           return true
         }
-        return gaiaLinks.filter(gaiaLink => gaiaLink.articleId === article.articleId)
-        .filter(gaiaLink => gaiaLink.muted)
+        return manifests.filter(manifest => manifest.articleId === article.articleId)
+        .filter(manifest => manifest.muted)
         .length === 0
       })
       .filter(article => article.visible)
@@ -57,7 +57,7 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
     filters: !!filters ? filters : [],
-    gaiaLinks: !!gaiaLinks ? gaiaLinks : []
+    manifests: !!manifests ? manifests : []
   }
 }
 
@@ -69,14 +69,14 @@ const mapDispatchToProps = (dispatch) => {
     handleClickShadowBanDomain: (link, selectedSection, filters) => {
       dispatch(addFilter({id: parse(link).domain, text: parse(link).domain, fields: [{id:'link',name:'link',muted:false}], sections: [selectedSection], muted: false, }, filters))
     },
-    handleClickRemoveArticle: (article, articles, gaiaLinks) => {
-      dispatch(removeArticle(article, articles, gaiaLinks))
+    handleClickRemoveArticle: (article, articles, manifests) => {
+      dispatch(removeArticle(article, articles, manifests))
     },
-    handleClickToggleArticle: (article, articles, gaiaLinks) => {
-      dispatch(toggleArticle(article, articles, gaiaLinks))
+    handleClickToggleArticle: (article, articles, manifests) => {
+      dispatch(toggleArticle(article, articles, manifests))
     },
-    handleClickMarkAllRead: (articles, allArticles, gaiaLinks) => {
-      dispatch(markArticleRead(articles, allArticles, gaiaLinks))
+    handleClickMarkAllRead: (articles, allArticles, manifests) => {
+      dispatch(markArticleRead(articles, allArticles, manifests))
     },
     handleClickAddFilter: (text, filters, selectedSection) => {
       if (text === '') {
@@ -91,14 +91,14 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(addFilter(newFilter, filters))
       dispatch(updateFilter(''))
     },
-    handleClickLearn: (selectedSection, article, category, classifiers, allArticles, gaiaLinks) => {
+    handleClickLearn: (selectedSection, article, category, classifiers, allArticles, manifests) => {
       dispatch(learn(category, selectedSection, article, classifiers), 100)
-      dispatch(markArticleRead(article, allArticles, gaiaLinks), 100)
+      dispatch(markArticleRead(article, allArticles, manifests), 100)
     }
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn, gaiaLinks}) => {
+export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn, manifests}) => {
   const sectionTitle = (selectedSection.id) ?
     (selectedSection.id === 'logout') ? 
     'home' :
@@ -109,7 +109,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
     <Fragment>
       <VerticalSpace/>
       <Typography variant="h4" >
-        <IconButton title={readTitle} onClick={() => {handleClickMarkAllRead(articles, allArticles, gaiaLinks)}} >
+        <IconButton title={readTitle} onClick={() => {handleClickMarkAllRead(articles, allArticles, manifests)}} >
           <PlaylistAddCheck></PlaylistAddCheck>
         </IconButton>
         {sectionTitle}
@@ -137,7 +137,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles, gaiaLinks)
+                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles, manifests)
                 }}>
                   <ThumbDown id='addFilter'/>
                 </IconButton>
@@ -145,7 +145,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles, gaiaLinks)
+                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles, manifests)
                 }}>
                   <ThumbUp id='train-good'/>
                 </IconButton>
