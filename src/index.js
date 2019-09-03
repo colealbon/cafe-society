@@ -103,14 +103,16 @@ const runInitialAppStartActions = () => {
     setTimeout(() => {
      store.dispatch(fetchArticles(
         store.getState().feeds, 
-        store.getState().filters
+        store.getState().filters,
+        store.getState().manifests
       ))
       store.dispatch(push('/home'))
     }, 2000)
   } else {
     store.dispatch(fetchArticles(
       store.getState().feeds, 
-      store.getState().filters
+      store.getState().filters,
+      store.getState().manifeests
     ))
   }
   store.dispatch(fetchAccounts())

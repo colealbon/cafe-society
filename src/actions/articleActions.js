@@ -8,9 +8,12 @@ var hash = require('object-hash')
 export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
 export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
 export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
+
 export const FETCH_SAVED_ARTICLES_SUCCESS = 'FETCH_SAVED_ARTICLES_SUCCESS'
-export const FETCH_SAVED_ARTICLE_SUCCESS = 'FETCH_SAVED_ARTICLE_SUCCESS'
 export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
+
+export const FETCH_SAVED_ARTICLE_SUCCESS = 'FETCH_SAVED_ARTICLE_SUCCESS'
+export const FETCH_SAVED_ARTICLE_FAIL = 'FETCH_SAVED_ARTICLE_FAIL'
 
 const slow_fetchFeedContent = feedUrl => {
   return !feedUrl ? 
@@ -202,17 +205,12 @@ export const fetchBlockstackArticles = (articles, manifests) => {
           })
         }
       })
-      // blockstack.getFileUrl(filename)
-      // .then(fileUrl => blockstackGetFile(filename)
-      //   .then((fileContents) => {
-      //     if (JSON.parse(fileContents) !== null) {
-      //       dispatch({
-      //         type: FETCH_SAVED_ARTICLE_SUCCESS,
-      //         payload: JSON.parse(fileContents)
-      //       })
-      //     }
-      //   })
-      // )
+      .catch((error) =>{
+        dispatch({
+          type: FETCH_SAVED_ARTICLE_FAIL,
+          payload: error
+        })
+      })
       return true
     })
     .catch((error) =>{
