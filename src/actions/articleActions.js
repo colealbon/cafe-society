@@ -175,7 +175,7 @@ export const fetchArticles = (feeds, filters, manifests) => {
     })
   }
 }
-export const fetchBlockstackArticles = (articles) => {
+export const fetchBlockstackArticles = (articles, manifests) => {
   return (dispatch) => {
     dispatch({ 
       type: 'FETCH_BLOCKSTACK_ARTICLES_START',
@@ -190,6 +190,9 @@ export const fetchBlockstackArticles = (articles) => {
       if (filename.indexOf('.json') !== -1) {
         return
       }
+      if (manifests.filter((manifest) => manifest.sha1Hash === filename).length!== 0) {
+        return
+      }
       blockstackGetFile(filename)
       .then((fileContents) => {
         if (JSON.parse(fileContents) !== null) {
@@ -199,17 +202,17 @@ export const fetchBlockstackArticles = (articles) => {
           })
         }
       })
-      blockstack.getFileUrl(filename)
-      .then(fileUrl => blockstackGetFile(filename)
-        .then((fileContents) => {
-          if (JSON.parse(fileContents) !== null) {
-            dispatch({
-              type: FETCH_SAVED_ARTICLE_SUCCESS,
-              payload: JSON.parse(fileContents)
-            })
-          }
-        })
-      )
+      // blockstack.getFileUrl(filename)
+      // .then(fileUrl => blockstackGetFile(filename)
+      //   .then((fileContents) => {
+      //     if (JSON.parse(fileContents) !== null) {
+      //       dispatch({
+      //         type: FETCH_SAVED_ARTICLE_SUCCESS,
+      //         payload: JSON.parse(fileContents)
+      //       })
+      //     }
+      //   })
+      // )
       return true
     })
     .catch((error) =>{
