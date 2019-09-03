@@ -302,14 +302,13 @@ export default (state = [], action) => {
 
   case PUBLISH_MANIFESTS_SUCCESS:
     return state.map(stateArticleItem => {
-      let muted = Object.assign(stateArticleItem.muted)
-      action.payload.manifests.map(payloadManifestItem => {
-        if (payloadManifestItem.articleId === stateArticleItem.articleId) {
-          muted = Object.assign(payloadManifestItem.muted)
-        }
-        return 'o'
-      })
-      return {...stateArticleItem, muted: muted}
+      return {
+        ...stateArticleItem, 
+        muted: action.payload.manifests
+          .filter(payloadManifestItem => payloadManifestItem.articleId === stateArticleItem.articleId)
+          .filter(payloadManifestItem => payloadManifestItem.muted)[0] 
+          || false 
+      }
     })
   default:
       return state
