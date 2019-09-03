@@ -236,8 +236,8 @@ export default (state = [], action) => {
         return article
       }
       return {
+        ...article,
         classifiers: action.payload,
-        ...article
       }
     })
     .map((article) => {
@@ -250,6 +250,7 @@ export default (state = [], action) => {
         // pass
       }
       return {
+        ...article,
         classifiers: action.payload.filter((classifier) => {
           if (classifier.id === ''){
             return true
@@ -260,8 +261,7 @@ export default (state = [], action) => {
           return article.feed.sections.filter((articleSection) => {
             return articleSection.id === classifier.id
           }).length !== 0
-        }),
-        ...article
+        })
       }
     })
   .map((article) => {
@@ -274,6 +274,7 @@ export default (state = [], action) => {
       // pass
     }
       return {
+        ...article,
         bayesCategories: article.classifiers.map((classifier) => {
           if (!classifier.bayesJSON) {
             return  null
@@ -286,8 +287,7 @@ export default (state = [], action) => {
           }
         })
         .filter((classifier) => classifier !== null)
-        .filter((classifier) => classifier.category !== undefined),
-        ...article
+        .filter((classifier) => classifier.category !== undefined)
       }
    })
 

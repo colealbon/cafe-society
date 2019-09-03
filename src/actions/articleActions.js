@@ -45,8 +45,8 @@ export const removeArticle = (removeArticle, articles, manifests) => {
 
 export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
 
-const slowBlockstackPutFile = (filename, options) => {
-  return blockstack.putFile(filename, options)
+const slowBlockstackPutFile = (filename, content) => {
+  return blockstack.putFile(filename, content)
 }
 const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
