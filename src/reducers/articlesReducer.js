@@ -235,6 +235,9 @@ export default (state = [], action) => {
       if (article.muted === true) {
         return article
       }
+      if (article.visible === false) {
+        return article
+      }
       return {
         ...article,
         classifiers: action.payload,
@@ -242,6 +245,9 @@ export default (state = [], action) => {
     })
     .map((article) => {
       if (article.muted === true) {
+        return article
+      }
+      if (article.visible === false) {
         return article
       }
       try {
@@ -266,6 +272,9 @@ export default (state = [], action) => {
     })
   .map((article) => {
     if (article.muted === true) {
+      return article
+    }
+    if (article.visible === false) {
       return article
     }
     try {

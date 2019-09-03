@@ -75,8 +75,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickToggleArticle: (article, articles, manifests) => {
       dispatch(toggleArticle(article, articles, manifests))
     },
-    handleClickMarkAllRead: (articles, allArticles, manifests) => {
-      dispatch(markArticleRead(articles, allArticles, manifests))
+    handleClickMarkAllRead: (articles, allArticles, manifests, blockstackUser) => {
+      dispatch(markArticleRead(articles, allArticles, manifests, blockstackUser))
     },
     handleClickAddFilter: (text, filters, selectedSection) => {
       if (text === '') {
@@ -91,14 +91,14 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(addFilter(newFilter, filters))
       dispatch(updateFilter(''))
     },
-    handleClickLearn: (selectedSection, article, category, classifiers, allArticles, manifests) => {
+    handleClickLearn: (selectedSection, article, category, classifiers, allArticles, manifests, blockstackUser) => {
       dispatch(learn(category, selectedSection, article, classifiers), 100)
-      dispatch(markArticleRead(article, allArticles, manifests), 100)
+      dispatch(markArticleRead(article, allArticles, manifests, blockstackUser), 100)
     }
   }
 }
 
-export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn, manifests}) => {
+export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, handleClickMarkAllRead, handleClickToggleSection, articles, allArticles, selectedSection, sections, filters, classifiers, handleClickLearn, manifests, blockstackUser}) => {
   const sectionTitle = (selectedSection.id) ?
     (selectedSection.id === 'logout') ? 
     'home' :
@@ -137,7 +137,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles, manifests)
+                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles, manifests, blockstackUser)
                 }}>
                   <ThumbDown id='addFilter'/>
                 </IconButton>
@@ -145,7 +145,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles, manifests)
+                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles, manifests, blockstackUser)
                 }}>
                   <ThumbUp id='train-good'/>
                 </IconButton>

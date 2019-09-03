@@ -50,12 +50,15 @@ const slowBlockstackPutFile = (filename, content) => {
 }
 const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
-export const markArticleRead = (articles, allArticles, manifests) => {
+export const markArticleRead = (articles, allArticles, manifests, blockstackUser) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_MARK_READ,
       payload: articles
     })
+    if (!blockstackUser.isAuthenticated) {
+      return
+    }
     dispatch(publishArticles([].concat(articles).map((stateArticle) => {
       let articleMatched = false
       articles = [].concat(articles)
