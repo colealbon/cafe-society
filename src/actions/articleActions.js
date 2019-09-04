@@ -192,19 +192,11 @@ export const fetchBlockstackArticles = (manifests, filters) => {
         payload: filename
       })
       if (filename.indexOf('.json') !== -1) {
-        dispatch({ 
-          type: 'BLOCKSTACK_ARTICLE_ABORT_FILENAMES_DO_NOT_HAVE_JSON',
-          payload: filename
-        })
-        return
+        return true
       }
-      if (manifests.filter((manifest) => manifest.sha1Hash === filename)
+      if (manifests.filter((manifest) => manifest.articleId === filename)
       .filter(manifest => manifest.muted === true).length !== 0) {
-        dispatch({ 
-          type: 'BLOCKSTACK_ARTICLE_ABORT_MANIFEST_EXISTS',
-          payload: filename
-        })
-        return
+        return true
       }
       dispatch({ 
         type: 'FETCH_BLOCKSTACK_ARTICLE_START',
@@ -214,52 +206,44 @@ export const fetchBlockstackArticles = (manifests, filters) => {
         blockstackGetFile(filename)
         .then((fileContents) => {
           if (JSON.parse(fileContents) !== null) {
+            const articleItem = JSON.parse(fileContents)
             dispatch({
-              type: FETCH_SAVED_ARTICLE_SUCCESS,
-              payload: JSON.parse(fileContents)
+              type: 'FETCH_SAVED_ARTICLE_CONTENT',
+              payload: articleItem
+            })
+            const blockReasons = filters
+            .filter(filterItem => !filterItem.muted )
+            .filter(filterItem => {
+              return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+              true :
+              filterItem.sections.filter((filterItemSectionItem) => {
+                if (articleItem.feed.sections === undefined) {
+                  return false
+                }
+                return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+              }).length !==0
+            })
+            .filter(filterItem => {
+              return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+              Object.keys(articleItem)
+              .filter(articleField => articleField !== 'id')
+              .filter(articleField => articleField !== 'feed')
+              .filter(articleField => articleField !== 'isoDate')
+              .filter(articleField => articleField !== 'guid')
+              .filter(articleField => articleField !== 'muted')
+              .filter(articleField => articleField !== 'pubDate')
+              .filter(articleField => {
+                return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+              }).length !== 0 :
+              filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+                return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+              }).length !== 0
+            })
+            dispatch({
+              type: 'FETCH_SAVED_ARTICLE_SUCCESS',
+              payload: (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
             })
           }
-          //.map(articleItem => {
-          //       try {
-          //         const blockReasons = filters
-          //         .filter(filterItem => !filterItem.muted )
-          //         .filter(filterItem => {
-          //           return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
-          //           true :
-          //           filterItem.sections.filter((filterItemSectionItem) => {
-          //             if (articleItem.feed.sections === undefined) {
-          //               return false
-          //             }
-          //             return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
-          //           }).length !==0
-          //         })
-          //         .filter(filterItem => {
-          //           return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
-          //           Object.keys(articleItem)
-          //           .filter(articleField => articleField !== 'id')
-          //           .filter(articleField => articleField !== 'feed')
-          //           .filter(articleField => articleField !== 'isoDate')
-          //           .filter(articleField => articleField !== 'guid')
-          //           .filter(articleField => articleField !== 'muted')
-          //           .filter(articleField => articleField !== 'pubDate')
-          //           .filter(articleField => {
-          //             return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
-          //           }).length !== 0 :
-          //           filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
-          //             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
-          //           }).length !== 0
-          //         })
-          //         return (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
-          //       } catch (error) {
-          //         dispatch({
-          //           type: 'FETCH_ARTICLES_FAIL',
-          //           payload: error
-          //         })
-          //       }
-          //       return 'o'
-          //     })
-          //   })
-          // }
         })
         .catch((error) =>{
           dispatch({

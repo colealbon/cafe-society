@@ -96,18 +96,18 @@ const runInitialAppStartActions = () => {
     store.dispatch(fetchBlockstackManifests())
     store.dispatch(fetchBlockstackContacts())
     store.dispatch(fetchBlockstackFilters())
-    store.dispatch(fetchBlockstackArticles(store.getState().manifests, store.getState().filters))
     store.dispatch(fetchBlockstackClassifiers())
     store.dispatch(fetchBlockstackSections())
     store.dispatch(fetchBlockstackFeeds())
     setTimeout(() => {
+     store.dispatch(fetchBlockstackArticles(store.getState().manifests, store.getState().filters))
      store.dispatch(fetchArticles(
         store.getState().feeds, 
         store.getState().filters,
         store.getState().manifests
       ))
       store.dispatch(push('/home'))
-    }, 2000)
+    }, 1000)
   } else {
     store.dispatch(fetchArticles(
       store.getState().feeds, 
