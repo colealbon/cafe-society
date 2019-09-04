@@ -251,8 +251,8 @@ export const fetchBlockstackArticles = (manifests, filters) => {
             payload: error
           })
         })
-        return true
       })
+      return true
     })
     .catch((error) =>{
       dispatch({
