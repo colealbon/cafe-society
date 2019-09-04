@@ -177,13 +177,8 @@ export const fetchArticles = (feeds, filters, manifests) => {
     })
   }
 }
-export const fetchBlockstackArticles = (articles, manifests) => {
+export const fetchBlockstackArticles = (manifests, filters) => {
   return (dispatch) => {
-    dispatch({ 
-      type: 'FETCH_BLOCKSTACK_ARTICLES_START',
-      payload: articles
-    })
-
     blockstack.listFiles((filename) => {
       dispatch({ 
         type: 'FETCH_BLOCKSTACK_ARTICLE_START',
@@ -200,7 +195,45 @@ export const fetchBlockstackArticles = (articles, manifests) => {
         if (JSON.parse(fileContents) !== null) {
           dispatch({
             type: FETCH_SAVED_ARTICLE_SUCCESS,
-            payload: JSON.parse(fileContents)
+            payload: JSON.parse(fileContents).map(articleItem => {
+              try {
+                const blockReasons = filters
+                .filter(filterItem => !filterItem.muted )
+                .filter(filterItem => {
+                  return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+                  true :
+                  filterItem.sections.filter((filterItemSectionItem) => {
+                    if (articleItem.feed.sections === undefined) {
+                      return false
+                    }
+                    return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+                  }).length !==0
+                })
+                .filter(filterItem => {
+                  return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+                  Object.keys(articleItem)
+                  .filter(articleField => articleField !== 'id')
+                  .filter(articleField => articleField !== 'feed')
+                  .filter(articleField => articleField !== 'isoDate')
+                  .filter(articleField => articleField !== 'guid')
+                  .filter(articleField => articleField !== 'muted')
+                  .filter(articleField => articleField !== 'pubDate')
+                  .filter(articleField => {
+                    return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+                  }).length !== 0 :
+                  filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+                    return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+                  }).length !== 0
+                })
+                return (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
+              } catch (error) {
+                dispatch({
+                  type: 'FETCH_ARTICLES_FAIL',
+                  payload: error
+                })
+              }
+              return 'o'
+            })
           })
         }
       })
