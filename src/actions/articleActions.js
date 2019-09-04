@@ -244,6 +244,7 @@ export const fetchBlockstackArticles = (manifests, filters) => {
               payload: (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
             })
           }
+          return true
         })
         .catch((error) =>{
           dispatch({
