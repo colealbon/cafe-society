@@ -2,7 +2,6 @@ import {
   ARTICLES_REMOVE_ARTICLE,
   ARTICLES_TOGGLE_ARTICLE,
   FETCH_ARTICLES_SUCCESS,
-  FETCH_SAVED_ARTICLES_SUCCESS,
   FETCH_SAVED_ARTICLE_SUCCESS,
   ARTICLES_MARK_READ
 } from '../actions/articleActions'
@@ -41,9 +40,6 @@ export default (state = [], action) => {
 
     case FETCH_SAVED_ARTICLE_SUCCESS:
       return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
-
-    case FETCH_SAVED_ARTICLES_SUCCESS:
-      return [].concat(action.payload)
 
     case  FETCH_ARTICLES_SUCCESS:
       // don't overwrite
