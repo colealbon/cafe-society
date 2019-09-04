@@ -54,6 +54,7 @@ export const ManifestList = ({ handleClickRemoveManifest, handleClickRemoveAllMa
               />
               <Typography><Link href={manifest.gaiaUrl}>{manifest.articleId}</Link></Typography>
               <br />
+              <p></p>
               <Typography><JSONTree hideRoot={true} data={manifest} /></Typography>
             </ListItem>
           )

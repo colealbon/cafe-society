@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import { connect } from 'react-redux'
 import {Link} from 'react-router-dom'
 import { handleLeftDrawerClose } from '../../actions/sideDrawerActions'
@@ -19,6 +19,8 @@ import FilterListIcon from '@material-ui/icons/FilterList'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ContactsIcon from '@material-ui/icons/Contacts'
 import MoneyIcon from '@material-ui/icons/Money'
+import ReceiptIcon from '@material-ui/icons/Receipt'
+
 // import IdentityIcon from '@material-ui/icons/PermIdentity'
 
 const mapStateToProps = ({ leftDrawer, blockstackUser }) => {
@@ -36,7 +38,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
+export const LeftDrawer = ({ leftDrawer, handleDrawerClose, blockstackUser }) => {
   return (
     <Drawer
       variant="persistent"
@@ -77,6 +79,14 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose }) => {
           <ListItemIcon><AccountCircleIcon/></ListItemIcon>
           <ListItemText primary="Blockstack Profile" />
         </ListItem>
+        {
+          (blockstackUser.isAuthenticated) ? 
+          <ListItem onClick={() => handleDrawerClose()} button key='/manifest-list' component={Link} to='/manifest-list'>
+            <ListItemIcon><ReceiptIcon/></ListItemIcon>
+            <ListItemText primary="Manifests" />
+          </ListItem> :
+          <Fragment />
+        }
       </List>
       <Divider />
       <List subheader={<ListSubheader>Project / Community</ListSubheader>}>

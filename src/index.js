@@ -112,7 +112,7 @@ const runInitialAppStartActions = () => {
     store.dispatch(fetchArticles(
       store.getState().feeds, 
       store.getState().filters,
-      store.getState().manifeests
+      store.getState().manifests
     ))
   }
   store.dispatch(fetchAccounts())
