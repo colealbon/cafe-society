@@ -111,7 +111,9 @@ export const fetchArticles = (feeds, filters, manifests) => {
               .filter(manifestItem => manifestItem.feed.id === feed.id)
               .filter(manifestItem => !fetchedContent.items.filter(articleItem => articleItem.articleId = manifestItem.articleId))
 
-            //removeArticle, articles, manifests
+            if (orphanedManifests) {
+              alert(JSON.stringify(orphanedManifests))
+            }
 
             dispatch({
               type: 'ORPHAN_MANIFEST_FOR_FEED',
