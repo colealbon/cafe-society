@@ -39,7 +39,7 @@ export const removeArticle = (removeArticle, articles, manifests) => {
     })
     if (!!articles && articles !== undefined) {
       dispatch(publishArticles(articles.filter(articleItem => {
-        return removeArticles.filter((removeArticleItem) => (removeArticleItem.id === articleItem.id)).length === 0
+        return removeArticles.filter((removeArticleItem) => (removeArticleItem.articleId === articleItem.articleId)).length === 0
       }), manifests))
     }
   }
@@ -106,6 +106,20 @@ export const fetchArticles = (feeds, filters, manifests) => {
             if (!fetchedContent.items) {
               return
             }
+            // manifests no longer in the feed we just pulled
+            const orphanedManifests = manifests
+              .filter(manifestItem => manifestItem.feed.id === feed.id)
+              .filter(manifestItem => !fetchedContent.items.filter(articleItem => articleItem.articleId = manifestItem.articleId))
+
+            //removeArticle, articles, manifests
+
+            dispatch({
+              type: 'ORPHAN_MANIFEST_FOR_FEED',
+              payload: {
+                feed: feed,
+                orphanedManifests: orphanedManifests
+              }
+            })
             dispatch({
               type: FETCH_ARTICLES_SUCCESS,
               payload: fetchedContent.items.map((item) => {
