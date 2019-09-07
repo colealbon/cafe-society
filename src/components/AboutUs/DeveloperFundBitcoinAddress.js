@@ -1,18 +1,13 @@
 import React, { Fragment } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from "react-redux";
 
-const mapStateToProps = ({ developerFund }) => {
-  return {
-    bitcoinAddress: developerFund.bitcoinAddress
-  }
-}
-
-export const BitcoinAddress = ({ bitcoinAddress, ...rest}) => {
+export const BitcoinAddress = () => {
+  const developerFund = useSelector(state => state.developerfund)
   return (
     <Fragment>
-    {bitcoinAddress}
+    {developerFund.bitcoinAddress}
     </Fragment>
   )
 }
 
-export default connect(mapStateToProps)(BitcoinAddress)
+export default connect(BitcoinAddress)
