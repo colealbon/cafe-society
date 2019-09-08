@@ -85,22 +85,8 @@ export const removeManifest = (removeManifest, manifests) => {
     })
     if (!!manifests) {
       dispatch(publishManifests(manifests.filter(manifestItem => {
-        return removeManifests.filter((removeManifestItem) => (removeManifestItem.articleId === manifestItem.articleId)).length === 0
+        return removeManifests.filter((removeManifestItem) => (removeManifestItem.link === manifestItem.link)).length === 0
       })))
     }
-    dispatch({
-      type: DELETE_MANIFEST_START,
-      payload: removeManifest
-    })
-    blockstack.deleteFile(`${removeManifest.sha1Hash}`)
-    .then(() => dispatch(
-      {type: DELETE_MANIFEST_SUCCESS}
-    ))
-    .catch((error) => {
-      dispatch({
-        type: DELETE_MANIFEST_ERROR,
-        payload: error
-      })
-    })
   }
 }

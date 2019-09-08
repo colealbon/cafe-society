@@ -39,28 +39,24 @@ export default (state = [], action) => {
 
     case FETCH_ARTICLES_SUCCESS:
       return state
-        // delete obsolete manifests
-        //   manifests.filter((manifest) => manifest.articleId === articleItem.articleId)
-        //   .filter((manifest) => (manifest.sha1Hash !== sha1Hash))
-        //   .map(manifest => {
-        //     if (!manifest) {
-        //       return 'o'
-        //     }      
-        
-        
-        // CREATE NEW MANIFESTS add this one   
-        // const theManifest = {
-        //   link: articleItem.link,
-        //   articleId: articleItem.articleId,
-        //   muted: articleItem.muted,
-        //   salt: articleItem.salt,
-        //   date: theDate,
-        //   sha1Hash: sha1Hash,
-        // }
-        // dispatch({
-        //   type: 'PUBLISH_ARTICLE_SUCCESS',
-        //   payload: thManifest
-        // })
+        .filter(stateItem => stateItem.feed.id !== action.payload.feed.id)
+        .concat(
+          state.filter(stateItem => stateItem.feed.id === action.payload.feed.id)
+          .filter(stateItem => !!action.payload.articles
+            .filter(payloadArticle => payloadArticle.link === stateItem.link)
+          )
+        )
+        .concat(
+          action.payload.filter(payloadItem => {
+            return state.filter(stateItem => payloadItem.link === stateItem.link).length === 0
+          }).map(payloadItem => {
+            return {
+              link: payloadItem.link,
+              muted: payloadItem.muted || false,
+              feed: payloadItem.feed
+            }
+          })
+        )
 
     default:
       return state

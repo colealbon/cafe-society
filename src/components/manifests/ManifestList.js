@@ -45,14 +45,14 @@ export const ManifestList = ({ handleClickRemoveManifest, handleClickRemoveAllMa
         </ListItem>
         {manifests.map((manifest) => {
           return (
-            <ListItem key={manifest.gaiaUrl}>
+            <ListItem key={manifest.link}>
               <RemoveManifest
                 {...manifest}
                 onClick={() => {
                   handleClickRemoveManifest(manifest, manifests)
                 }}
               />
-              <Typography><Link href={manifest.gaiaUrl}>{manifest.articleId}</Link></Typography>
+              <Typography><Link href={manifest.link}>{manifest.link}</Link></Typography>
               <br />
               <p></p>
               <Typography><JSONTree hideRoot={true} data={manifest} /></Typography>
