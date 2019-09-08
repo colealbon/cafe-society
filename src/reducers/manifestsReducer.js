@@ -1,6 +1,7 @@
 import {
   MANIFESTS_REMOVE_MANIFEST,
   FETCH_SAVED_MANIFESTS_SUCCESS,
+  PUBLISH_MANIFESTS_SUCCESS
 
 } from '../actions/manifestActions'
 
