@@ -25,16 +25,11 @@ export default (state = [], action) => {
       return state.map(stateItem => {
         return {
           ...stateItem,
-          muted: !!action.payload.filter(payloadItem => payloadItem.link === stateItem.link)
+          muted: [].concat(action.payload).filter(payloadItem => payloadItem.link === stateItem.link).length === 0 ?
+          stateItem.muted :
+          true
         }
       })
-
-
-        // return state.map(stateItem => {
-        //   let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        //   let muteArticle = payload.filter((payloadItem) => (payloadItem.articleId === stateItem.articleId)).length !== 0
-        //   return (muteArticle === true) ? { ...stateItem, muted: true} : stateItem
-        // })
 
     case MANIFESTS_REMOVE_MANIFEST:
       return state.filter(stateItem => !action.payload

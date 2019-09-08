@@ -52,12 +52,12 @@ export default (state = [], action) => {
       return state.map(stateItem => {
         return {
           ...stateItem,
-          muted: []
-            .concat(action.payload)
-            .filter(payloadItem => payloadItem.link === stateItem.link).length !== 0
+          muted: [].concat(action.payload).filter(payloadItem => payloadItem.link === stateItem.link).length === 0 ?
+          stateItem.muted :
+          true
         }
       })
-
+      
     case ARTICLES_REMOVE_ARTICLE:
       return state.filter(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
