@@ -22,7 +22,6 @@ import { fetchArticles } from './actions/articleActions'
 import { fetchBlockstackContacts } from './actions/contactActions'
 import { fetchBlockstackFilters } from './actions/filterActions'
 import { fetchBlockstackFeeds } from './actions/feedActions'
-import { fetchBlockstackArticles } from './actions/articleActions'
 import { fetchBlockstackClassifiers } from './actions/classifierActions'
 import { fetchBlockstackSections } from './actions/sectionActions'
 import { fetchBlockstackManifests } from './actions/manifestActions'
@@ -100,7 +99,6 @@ const runInitialAppStartActions = () => {
     store.dispatch(fetchBlockstackSections())
     store.dispatch(fetchBlockstackFeeds())
     setTimeout(() => {
-      store.dispatch(fetchBlockstackArticles(store.getState().manifests, store.getState().filters))
       store.dispatch(fetchArticles(
         store.getState().feeds, 
         store.getState().filters,

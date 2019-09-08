@@ -1,9 +1,8 @@
-import * as blockstack from 'blockstack'
 import uuid from 'uuidv4'
+import {publishManifests} from './manifestActions'
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
-var hash = require('object-hash')
 
 export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
 export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
@@ -23,34 +22,34 @@ const slow_fetchFeedContent = feedUrl => {
 
 const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000})
 
-const slowBlockstackGetFile = (filename, options) => {
-  return blockstack.getFile(filename, options)
-}
-const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
+// const slowBlockstackGetFile = (filename, options) => {
+//   return blockstack.getFile(filename, options)
+// }
+// const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
 
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
+export const MANIFESTS_REMOVE_MANIFEST = 'MANIFESTS_REMOVE_MANIFEST'
 
-export const removeArticle = (removeArticle, articles, manifests) => {
-  const removeArticles = [].concat(removeArticle)
+export const removeArticle = (article) => {
+  const articles = [].concat(article)
   return (dispatch) => {
     dispatch({
       type: ARTICLES_REMOVE_ARTICLE,
-      payload: removeArticle
+      payload: articles
     })
-    if (!!articles && articles !== undefined) {
-      dispatch(publishArticles(articles.filter(articleItem => {
-        return removeArticles.filter((removeArticleItem) => (removeArticleItem.articleId === articleItem.articleId)).length === 0
-      }), manifests))
-    }
+    dispatch({
+      type: MANIFESTS_REMOVE_MANIFEST,
+      payload: articles
+    })
   }
 }
 
 export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
 
-const slowBlockstackPutFile = (filename, content) => {
-  return blockstack.putFile(filename, content)
-}
-const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
+// const slowBlockstackPutFile = (filename, content) => {
+//   return blockstack.putFile(filename, content)
+// }
+// const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
 export const markArticleRead = (articles, allArticles, manifests, blockstackUser) => {
   return (dispatch) => {
@@ -61,19 +60,32 @@ export const markArticleRead = (articles, allArticles, manifests, blockstackUser
     if (!blockstackUser.isAuthenticated) {
       return
     }
-    dispatch(publishArticles([].concat(articles).map((stateArticle) => {
-      let articleMatched = false
-      articles = [].concat(articles)
-      articles.map((toggleArticle) => {
-        if (toggleArticle.id === stateArticle.id) {
-          articleMatched = true
-        }
-        return 'o'
-      })
-      return (articleMatched === true ) ? { ...stateArticle, muted: true || false } : stateArticle
-    }), manifests ))
+    dispatch(
+      publishManifests(
+        manifests.map(manifestItem => {
+          return {
+            ...manifestItem,
+            muted: !!articles.filter(articleItem => articleItem.link === manifestItem.link)
+          }
+        })
+      )
+    )
   }
 }
+
+    // dispatch(publishArticles([].concat(articles).map((stateArticle) => {
+    //   let articleMatched = false
+    //   articles = [].concat(articles)
+    //   articles.map((toggleArticle) => {
+    //     if (toggleArticle.id === stateArticle.id) {
+    //       articleMatched = true
+    //     }
+    //     return 'o'
+    //   })
+    //   return (articleMatched === true ) ? { ...stateArticle, muted: true || false } : stateArticle
+    // }), manifests ))
+//   }
+// }
 
 export const ARTICLES_TOGGLE_ARTICLE = 'ARTICLES_TOGGLE_ARTICLE'
 
@@ -83,9 +95,9 @@ export const toggleArticle = (articles, allArticles, manifests) => {
       type: ARTICLES_TOGGLE_ARTICLE,
       payload: articles
     })
-    dispatch(publishArticles(articles.map((stateArticle) => {
-      return { ...stateArticle, muted: !stateArticle.muted || true }
-    }), manifests ))
+    // dispatch(publishArticles(articles.map((stateArticle) => {
+    //   return { ...stateArticle, muted: !stateArticle.muted || true }
+    // }), manifests ))
   }
 }
 
@@ -109,38 +121,41 @@ export const fetchArticles = (feeds, filters, manifests) => {
             // manifests no longer in the feed we just pulled
             const orphanedManifests = manifests
               .filter(manifestItem => manifestItem.feed.id === feed.id)
-              .filter(manifestItem => !fetchedContent.items.filter(articleItem => articleItem.articleId = manifestItem.articleId))
+              .filter(manifestItem => !fetchedContent.items.filter(articleItem => articleItem.link = manifestItem.link))
 
             if (orphanedManifests.length !== 0) {
-              console.log(orphanedManifests)
+              dispatch({
+                type: 'ORPHAN_MANIFEST_FOR_FEED',
+                payload: {
+                  feed: feed,
+                  orphanedManifests: orphanedManifests
+                }
+              })
             }
 
             dispatch({
-              type: 'ORPHAN_MANIFEST_FOR_FEED',
-              payload: {
-                feed: feed,
-                orphanedManifests: orphanedManifests
-              }
-            })
-            dispatch({
               type: FETCH_ARTICLES_SUCCESS,
-              payload: fetchedContent.items.map((item) => {
-                const salt = uuid()
-                return Object.assign({articleId: hash.sha1(item.link, salt), feed: feed, salt: salt}, item)
-              })
-              .filter(articleItem => articleItem.title !== '')
-              .map(articleItem => {
-                if (!manifests) {
-                  return articleItem
-                }
-                return {
-                  ...articleItem,
-                  muted: manifests
-                  .filter(manifestItem => articleItem.articleId === manifestItem.articleId)
-                  .filter(manifestItem => manifestItem.muted)[0] 
-                  || articleItem.muted || false
-                }
-              })
+              payload: fetchedContent.items
+                .filter(articleItem => articleItem.title !== '')
+                .map((item) => {
+                  return {
+                    ...item,
+                    articleId: uuid(),
+                    feed: feed
+                  }
+                })
+                .map(articleItem => {
+                  if (!manifests) {
+                    return articleItem
+                  }
+                  return {
+                    ...articleItem,
+                    muted: manifests
+                    .filter(manifestItem => articleItem.link === manifestItem.link)
+                    .filter(manifestItem => manifestItem.muted)[0] 
+                    || articleItem.muted || false
+                  }
+                })
               .map(articleItem => {
                 try {
                   const blockReasons = filters
@@ -190,178 +205,6 @@ export const fetchArticles = (feeds, filters, manifests) => {
         })
       }
       return 'o'
-    })
-  }
-}
-export const fetchBlockstackArticles = (manifests, filters) => {
-  return (dispatch) => {
-    dispatch({ 
-      type: 'FETCH_BLOCKSTACK_ARTICLES_START',
-      payload: {
-        manifests: manifests,
-        filters: filters
-      }
-    })
-    blockstack.listFiles((filename) => {
-      dispatch({ 
-        type: 'BLOCKSTACK_ARTICLES_START',
-        payload: filename
-      })
-      if (filename.indexOf('.json') !== -1) {
-        return true
-      }
-      if (manifests.filter((manifest) => manifest.articleId === filename)
-      .filter(manifest => manifest.muted === true).length !== 0) {
-        return true
-      }
-      dispatch({ 
-        type: 'FETCH_BLOCKSTACK_ARTICLE_START',
-        payload: filename
-      })
-      dispatch(() => {
-        blockstackGetFile(filename)
-        .then((fileContents) => {
-          if (JSON.parse(fileContents) !== null) {
-            const articleItem = JSON.parse(fileContents)
-            dispatch({
-              type: 'FETCH_SAVED_ARTICLE_CONTENT',
-              payload: articleItem
-            })
-            const blockReasons = filters
-            .filter(filterItem => !filterItem.muted )
-            .filter(filterItem => {
-              return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
-              true :
-              filterItem.sections.filter((filterItemSectionItem) => {
-                if (articleItem.feed.sections === undefined) {
-                  return false
-                }
-                return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
-              }).length !==0
-            })
-            .filter(filterItem => {
-              return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
-              Object.keys(articleItem)
-              .filter(articleField => articleField !== 'id')
-              .filter(articleField => articleField !== 'feed')
-              .filter(articleField => articleField !== 'isoDate')
-              .filter(articleField => articleField !== 'guid')
-              .filter(articleField => articleField !== 'muted')
-              .filter(articleField => articleField !== 'pubDate')
-              .filter(articleField => {
-                return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
-              }).length !== 0 :
-              filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
-                return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
-              }).length !== 0
-            })
-            dispatch({
-              type: 'FETCH_SAVED_ARTICLE_SUCCESS',
-              payload: (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
-            })
-          }
-          return true
-        })
-        .catch((error) =>{
-          dispatch({
-            type: FETCH_SAVED_ARTICLE_FAIL,
-            payload: error
-          })
-        })
-      })
-      return true
-    })
-    .catch((error) =>{
-      dispatch({
-        type: FETCH_SAVED_ARTICLES_FAIL,
-        payload: error
-      })
-    })
-  }
-}
-
-export const PUBLISH_ARTICLES_START = 'PUBLISH_ARTICLES_START'
-export const PUBLISH_ARTICLE_SUCCESS = 'PUBLISH_ARTICLE_SUCCESS'
-export const PUBLISH_ARTICLES_FAIL = 'PUBLISH_ARTICLES_FAIL'
-
-export const publishArticles = (articles, manifests) => {
-  return (dispatch) => {
-    dispatch({
-      type: 'PUBLISH_ARTICLES_START',
-      payload: articles
-    })
-    dispatch(() => {
-      articles.map(articleItem => {
-        const sha1Hash = hash.sha1(articleItem)
-        dispatch(() => {
-          manifests.filter((manifest) => manifest.articleId === articleItem.articleId)
-          .filter((manifest) => (manifest.sha1Hash !== sha1Hash))
-          .map(manifest => {
-            if (!manifest) {
-              return 'o'
-            }
-            dispatch({
-              type: 'DELETE_MANIFEST_START',
-              payload: manifest
-            })
-           // if cors errors persist for DELETE, publish empty file here.
-            blockstack.deleteFile(`${manifest.sha1Hash}`)
-            .then(() => dispatch({
-              type: 'DELETE_MANIFEST_SUCCESS'
-            }))
-            .catch((error) => {
-              dispatch({
-                type: 'DELETE_MANIFEST_FAIL',
-                payload: error
-              })
-            })
-            return 'o'
-          })
-        })
-        dispatch({
-          type: 'PUBLISH_ARTICLE_START',
-          payload: {
-            sha1Hash: sha1Hash,
-            articleId: articleItem.articleId
-          }
-        })
-        dispatch(() => {
-          blockstackPutFile( articleItem.articleId, JSON.stringify(articleItem))
-          .then((gaiaUrl) => {
-            const theDate = Date.now()
-            //articleId: hash.sha1(item.link, salt)
-            const thePayload = {
-              gaiaUrl: gaiaUrl,
-              link: articleItem.link,
-              articleId: articleItem.articleId,
-              muted: articleItem.muted,
-              salt: articleItem.salt,
-              date: theDate,
-              sha1Hash: sha1Hash,
-            }
-            dispatch({
-              type: 'PUBLISH_ARTICLE_SUCCESS',
-              payload: thePayload
-            })
-            
-            const newManifests = manifests.filter((manifestItem) => manifestItem.articleId !== thePayload.articleId).concat(thePayload)
-  
-            dispatch(() => {
-              blockstackPutFile('manifests.json', JSON.stringify(newManifests))
-              .then((manifestsURL) => {
-                dispatch({
-                  type: 'PUBLISH_MANIFESTS_SUCCESS',
-                  payload: {
-                    gaiaUrl: manifestsURL,
-                    manifests: newManifests
-                  }
-                })
-              })
-            })
-          })
-        })
-      return 'o'
-      })
     })
   }
 }

@@ -50,9 +50,12 @@ export default (state = [], action) => {
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
-        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        let muteArticle = payload.filter((payloadItem) => (payloadItem.articleId === stateItem.articleId)).length !== 0
-        return (muteArticle === true) ? { ...stateItem, muted: true} : stateItem
+        return {
+          ...stateItem,
+          muted: []
+            .concat(action.payload)
+            .filter(payloadItem => payloadItem.link === stateItem.link).length !== 0
+        }
       })
 
     case ARTICLES_REMOVE_ARTICLE:

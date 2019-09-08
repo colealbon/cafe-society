@@ -24,7 +24,7 @@ import {
       case USER_LOGIN_SUCCESS:
         return { ...state, isAuthenticated: true }
       case USER_LOGOUT:
-        return { ...initialState }
+        return initialState
       case USER_HANDLE_LOGIN:
         return { ...state, isLoginPending: false }
       case USER_LOGGED_IN:
