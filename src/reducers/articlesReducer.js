@@ -299,16 +299,6 @@ export default (state = [], action) => {
       }
    })
 
-  case PUBLISH_MANIFESTS_SUCCESS:
-    return state.map(stateArticleItem => {
-      return {
-        ...stateArticleItem, 
-        muted: action.payload.manifests
-          .filter(payloadManifestItem => payloadManifestItem.articleId === stateArticleItem.articleId)
-          .filter(payloadManifestItem => payloadManifestItem.muted)[0] 
-          || false 
-      }
-    })
   default:
       return state
   }

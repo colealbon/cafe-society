@@ -1,6 +1,7 @@
 import {
   MANIFESTS_REMOVE_MANIFEST,
-  FETCH_SAVED_MANIFESTS_SUCCESS
+  FETCH_SAVED_MANIFESTS_SUCCESS,
+
 } from '../actions/manifestActions'
 
 import {
@@ -13,6 +14,9 @@ export default (state = [], action) => {
 
     case 'RESET_APP':
       return []
+
+  case PUBLISH_MANIFESTS_SUCCESS:
+    return action.payload.manifests
 
     case FETCH_SAVED_MANIFESTS_SUCCESS:
       return [].concat(action.payload)
