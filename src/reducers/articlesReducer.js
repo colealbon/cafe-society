@@ -37,12 +37,20 @@ export default (state = [], action) => {
     case FETCH_SAVED_ARTICLE_SUCCESS:
       return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
 
-    case  FETCH_ARTICLES_SUCCESS:
-      // don't overwrite
-      return state.concat(action.payload
-      .filter((payloadItem) => {
-        return [].concat(state).filter((stateItem) => stateItem.articleId === payloadItem.articleId).length === 0
-      }))
+    case FETCH_ARTICLES_SUCCESS:
+      return state
+        .filter(stateItem => stateItem.feed.id !== action.payload.feed.id)
+        .concat(
+          state.filter(stateItem => stateItem.feed.id === action.payload.feed.id)
+          .filter(stateItem => !!action.payload.articles
+            .filter(payloadArticle => payloadArticle.link === stateItem.link)
+          )
+        )
+        .concat(
+          action.payload.filter(payloadItem => {
+            return state.filter(stateItem => payloadItem.link === stateItem.link).length === 0
+          })
+        )
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
