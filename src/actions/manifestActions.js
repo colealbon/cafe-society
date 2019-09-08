@@ -7,10 +7,6 @@ const slowBlockstackGetFile = (filename, options) => {
 const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
 
 
-// export const FETCH_MANIFESTS_START = 'FETCH_MANIFESTS_START'
-// export const FETCH_MANIFESTS_SUCCESS = 'FETCH_MANIFESTS_SUCCESS'
-// export const FETCH_MANIFESTS_ERROR = 'FETCH_MANIFESTS_ERROR'
-// export const FETCH_SAVED_MANIFESTS_SUCCESS = 'FETCH_SAVED_MANIFESTS_SUCCESS'
 export const FETCH_SAVED_MANIFEST_SUCCESS = 'FETCH_SAVED_MANIFEST_SUCCESS'
 
 export const FETCH_SAVED_MANIFESTS_ERROR = 'FETCH_SAVED_MANIFESTS_ERROR'
@@ -31,16 +27,16 @@ export const publishManifests = (manifests) => {
   return (dispatch) => {
     dispatch({
       type: PUBLISH_MANIFESTS_START,
-      payload: manifests
+      payload: manifests.filter(manifestItem => manifestItem.muted === true)
     })
-    const fileContent = JSON.stringify(manifests)
+    const fileContent = JSON.stringify(manifests.filter(manifestItem => manifestItem.muted === true))
     blockstack.putFile('manifests.json', fileContent)
     .then((response) => {
       dispatch({
         type: PUBLISH_MANIFESTS_SUCCESS,
         payload: {
           response: response,
-          manifests: manifests
+          manifests: manifests.filter(manifestItem => manifestItem.muted === true)
         }
       })
     })
