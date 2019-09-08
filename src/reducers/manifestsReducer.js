@@ -21,6 +21,7 @@ export default (state = [], action) => {
 
     case FETCH_SAVED_MANIFESTS_SUCCESS:
       return [].concat(action.payload)
+      .filter(stateItem => stateItem.muted === true)
     
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
@@ -31,6 +32,7 @@ export default (state = [], action) => {
           true
         }
       })
+      .filter(stateItem => stateItem.muted === true)
 
     case MANIFESTS_REMOVE_MANIFEST:
       return state.filter(stateItem => !action.payload
@@ -50,13 +52,15 @@ export default (state = [], action) => {
           action.payload.articles.filter(payloadItem => {
             return [].concat(state).filter(stateItem => payloadItem.link === stateItem.link).length === 0
           })
-        ).map(payloadItem => {
+        )
+        .map(payloadItem => {
           return {
             link: payloadItem.link,
             muted: payloadItem.muted || false,
             feed: payloadItem.feed
           }
         })
+        .filter(stateItem => stateItem.muted === true)
 
     default:
       return state
