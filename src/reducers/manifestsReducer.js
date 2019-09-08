@@ -18,21 +18,25 @@ export default (state = [], action) => {
 
     case FETCH_SAVED_MANIFESTS_SUCCESS:
       return [].concat(action.payload)
-    
-    case ARTICLES_MARK_READ:
-      return state.map(stateItem => {
-        return {
-          ...stateItem,
-          muted: [].concat(action.payload).filter(payloadItem => payloadItem.link === stateItem.link).length === 0 ?
-          stateItem.muted :
-          true
-        }
-      })
 
     case MANIFESTS_REMOVE_MANIFEST:
       return state.filter(stateItem => !action.payload
         .filter(payloadItem => payloadItem.link === stateItem.link)
       )
+
+    
+    case ARTICLES_MARK_READ:
+      return state.filter(stateItem => [].concat(action.payload)
+        .filter(payloadItem => payloadItem.link === action.payload.link).length === 0
+      )
+      .concat([].concat(action.payload).map(payloadItem => {
+        return {
+          link: payloadItem.link,
+          muted: true,
+          feed: payloadItem.feed
+        }
+      })
+    )
 
     case FETCH_ARTICLES_SUCCESS:
       return state
@@ -48,13 +52,7 @@ export default (state = [], action) => {
             return [].concat(state).filter(stateItem => payloadItem.link === stateItem.link).length === 0
           })
         )
-        .map(payloadItem => {
-          return {
-            link: payloadItem.link,
-            muted: payloadItem.muted || false,
-            feed: payloadItem.feed
-          }
-        })
+
 
     default:
       return state
