@@ -47,16 +47,16 @@ export default (state = [], action) => {
           )
         )
         .concat(
-          action.payload.filter(payloadItem => {
-            return state.filter(stateItem => payloadItem.link === stateItem.link).length === 0
-          }).map(payloadItem => {
-            return {
-              link: payloadItem.link,
-              muted: payloadItem.muted || false,
-              feed: payloadItem.feed
-            }
+          action.payload.articles.filter(payloadItem => {
+            return [].concat(state).filter(stateItem => payloadItem.link === stateItem.link).length === 0
           })
-        )
+        ).map(payloadItem => {
+          return {
+            link: payloadItem.link,
+            muted: payloadItem.muted || false,
+            feed: payloadItem.feed
+          }
+        })
 
     default:
       return state
