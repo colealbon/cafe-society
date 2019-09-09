@@ -29,10 +29,17 @@ export default (state = [], action) => {
       return state.filter(stateItem => {
         return [].concat(action.payload).filter(payloadItem => payloadItem.link === action.payload.link).length !== 0
       })
-      .filter(manifestItem => !manifestItem.gaiaUrl)
-      .filter(manifestItem => !manifestItem.contentSnippet)
-      .filter(manifestItem => manifestItem.muted === true)
       .concat([].concat(action.payload).map(payloadItem => {
+        if (feed.id === 'https://lifehacker.com/rss') {
+          return {
+            return {
+              link: payloadItem.link,
+              muted: true,
+              feed: payloadItem.feed,
+              guid: payloadItem.guid
+            }
+          }
+        }
         return {
           link: payloadItem.link,
           muted: true,
@@ -48,7 +55,12 @@ export default (state = [], action) => {
           return (stateItem.feed.id !== action.payload.feed.id) ?
           true:
           [].concat(action.payload.articles)
-          .filter(payloadItem => payloadItem.link === stateItem.link)
+          .filter(payloadItem => {
+            if (feed.id === 'https://lifehacker.com/rss') {
+              return payloadItem.link.replace(payloadiItem.guid) === stateItem.link.replace(stateItem.guid)
+            }
+            return payloadItem.link === stateItem.link
+          })
           .length !== 0
         })
         .filter(manifestItem => !manifestItem.gaiaUrl)
