@@ -73,7 +73,7 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
             return {
               link: articleItem.link,
               muted: true,
-              feed: articleItemItem.feed
+              feed: articleItem.feed
             }
           })
         )
