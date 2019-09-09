@@ -51,7 +51,7 @@ export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
 // }
 // const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
 
-export const markArticleRead = (articles, allArticles, manifests, blockstackUser) => {
+export const markArticleRead = (articles, manifests, blockstackUser) => {
   return (dispatch) => {
     dispatch({
       type: ARTICLES_MARK_READ,
@@ -65,7 +65,7 @@ export const markArticleRead = (articles, allArticles, manifests, blockstackUser
         manifests.map(manifestItem => {
           return {
             ...manifestItem,
-            muted: !!articles.filter(articleItem => articleItem.link === manifestItem.link)
+            muted: [].concat(articles).filter(articleItem => articleItem.link === manifestItem.link).length !== 0 ? true : manifestItem.muted
           }
         })
       )

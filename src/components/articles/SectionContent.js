@@ -75,8 +75,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClickToggleArticle: (article, articles, manifests) => {
       dispatch(toggleArticle(article, articles, manifests))
     },
-    handleClickMarkAllRead: (articles, allArticles, manifests, blockstackUser) => {
-      dispatch(markArticleRead(articles, allArticles, manifests, blockstackUser))
+    handleClickMarkAllRead: (articles, manifests, blockstackUser) => {
+      dispatch(markArticleRead(articles, manifests, blockstackUser))
     },
     handleClickAddFilter: (text, filters, selectedSection) => {
       if (text === '') {
@@ -91,9 +91,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(addFilter(newFilter, filters))
       dispatch(updateFilter(''))
     },
-    handleClickLearn: (selectedSection, article, category, classifiers, allArticles, manifests, blockstackUser) => {
+    handleClickLearn: (selectedSection, article, category, classifiers, manifests, blockstackUser) => {
       dispatch(learn(category, selectedSection, article, classifiers), 100)
-      dispatch(markArticleRead(article, allArticles, manifests, blockstackUser), 100)
+      dispatch(markArticleRead(article, manifests, blockstackUser), 100)
     }
   }
 }
