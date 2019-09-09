@@ -18,8 +18,8 @@ export default (state = [], action) => {
       return [].concat(action.payload)
 
     case MANIFESTS_REMOVE_MANIFEST:
-      return state.filter(stateItem => !action.payload
-        .filter(payloadItem => payloadItem.link === stateItem.link)
+      return state.filter(stateItem => [].concat(action.payload)
+        .filter(payloadItem => payloadItem.link === stateItem.link).length === 0
       )
 
     
