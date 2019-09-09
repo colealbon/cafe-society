@@ -55,43 +55,52 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
       return
     }
     dispatch(() => {
-      const newManifests = manifests
-      .filter(manifestItem => {
-        return [].concat(articles).filter(articleItem => {
-          return articleItem.link === manifestItem.link
-        }).length === 0
-      })
-      .concat([].concat(articles).map(articleItem => {
-        return {
-          link: articleItem.link,
-          muted: true,
-          feed: articleItem.feed
-        }
-      }))
+      try {
+        const newManifests = manifests
+        .filter(manifestItem => {
+          return [].concat(articles).filter(articleItem => {
+            return articleItem.link === manifestItem.link
+          }).length === 0
+        })
+        .concat([].concat(articles).map(articleItem => {
+          return {
+            link: articleItem.link,
+            muted: true,
+            feed: articleItem.feed
+          }
+        }))
+        dispatch({
+          type: PUBLISH_MANIFESTS_START,
+          payload: newManifests
+        })
+        const fileContent = JSON.stringify(newManifests)
+        blockstack.putFile('manifests.json', fileContent)
+        .then((response) => {
+          dispatch({
+            type: PUBLISH_MANIFESTS_SUCCESS,
+            payload: {
+              response: response,
+              manifests: newManifests
+            }
+          })
+        })
+        .catch((error) => {
+          dispatch({
+            type: PUBLISH_MANIFESTS_ERROR,
+            payload: {
+              error: error
+            }
+          })
+        })
+      } catch (error) {
       dispatch({
-        type: PUBLISH_MANIFESTS_START,
-        payload: newManifests
+        type: PUBLISH_MANIFESTS_ERROR,
+        payload: {
+          error: error
+        }
       })
-      const fileContent = JSON.stringify(newManifests)
-      blockstack.putFile('manifests.json', fileContent)
-      .then((response) => {
-        dispatch({
-          type: PUBLISH_MANIFESTS_SUCCESS,
-          payload: {
-            response: response,
-            manifests: newManifests
-          }
-        })
-      })
-      .catch((error) => {
-        dispatch({
-          type: PUBLISH_MANIFESTS_ERROR,
-          payload: {
-            error: error
-          }
-        })
-      })
-    })
+    }
+  })
   }
 }
 
