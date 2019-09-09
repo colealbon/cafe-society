@@ -54,7 +54,7 @@ export default (state = [], action) => {
           true:
           [].concat(action.payload.articles)
           .filter(payloadItem => (action.payload.feed.id === 'https://lifehacker.com/rss') ?
-            payloadItem.link.replace(payloadItem.guid, '') == stateItem.link.replace(stateItem.guid, '') :
+            payloadItem.link.replace(payloadItem.guid, '') === stateItem.link.replace(stateItem.guid, '') :
             payloadItem.link === stateItem.link
           )
           .length !== 0
