@@ -53,12 +53,10 @@ export default (state = [], action) => {
           return (stateItem.feed.id !== action.payload.feed.id) ?
           true:
           [].concat(action.payload.articles)
-          .filter(payloadItem => {
-            if (payloadItem.feed.id === 'https://lifehacker.com/rss') {
-              return payloadItem.link.replace(payloadItem.guid, '') === stateItem.link.replace(stateItem.guid, '')
-            }
-            return payloadItem.link === stateItem.link
-          })
+          .filter(payloadItem => (action.payload.feed.id === 'https://lifehacker.com/rss') ?
+            payloadItem.link.replace(payloadItem.guid, '') == stateItem.link.replace(stateItem.guid, '') :
+            payloadItem.link === stateItem.link
+          )
           .length !== 0
         })
         .filter(manifestItem => !manifestItem.gaiaUrl)
