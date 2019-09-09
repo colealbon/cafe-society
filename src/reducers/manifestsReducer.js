@@ -28,6 +28,7 @@ export default (state = [], action) => {
       return state.filter(stateItem => {
         return [].concat(action.payload).filter(payloadItem => payloadItem.link === action.payload.link).length !== 0
       })
+      .filter(manifestItem => !manifestItem.gaiaUrl)
       .filter(manifestItem => !manifestItem.contentSnippet)
       .filter(manifestItem => manifestItem.muted === true)
       .concat([].concat(action.payload).map(payloadItem => {
@@ -50,6 +51,8 @@ export default (state = [], action) => {
             .length !== 0
           )
         )
+        .filter(manifestItem => !manifestItem.gaiaUrl)
+        .filter(manifestItem => !manifestItem.contentSnippet)
 
     default:
       return state
