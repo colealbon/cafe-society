@@ -50,8 +50,9 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    if (blockstackUser.isAuthenticated !== true) {
+    if (!blockstack.isUserSignedIn()) {
       console.log('anonymous markArticleRead - bail')
+      console.log(blockstackUser)
       return
     }
     dispatch(() => {

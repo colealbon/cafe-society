@@ -137,7 +137,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'notgood', classifiers, allArticles, manifests, blockstackUser)
+                  handleClickLearn(selectedSection, article, 'notgood', classifiers, manifests, blockstackUser)
                 }}>
                   <ThumbDown id='addFilter'/>
                 </IconButton>
@@ -145,7 +145,7 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
                   if (getSelectionText().length !== 0) {
                     handleClickAddFilter(getSelectionText(), filters, selectedSection)
                   }
-                  handleClickLearn(selectedSection, article, 'good', classifiers, allArticles, manifests, blockstackUser)
+                  handleClickLearn(selectedSection, article, 'good', classifiers, manifests, blockstackUser)
                 }}>
                   <ThumbUp id='train-good'/>
                 </IconButton>
