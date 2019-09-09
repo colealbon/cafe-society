@@ -1,17 +1,19 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import RemoveManifest from './RemoveManifest'
 import { removeManifest } from '../../actions/manifestActions'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
-
+import Link from '@material-ui/core/Link'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListSubheader from '@material-ui/core/ListSubheader'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import Typography from '@material-ui/core/Typography'
-import Link from '@material-ui/core/Link'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import JSONTree from 'react-json-tree'
 
 const mapStateToProps = ({ manifests }) => {
@@ -52,23 +54,24 @@ export const ManifestList = ({ handleClickRemoveManifest, handleClickRemoveAllMa
                   handleClickRemoveManifest(manifest, manifests)
                 }}
               />
-              <Typography><Link href={manifest.link}>{manifest.link}</Link></Typography>
-              <br />
-              <p></p>
-              <Typography><JSONTree hideRoot={true} data={manifest} /></Typography>
+              <ExpansionPanel>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  id="panel1bh-header"
+                >
+                  <Link href={manifest.link}>{manifest.link}</Link>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                <JSONTree hideRoot={true} data={manifest} />
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
             </ListItem>
           )
-        }).reverse()
+        })
         }
       </List>
     </Fragment>
   )
 }
 
-ManifestList.propTypes = {
-  handleClickRemoveManifest: PropTypes.func.isRequired,
-  handleClickToggleManifest: PropTypes.func.isRequired,
-  handleClickRemoveAllManifests: PropTypes.func.isRequired,
-  manifests: PropTypes.array.isRequired,
-}
 export default connect(mapStateToProps, mapDispatchToProps)(ManifestList)
