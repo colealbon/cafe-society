@@ -55,7 +55,8 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
       return
     }
     dispatch(() => {
-      const newManifests = manifests.filter(manifestItem => {
+      const newManifests = manifests
+      .filter(manifestItem => {
         return [].concat(articles).filter(articleItem => {
           return articleItem.link === manifestItem.link
         }).length === 0
@@ -67,6 +68,10 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
           feed: articleItem.feed
         }
       }))
+      dispatch({
+        type: PUBLISH_MANIFESTS_START,
+        payload: newManifests
+      })
       const fileContent = JSON.stringify(newManifests)
       blockstack.putFile('manifests.json', fileContent)
       .then((response) => {
@@ -74,7 +79,7 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
           type: PUBLISH_MANIFESTS_SUCCESS,
           payload: {
             response: response,
-            manifests: manifests.filter(manifestItem => manifestItem.muted === true)
+            manifests: newManifests
           }
         })
       })

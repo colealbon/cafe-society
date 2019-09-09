@@ -142,17 +142,17 @@ export const learn = (category, selectedSection, article, classifiers, blockstac
         classifiers : 
         classifiers.concat({id: selectedSection.id})
       const newClassifiers = classifiers.filter((classifier) => classifier !== null)
-          .filter((classifier) => classifier.id === selectedSection.id)
-          .map((classifier) => {
-            if (classifier.id === selectedSection.id) {
-              let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) : bayes()
-              bayesClassifier.learn(article.title.concat(article.contentSnippet), category)
-              classifier.bayesJSON = bayesClassifier.toJson()
-              return classifier
-            }
-            return null
-          }).filter((classifier) => classifier !== null)
-          .concat(classifiers.filter((classifier) => classifier.id !== selectedSection.id))
+        .filter((classifier) => classifier.id === selectedSection.id)
+        .map((classifier) => {
+          if (classifier.id === selectedSection.id) {
+            let bayesClassifier = (classifier.bayesJSON) ? bayes.fromJson(classifier.bayesJSON) : bayes()
+            bayesClassifier.learn(article.title.concat(article.contentSnippet), category)
+            classifier.bayesJSON = bayesClassifier.toJson()
+            return classifier
+          }
+          return null
+        }).filter((classifier) => classifier !== null)
+        .concat(classifiers.filter((classifier) => classifier.id !== selectedSection.id))
       dispatch({
         type: CLASSIFIERS_LEARN_SUCCESS,
         payload: newClassifiers
