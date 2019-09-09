@@ -30,14 +30,12 @@ export default (state = [], action) => {
         return [].concat(action.payload).filter(payloadItem => payloadItem.link === action.payload.link).length !== 0
       })
       .concat([].concat(action.payload).map(payloadItem => {
-        if (feed.id === 'https://lifehacker.com/rss') {
+        if (payloadItem.feed.id === 'https://lifehacker.com/rss') {
           return {
-            return {
-              link: payloadItem.link,
-              muted: true,
-              feed: payloadItem.feed,
-              guid: payloadItem.guid
-            }
+            link: payloadItem.link,
+            muted: true,
+            feed: payloadItem.feed,
+            guid: payloadItem.guid
           }
         }
         return {
@@ -56,8 +54,8 @@ export default (state = [], action) => {
           true:
           [].concat(action.payload.articles)
           .filter(payloadItem => {
-            if (feed.id === 'https://lifehacker.com/rss') {
-              return payloadItem.link.replace(payloadiItem.guid) === stateItem.link.replace(stateItem.guid)
+            if (payloadItem.feed.id === 'https://lifehacker.com/rss') {
+              return payloadItem.link.replace(payloadItem.guid, '') === stateItem.link.replace(stateItem.guid, '')
             }
             return payloadItem.link === stateItem.link
           })
