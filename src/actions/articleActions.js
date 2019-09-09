@@ -46,30 +46,29 @@ export const PUBLISH_MANIFESTS_ERROR = 'PUBLISH_MANIFESTS_ERROR'
 
 export const markArticleRead = (articles, manifests, blockstackUser) => {
   return (dispatch) => {
-    if (!blockstackUser.isAuthenticated) {
-      return
-    }
     dispatch({
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    const newManifests = manifests.filter(manifestItem => {
-      return [].concat(articles).filter(articleItem => {
-        return articleItem.link === manifestItem.link
-      }).length === 0
-    })
-    .concat([].concat(articles).map(articleItem => {
-      return {
-        link: articleItem.link,
-        muted: true,
-        feed: articleItem.feed
-      }
-    }))
-
-    const fileContent = JSON.stringify(newManifests)
-
+    if (blockstackUser.isAuthenticated !== true) {
+      console.log('anonymous markArticleRead - bail')
+      return
+    }
     dispatch(() => {
-      return blockstack.putFile('manifests.json', fileContent)
+      const newManifests = manifests.filter(manifestItem => {
+        return [].concat(articles).filter(articleItem => {
+          return articleItem.link === manifestItem.link
+        }).length === 0
+      })
+      .concat([].concat(articles).map(articleItem => {
+        return {
+          link: articleItem.link,
+          muted: true,
+          feed: articleItem.feed
+        }
+      }))
+      const fileContent = JSON.stringify(newManifests)
+      blockstack.putFile('manifests.json', fileContent)
       .then((response) => {
         dispatch({
           type: PUBLISH_MANIFESTS_SUCCESS,
