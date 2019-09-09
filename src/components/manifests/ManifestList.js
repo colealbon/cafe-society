@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(removeManifest(manifest, manifests))
     },
     handleClickRemoveAllManifests: (manifests) => {
-      manifests.map((manifest) => dispatch(removeManifest(manifest, manifests)))
+      dispatch(removeManifest(manifests, manifests))
     }
   }
 }
