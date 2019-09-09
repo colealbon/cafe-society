@@ -62,12 +62,21 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
     }
     dispatch(
       publishManifests(
-        manifests.map(manifestItem => {
-          return {
-            ...manifestItem,
-            muted: [].concat(articles).filter(articleItem => manifestItem.link --- articleItem.link).length !== 0
-          }
+        manifests.filter(manifestItem => {
+          return [].concat(articles)
+          .filter(articleItem => manifestItem.link === articleItem.link)
+          .length !== 0
         })
+        .concat(
+          [].concat(articles)
+          .map(articleItem => {
+            return {
+              link: articleItem.link,
+              muted: true,
+              feed: articleItemItem.feed
+            }
+          })
+        )
       )
     )
   }
