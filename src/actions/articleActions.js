@@ -52,6 +52,7 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
       payload: articles
     })
     if (!blockstackUser.isAuthenticated) {
+      alert('user not authenticated')
       return
     }
     dispatch({

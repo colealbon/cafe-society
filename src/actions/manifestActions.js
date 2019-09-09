@@ -29,23 +29,25 @@ export const publishManifests = (manifests) => {
       type: PUBLISH_MANIFESTS_START,
       payload: manifests.filter(manifestItem => manifestItem.muted === true)
     })
-    const fileContent = JSON.stringify(manifests.filter(manifestItem => manifestItem.muted === true))
-    blockstack.putFile('manifests.json', fileContent)
-    .then((response) => {
-      dispatch({
-        type: PUBLISH_MANIFESTS_SUCCESS,
-        payload: {
-          response: response,
-          manifests: manifests.filter(manifestItem => manifestItem.muted === true)
-        }
+    dispatch(() => {
+      const fileContent = JSON.stringify(manifests.filter(manifestItem => manifestItem.muted === true))
+      blockstack.putFile('manifests.json', fileContent)
+      .then((response) => {
+        dispatch({
+          type: PUBLISH_MANIFESTS_SUCCESS,
+          payload: {
+            response: response,
+            manifests: manifests.filter(manifestItem => manifestItem.muted === true)
+          }
+        })
       })
-    })
-    .catch((error) => {
-      dispatch({
-        type: PUBLISH_MANIFESTS_ERROR,
-        payload: {
-          error: error
-        }
+      .catch((error) => {
+        dispatch({
+          type: PUBLISH_MANIFESTS_ERROR,
+          payload: {
+            error: error
+          }
+        })
       })
     })
   }
