@@ -40,29 +40,16 @@ export default (state = [], action) => {
     )
 
     case FETCH_ARTICLES_SUCCESS:
+      // clean out articles no longer in rss feed content
       return state
         .filter(stateItem => stateItem.feed.id !== action.payload.feed.id)
         .concat(
           state.filter(stateItem => stateItem.feed.id === action.payload.feed.id)
-          .filter(stateItem => !!action.payload.articles
+          .filter(stateItem => [].concat(action.payload.articles)
             .filter(payloadArticle => payloadArticle.link === stateItem.link)
+            .length !== 0
           )
         )
-        .concat(
-          action.payload.articles.filter(payloadItem => {
-            return [].concat(state).filter(stateItem => payloadItem.link === stateItem.link).length === 0
-          })
-          .map(payloadArticleItem => {
-            return {
-              link: payloadArticleItem.link,
-              muted: true,
-              feed: payloadArticleItem.feed
-            }
-          })
-        )
-        .filter(manifestItem => !manifestItem.contentSnippet)
-        .filter(manifestItem => manifestItem.muted === true)
-
 
     default:
       return state
