@@ -17,6 +17,7 @@ export default (state = [], action) => {
     case FETCH_SAVED_MANIFESTS_SUCCESS:
       return [].concat(action.payload)
         .filter(manifestItem => !manifestItem.contentSnippet)
+        .filter(manifestItem => !manifestItem.gaiaUrl)
         .filter(manifestItem => manifestItem.muted === true)
 
     case MANIFESTS_REMOVE_MANIFEST:
