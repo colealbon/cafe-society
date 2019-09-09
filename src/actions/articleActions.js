@@ -1,5 +1,5 @@
+import * as blockstack from 'blockstack'
 import uuid from 'uuidv4'
-import {publishManifests} from './manifestActions'
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
@@ -22,11 +22,6 @@ const slow_fetchFeedContent = feedUrl => {
 
 const fetchFeedContent = memoize(slow_fetchFeedContent, { promise: true, maxAge: 10000})
 
-// const slowBlockstackGetFile = (filename, options) => {
-//   return blockstack.getFile(filename, options)
-// }
-// const blockstackGetFile = memoize(slowBlockstackGetFile, { promise: true, maxAge: 10000 })
-
 export const ARTICLES_REMOVE_ARTICLE = 'ARTICLES_REMOVE_ARTICLE'
 export const MANIFESTS_REMOVE_MANIFEST = 'MANIFESTS_REMOVE_MANIFEST'
 
@@ -46,10 +41,9 @@ export const removeArticle = (article) => {
 
 export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
 
-// const slowBlockstackPutFile = (filename, content) => {
-//   return blockstack.putFile(filename, content)
-// }
-// const blockstackPutFile = memoize(slowBlockstackPutFile, { promise: true })
+export const PUBLISH_MANIFESTS_START = 'PUBLISH_MANIFESTS_START'
+export const PUBLISH_MANIFESTS_SUCCESS = 'PUBLISH_MANIFESTS_SUCCESS'
+export const PUBLISH_MANIFESTS_ERROR = 'PUBLISH_MANIFESTS_ERROR'
 
 export const markArticleRead = (articles, manifests, blockstackUser) => {
   return (dispatch) => {
@@ -60,25 +54,43 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
     if (!blockstackUser.isAuthenticated) {
       return
     }
-    dispatch(
-      publishManifests(
-        manifests.filter(manifestItem => {
-          return [].concat(articles)
-          .filter(articleItem => manifestItem.link === articleItem.link)
-          .length !== 0
-        })
-        .concat(
-          [].concat(articles)
-          .map(articleItem => {
-            return {
-              link: articleItem.link,
-              muted: true,
-              feed: articleItem.feed
-            }
-          })
-        )
-      )
+    dispatch({
+      type: PUBLISH_MANIFESTS_START
+    })
+
+    const fileContent = JSON.stringify(
+      manifests.filter(manifestItem => {
+        return [].concat(articles).filter(articleItem => {
+          return articleItem.link === manifestItem.link
+        }).length === 0
+      })
+      .concat([].concat(articles).map(articleItem => {
+        return {
+          link: articleItem.link,
+          muted: true,
+          feed: articleItem.feed
+        }
+      }))
     )
+
+    blockstack.putFile('manifests.json', fileContent)
+    .then((response) => {
+      dispatch({
+        type: PUBLISH_MANIFESTS_SUCCESS,
+        payload: {
+          response: response,
+          manifests: manifests.filter(manifestItem => manifestItem.muted === true)
+        }
+      })
+    })
+    .catch((error) => {
+      dispatch({
+        type: PUBLISH_MANIFESTS_ERROR,
+        payload: {
+          error: error
+        }
+      })
+    })
   }
 }
 
