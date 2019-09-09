@@ -44,20 +44,13 @@ export default (state = [], action) => {
     case FETCH_ARTICLES_SUCCESS:
       // clean out articles no longer in rss feed content
       return state
-        .filter(stateItem => stateItem.feed.id !== action.payload.feed.id)
-        .concat(
-          state.filter(stateItem => stateItem.feed.id === action.payload.feed.id)
-          .filter(stateItem => [].concat(action.payload.articles)
-            .filter(payloadArticle => payloadArticle.link === stateItem.link)
-            .length !== 0
-          )
-        )
-        .concat(
-          action.payload.articles.filter(payloadArticleItem => state
-            .filter(stateItem => stateItem.link === payloadArticleItem.link)
-            .length === 0
-          )
-        )
+        .filter(stateItem => {
+          return (stateItem.feed.id !== action.payload.feed.id) ?
+          true:
+          [].concat(action.payload.articles)
+          .filter(payloadItem => payloadItem.link === stateItem.link)
+          .length !== 0
+        })
         .filter(manifestItem => !manifestItem.gaiaUrl)
         .filter(manifestItem => !manifestItem.contentSnippet)
 
