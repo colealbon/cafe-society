@@ -1,8 +1,6 @@
 import {
   MANIFESTS_REMOVE_MANIFEST,
-  FETCH_SAVED_MANIFESTS_SUCCESS,
-  PUBLISH_MANIFESTS_SUCCESS
-
+  FETCH_SAVED_MANIFESTS_SUCCESS
 } from '../actions/manifestActions'
 
 import {
@@ -26,9 +24,9 @@ export default (state = [], action) => {
 
     
     case ARTICLES_MARK_READ:
-      return state.filter(stateItem => [].concat(action.payload)
-        .filter(payloadItem => payloadItem.link === action.payload.link).length === 0
-      )
+      return state.filter(stateItem => {
+        return [].concat(action.payload).filter(payloadItem => payloadItem.link === action.payload.link).length !== 0
+      })
       .concat([].concat(action.payload).map(payloadItem => {
         return {
           link: payloadItem.link,
