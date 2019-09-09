@@ -52,6 +52,12 @@ export default (state = [], action) => {
             .length !== 0
           )
         )
+        .concat(
+          action.payload.articles.filter(payloadArticleItem => state
+            .filter(stateItem => stateItem.link === payloadArticleItem.link)
+            .length === 0
+          )
+        )
         .filter(manifestItem => !manifestItem.gaiaUrl)
         .filter(manifestItem => !manifestItem.contentSnippet)
 
