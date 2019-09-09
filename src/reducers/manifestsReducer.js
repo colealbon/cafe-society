@@ -17,17 +17,19 @@ export default (state = [], action) => {
     case FETCH_SAVED_MANIFESTS_SUCCESS:
       return [].concat(action.payload)
         .filter(manifestItem => !manifestItem.contentSnippet)
+        .filter(manifestItem => manifestItem.muted === true)
 
     case MANIFESTS_REMOVE_MANIFEST:
       return state.filter(stateItem => [].concat(action.payload)
         .filter(payloadItem => payloadItem.link === stateItem.link).length === 0
       )
 
-    
     case ARTICLES_MARK_READ:
       return state.filter(stateItem => {
         return [].concat(action.payload).filter(payloadItem => payloadItem.link === action.payload.link).length !== 0
       })
+      .filter(manifestItem => !manifestItem.contentSnippet)
+      .filter(manifestItem => manifestItem.muted === true)
       .concat([].concat(action.payload).map(payloadItem => {
         return {
           link: payloadItem.link,
@@ -41,6 +43,7 @@ export default (state = [], action) => {
       return state
         .filter(stateItem => stateItem.feed.id !== action.payload.feed.id)
         .filter(stateItem => !stateItem.contentSnippet)
+        .filter(stateItem => stateItem.muted === true)
         .concat(
           state.filter(stateItem => stateItem.feed.id === action.payload.feed.id)
           .filter(stateItem => !!action.payload.articles
