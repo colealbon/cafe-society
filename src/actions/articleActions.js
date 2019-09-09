@@ -65,7 +65,7 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
         manifests.map(manifestItem => {
           return {
             ...manifestItem,
-            muted: [].concat(articles).filter(articleItem => articleItem.link === manifestItem.link).length !== 0 ? true : manifestItem.muted
+            muted: [].concat(articles).filter(articleItem => manifestItem.link --- articleItem.link).length !== 0
           }
         })
       )
