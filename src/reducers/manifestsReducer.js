@@ -16,6 +16,7 @@ export default (state = [], action) => {
 
     case FETCH_SAVED_MANIFESTS_SUCCESS:
       return [].concat(action.payload)
+        .filter(manifestItem => !manifestItem.contentSnippet)
 
     case MANIFESTS_REMOVE_MANIFEST:
       return state.filter(stateItem => [].concat(action.payload)
@@ -39,6 +40,7 @@ export default (state = [], action) => {
     case FETCH_ARTICLES_SUCCESS:
       return state
         .filter(stateItem => stateItem.feed.id !== action.payload.feed.id)
+        .filter(stateItem => !stateItem.contentSnippet)
         .concat(
           state.filter(stateItem => stateItem.feed.id === action.payload.feed.id)
           .filter(stateItem => !!action.payload.articles
