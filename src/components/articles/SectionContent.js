@@ -92,8 +92,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateFilter(''))
     },
     handleClickLearn: (selectedSection, article, category, classifiers, manifests, blockstackUser) => {
-      dispatch(learn(category, selectedSection, article, classifiers), 100)
-      dispatch(markArticleRead(article, manifests, blockstackUser), 100)
+      dispatch(learn(category, selectedSection, article, classifiers, blockstackUser), 100)
+      dispatch(markArticleRead(article, manifests, blockstackUser), 300)
     }
   }
 }

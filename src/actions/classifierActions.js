@@ -87,7 +87,7 @@ export const PUBLISH_CLASSIFIERS_START = 'PUBLISH_CLASSIFIERS_START'
 export const PUBLISH_CLASSIFIERS_SUCCESS = 'PUBLISH_CLASSIFIERS_SUCCESS'
 export const PUBLISH_CLASSIFIERS_FAIL = 'PUBLISH_CLASSIFIERS_FAIL'
 
-export const publishClassifiers = (classifiers) => {
+export const publishClassifiers = (classifiers, blockstackUser) => {
   return (dispatch) => {
     if ([].concat(classifiers).length === 0) {
       dispatch({
@@ -124,7 +124,7 @@ export const CLASSIFIERS_LEARN_START = 'CLASSIFIERS_LEARN_START'
 export const CLASSIFIERS_LEARN_SUCCESS = 'CLASSIFIERS_LEARN_SUCCESS'
 export const CLASSIFIERS_LEARN_FAIL = 'CLASSIFIERS_LEARN_FAIL'
 
-export const learn = (category, selectedSection, article, classifiers) => {
+export const learn = (category, selectedSection, article, classifiers, blockstackUser) => {
 
   return (dispatch) => {
     dispatch({
@@ -157,6 +157,9 @@ export const learn = (category, selectedSection, article, classifiers) => {
         type: CLASSIFIERS_LEARN_SUCCESS,
         payload: newClassifiers
       })
+      if (!blockstackUser.isAuthenticated) {
+        return
+      }
       dispatch(publishClassifiers(newClassifiers))
     } catch(error) {
       dispatch({

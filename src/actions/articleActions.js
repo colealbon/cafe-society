@@ -40,56 +40,52 @@ export const removeArticle = (article) => {
 }
 
 export const ARTICLES_MARK_READ = 'ARTICLES_MARK_READ'
-
 export const PUBLISH_MANIFESTS_START = 'PUBLISH_MANIFESTS_START'
 export const PUBLISH_MANIFESTS_SUCCESS = 'PUBLISH_MANIFESTS_SUCCESS'
 export const PUBLISH_MANIFESTS_ERROR = 'PUBLISH_MANIFESTS_ERROR'
 
 export const markArticleRead = (articles, manifests, blockstackUser) => {
   return (dispatch) => {
+    if (!blockstackUser.isAuthenticated) {
+      return
+    }
     dispatch({
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    if (!blockstackUser.isAuthenticated) {
-      alert('user not authenticated')
-      return
-    }
-    dispatch({
-      type: PUBLISH_MANIFESTS_START
+    const newManifests = manifests.filter(manifestItem => {
+      return [].concat(articles).filter(articleItem => {
+        return articleItem.link === manifestItem.link
+      }).length === 0
     })
+    .concat([].concat(articles).map(articleItem => {
+      return {
+        link: articleItem.link,
+        muted: true,
+        feed: articleItem.feed
+      }
+    }))
 
-    const fileContent = JSON.stringify(
-      manifests.filter(manifestItem => {
-        return [].concat(articles).filter(articleItem => {
-          return articleItem.link === manifestItem.link
-        }).length === 0
-      })
-      .concat([].concat(articles).map(articleItem => {
-        return {
-          link: articleItem.link,
-          muted: true,
-          feed: articleItem.feed
-        }
-      }))
-    )
+    const fileContent = JSON.stringify(newManifests)
 
-    blockstack.putFile('manifests.json', fileContent)
-    .then((response) => {
-      dispatch({
-        type: PUBLISH_MANIFESTS_SUCCESS,
-        payload: {
-          response: response,
-          manifests: manifests.filter(manifestItem => manifestItem.muted === true)
-        }
+    dispatch(() => {
+      return blockstack.putFile('manifests.json', fileContent)
+      .then((response) => {
+        dispatch({
+          type: PUBLISH_MANIFESTS_SUCCESS,
+          payload: {
+            response: response,
+            manifests: manifests.filter(manifestItem => manifestItem.muted === true)
+          }
+        })
       })
-    })
-    .catch((error) => {
-      dispatch({
-        type: PUBLISH_MANIFESTS_ERROR,
-        payload: {
-          error: error
-        }
+      .catch((error) => {
+        dispatch({
+          type: PUBLISH_MANIFESTS_ERROR,
+          payload: {
+            error: error
+          }
+        })
       })
     })
   }
