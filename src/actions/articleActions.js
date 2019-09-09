@@ -58,6 +58,7 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
     dispatch(() => {
       try {
         const newManifests = manifests
+        .filter(manifest => !manifest.gaiaUrl)
         .filter(manifestItem => {
           return [].concat(articles).filter(articleItem => {
             return articleItem.link === manifestItem.link
