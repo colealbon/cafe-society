@@ -32,10 +32,10 @@ export const removeArticle = (article) => {
       type: ARTICLES_REMOVE_ARTICLE,
       payload: articles
     })
-    dispatch({
-      type: MANIFESTS_REMOVE_MANIFEST,
-      payload: articles
-    })
+    // dispatch({
+    //   type: MANIFESTS_REMOVE_MANIFEST,
+    //   payload: articles
+    // })
   }
 }
 
@@ -137,21 +137,6 @@ export const fetchArticles = (feeds, filters, manifests) => {
             if (!fetchedContent.items) {
               return
             }
-            // manifests no longer in the feed we just pulled
-            const orphanedManifests = manifests
-              .filter(manifestItem => manifestItem.feed.id === feed.id)
-              .filter(manifestItem => !fetchedContent.items.filter(articleItem => articleItem.link = manifestItem.link))
-
-            if (orphanedManifests.length !== 0) {
-              dispatch({
-                type: 'ORPHAN_MANIFEST_FOR_FEED',
-                payload: {
-                  feed: feed,
-                  orphanedManifests: orphanedManifests
-                }
-              })
-            }
-
             dispatch({
               type: FETCH_ARTICLES_SUCCESS,
               payload: {
@@ -173,9 +158,8 @@ export const fetchArticles = (feeds, filters, manifests) => {
                     return {
                       ...articleItem,
                       muted: manifests
-                      .filter(manifestItem => articleItem.link === manifestItem.link)
-                      .filter(manifestItem => manifestItem.muted)[0] 
-                      || articleItem.muted || false
+                        .filter(manifestItem => articleItem.link === manifestItem.link)
+                        .filter(manifestItem => manifestItem.muted === true).length !== 0
                     }
                   })
                 .map(articleItem => {
