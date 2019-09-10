@@ -3,6 +3,7 @@ let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
 
+
 export const FETCH_FEED_CONTENT_START = 'FETCH_FEED_CONTENT_START'
 export const FETCH_FEED_CONTENT_SUCCESS = 'FETCH_FEED_CONTENT_SUCCESS'
 export const FETCH_FEED_CONTENT_FAIL = 'FETCH_FEED_CONTENT_FAIL'
@@ -49,9 +50,7 @@ export const markArticleRead = (articles, manifests, blockstackUser) => {
       type: ARTICLES_MARK_READ,
       payload: articles
     })
-    if (!blockstack.isUserSignedIn()) {
-      console.log('anonymous markArticleRead - bail')
-      console.log(blockstackUser)
+    if (!blockstackUser.isAuthenticated) {
       return
     }
     dispatch(() => {
