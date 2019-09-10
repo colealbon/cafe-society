@@ -1,12 +1,11 @@
 import * as blockstack from 'blockstack'
-import uuid from 'uuidv4'
 let Parser = require('rss-parser')
 let parser = new Parser()
 var memoize = require("memoizee")
 
-export const FETCH_ARTICLES_START = 'FETCH_ARTICLES_START'
-export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS'
-export const FETCH_ARTICLES_FAIL = 'FETCH_ARTICLES_FAIL'
+export const FETCH_FEED_CONTENT_START = 'FETCH_FEED_CONTENT_START'
+export const FETCH_FEED_CONTENT_SUCCESS = 'FETCH_FEED_CONTENT_SUCCESS'
+export const FETCH_FEED_CONTENT_FAIL = 'FETCH_FEED_CONTENT_FAIL'
 
 export const FETCH_SAVED_ARTICLES_FAIL = 'FETCH_SAVED_ARTICLES_FAIL'
 
@@ -125,7 +124,7 @@ export const fetchArticles = (feeds, filters, manifests) => {
     feeds.map((feed) => {
       if (feed.muted !== true && feed.url) { 
         dispatch({
-          type: FETCH_ARTICLES_START,
+          type: FETCH_FEED_CONTENT_START,
           payload: {
             feed: feed,
             filters: filters
@@ -134,78 +133,89 @@ export const fetchArticles = (feeds, filters, manifests) => {
         dispatch(() => {
           fetchFeedContent(feed.url)
           .then((fetchedContent) => {
-            if (!fetchedContent.items) {
+            if ([].concat(fetchedContent.items).length === 0) {
+              dispatch({
+                type: FETCH_FEED_CONTENT_FAIL,
+                payload: fetchedContent
+              })
               return
             }
             dispatch({
-              type: FETCH_ARTICLES_SUCCESS,
+              type: FETCH_FEED_CONTENT_SUCCESS,
               payload: {
                 feed: feed,
-                articles: 
-                  fetchedContent.items
-                  .filter(articleItem => articleItem.title !== '')
-                  .map((item) => {
-                    return {
-                      ...item,
-                      articleId: uuid(),
-                      feed: feed
-                    }
-                  })
-                  .map(articleItem => {
-                    if (!manifests) {
-                      return articleItem
-                    }
-                    return {
-                      ...articleItem,
-                      muted: manifests
-                        .filter(manifestItem => articleItem.link === manifestItem.link)
-                        .filter(manifestItem => manifestItem.muted === true).length !== 0
-                    }
-                  })
-                .map(articleItem => {
-                  try {
-                    const blockReasons = filters
-                    .filter(filterItem => !filterItem.muted )
-                    .filter(filterItem => {
-                      return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
-                      true :
-                      filterItem.sections.filter((filterItemSectionItem) => {
-                        if (articleItem.feed.sections === undefined) {
-                          return false
-                        }
-                        return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
-                      }).length !==0
-                    })
-                    .filter(filterItem => {
-                      return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
-                      Object.keys(articleItem)
-                      .filter(articleField => articleField !== 'id')
-                      .filter(articleField => articleField !== 'feed')
-                      .filter(articleField => articleField !== 'isoDate')
-                      .filter(articleField => articleField !== 'guid')
-                      .filter(articleField => articleField !== 'muted')
-                      .filter(articleField => articleField !== 'pubDate')
-                      .filter(articleField => {
-                        return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
-                      }).length !== 0 :
-                      filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
-                        return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
-                      }).length !== 0
-                    })
-                    return (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
-                  } catch (error) {
-                    dispatch({
-                      type: 'FETCH_ARTICLES_FAIL',
-                      payload: error
-                    })
-                  }
-                  return 'o'
-                })
-              }
+                filters: filters,
+                manifests: manifests,
+                fetchedContent: fetchedContent    
+              }             
             })
+            //   payload: {
+            //     feed: feed,
+            //     articles: 
+            //       fetchedContent.items
+            //       .filter(articleItem => articleItem.title !== '')
+            //       .map((item) => {
+            //         return {
+            //           ...item,
+            //           articleId: uuid(),
+            //           feed: feed
+            //         }
+            //       })
+            //       .map(articleItem => {
+            //         if (!manifests) {
+            //           return articleItem
+            //         }
+            //         return {
+            //           ...articleItem,
+            //           muted: manifests
+            //             .filter(manifestItem => articleItem.link === manifestItem.link)
+            //             .filter(manifestItem => manifestItem.muted === true).length !== 0
+            //         }
+            //       })
+            //     .map(articleItem => {
+            //       try {
+            //         const blockReasons = filters
+            //         .filter(filterItem => !filterItem.muted )
+            //         .filter(filterItem => {
+            //           return (filterItem.sections === undefined || filterItem.sections.length === 0) ?
+            //           true :
+            //           filterItem.sections.filter((filterItemSectionItem) => {
+            //             if (articleItem.feed.sections === undefined) {
+            //               return false
+            //             }
+            //             return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+            //           }).length !==0
+            //         })
+            //         .filter(filterItem => {
+            //           return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+            //           Object.keys(articleItem)
+            //           .filter(articleField => articleField !== 'id')
+            //           .filter(articleField => articleField !== 'feed')
+            //           .filter(articleField => articleField !== 'isoDate')
+            //           .filter(articleField => articleField !== 'guid')
+            //           .filter(articleField => articleField !== 'muted')
+            //           .filter(articleField => articleField !== 'pubDate')
+            //           .filter(articleField => {
+            //             return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+            //           }).length !== 0 :
+            //           filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+            //             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+            //           }).length !== 0
+            //         })
+            //         return (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
+            //       } catch (error) {
+            //         dispatch({
+            //           type: 'FETCH_FEED_CONTENT_FAIL',
+            //           payload: error
+            //         })
+            //       }
+            //       return 'o'
+            //     })
+            //   }
+            // })
           }).catch((error) => {
             dispatch({
-              type: FETCH_ARTICLES_FAIL,
+              type: FETCH_FEED_CONTENT_FAIL,
               payload: error
             })
           })

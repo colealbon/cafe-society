@@ -1,7 +1,7 @@
 import {
   ARTICLES_REMOVE_ARTICLE,
   ARTICLES_TOGGLE_ARTICLE,
-  FETCH_ARTICLES_SUCCESS,
+  FETCH_FEED_CONTENT_SUCCESS,
   FETCH_SAVED_ARTICLE_SUCCESS,
   ARTICLES_MARK_READ
 } from '../actions/articleActions'
@@ -37,20 +37,26 @@ export default (state = [], action) => {
     case FETCH_SAVED_ARTICLE_SUCCESS:
       return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
 
-    case FETCH_ARTICLES_SUCCESS:
-      return state
-        .filter(stateItem => stateItem.feed.id !== action.payload.feed.id)
-        .concat(
-          state.filter(stateItem => stateItem.feed.id === action.payload.feed.id)
-          .filter(stateItem => !!action.payload.articles
-            .filter(payloadArticle => payloadArticle.link === stateItem.link)
-          )
+    case FETCH_FEED_CONTENT_SUCCESS:
+      // remove article items that no longer exist in payload feed
+      // add new payload to state
+      if (!action.payload.fetchedContent) {
+        return state
+      }
+      return [].concat(action.payload.fetchedContent.items).length === 0 ?
+      state :
+      state.filter(
+        stateItem => stateItem.feed.id !== action.payload.feed.id ?
+        true :
+        [].concat(action.payload.fetchedContent.items)
+        .filter(payloadItem => payloadItem.link === stateItem.link)
+        .length !== 0
+      )
+      .concat(action.payload.fetchedContent.items
+        .filter(payloadItem => [].concat(state)
+          .filter(stateItem => payloadItem.link === stateItem.link).length === 0
         )
-        .concat(
-          action.payload.articles.filter(payloadItem => {
-            return [].concat(state).filter(stateItem => payloadItem.link === stateItem.link).length === 0
-          })
-        )
+      )
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {

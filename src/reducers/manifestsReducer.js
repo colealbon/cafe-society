@@ -4,7 +4,7 @@ import {
 } from '../actions/manifestActions'
 
 import {
-  FETCH_ARTICLES_SUCCESS,
+  FETCH_FEED_CONTENT_SUCCESS,
   ARTICLES_MARK_READ
 } from '../actions/articleActions'
 
@@ -30,14 +30,6 @@ export default (state = [], action) => {
         return [].concat(action.payload).filter(payloadItem => payloadItem.link === action.payload.link).length !== 0
       })
       .concat([].concat(action.payload).map(payloadItem => {
-        if (payloadItem.feed.id === 'https://lifehacker.com/rss') {
-          return {
-            link: payloadItem.link,
-            muted: true,
-            feed: payloadItem.feed,
-            title: payloadItem.title
-          }
-        }
         return {
           link: payloadItem.link,
           muted: true,
@@ -46,21 +38,20 @@ export default (state = [], action) => {
       })
     )
 
-    case FETCH_ARTICLES_SUCCESS:
-      // clean out articles no longer in rss feed content
-      return state
-        .filter(stateItem => {
-          return (stateItem.feed.id !== action.payload.feed.id) ?
-          true:
-          [].concat(action.payload.articles)
-          .filter(payloadItem => (action.payload.feed.id === 'https://lifehacker.com/rss') ?
-            payloadItem.title === stateItem.title :
-            payloadItem.link === stateItem.link
-          )
-          .length !== 0
-        })
-        .filter(manifestItem => !manifestItem.gaiaUrl)
-        .filter(manifestItem => !manifestItem.contentSnippet)
+    case FETCH_FEED_CONTENT_SUCCESS:
+      // remove items that no longer exist in payload feed
+      if (!action.payload.fetchedContent) {
+        return state
+      }
+      return [].concat(action.payload.fetchedContent.items).length === 0 ?
+      state :
+      state.filter(
+        stateItem => stateItem.feed.id !== action.payload.feed.id ?
+        true :
+        [].concat(action.payload.fetchedContent.items)
+        .filter(payloadItem => payloadItem.link === stateItem.link)
+        .length !== 0
+      )
 
     default:
       return state
