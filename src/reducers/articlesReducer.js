@@ -35,14 +35,15 @@ export default (state = [], action) => {
       return []
 
     case FETCH_SAVED_ARTICLE_SUCCESS:
-      return state.filter((stateItem) => stateItem.articleId !== action.payload.articleId).concat(action.payload)
+      return state.filter((stateItem) => stateItem.link !== action.payload.link).concat(action.payload)
 
     case FETCH_FEED_CONTENT_SUCCESS:
-      // remove article items that no longer exist in payload feed
-      // add new payload to state
+
       if (!action.payload.fetchedContent) {
         return state
       }
+      // remove article items that no longer exist in feed
+      // add any new items from feed
       return [].concat(action.payload.fetchedContent.items).length === 0 ?
       state :
       state.filter(
@@ -57,6 +58,50 @@ export default (state = [], action) => {
           .filter(stateItem => payloadItem.link === stateItem.link).length === 0
         )
       )
+      .map(articleItem => {
+        // merge article (which we just fetched) with manifest with same link
+        // where fields overlap, manifest overwrites article
+        return {
+          ...action.payload.manifests
+            .filter(manifestItem => articleItem.link === manifestItem.link)[0],
+          ...articleItem
+        }
+      })
+      .map(articleItem => {
+        // apply manual filters
+        if ([].concat(action.payload.filters).length === 0) {
+          return state
+        }
+        const blockReasons = [].concat(action.payload.filters)
+        .filter(filterItem => !filterItem.muted )
+        .filter(filterItem => {
+          return ([].concat(filterItem.sections).length === 0) ?
+          true :
+          filterItem.sections.filter((filterItemSectionItem) => {
+            if (articleItem.feed.sections === undefined) {
+              return false
+            }
+            return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+          }).length !==0
+        })
+        .filter(filterItem => {
+          return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+          Object.keys(articleItem)
+          .filter(articleField => articleField !== 'id')
+          .filter(articleField => articleField !== 'feed')
+          .filter(articleField => articleField !== 'isoDate')
+          .filter(articleField => articleField !== 'guid')
+          .filter(articleField => articleField !== 'muted')
+          .filter(articleField => articleField !== 'pubDate')
+          .filter(articleField => {
+            return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+          }).length !== 0 :
+          filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+            return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+          }).length !== 0
+        })
+        return (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
+      })
 
     case ARTICLES_MARK_READ:
       return state.map(stateItem => {
@@ -71,11 +116,11 @@ export default (state = [], action) => {
     case ARTICLES_REMOVE_ARTICLE:
       return state.filter(stateItem => {
         let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        return payload.filter((payloadItem) => (payloadItem.articleId === stateItem.articleId)).length === 0
+        return payload.filter((payloadItem) => (payloadItem.link === stateItem.link)).length === 0
       })
 
     case ARTICLES_TOGGLE_ARTICLE:
-      return state.map(article => article.articleId === action.payload.articleId ? { ...article, muted: !article.muted || false } : article )
+      return state.map(article => article.link === action.payload.link ? { ...article, muted: !article.muted || false } : article )
 
     case "@@router/LOCATION_CHANGE":
       return state.map(article => action.payload.location.pathname === "/" ? { ...article, visible: true } : article)
