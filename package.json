@@ -1,6 +1,6 @@
 {
   "name": "cafe-society-functions",
-  "version": "0.0.133",
+  "version": "0.0.134",
   "private": false,
   "dependencies": {
     "@material-ui/core": "^4.2.1",
