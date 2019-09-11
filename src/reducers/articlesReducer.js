@@ -87,6 +87,8 @@ export default (state = [], action) => {
           }).length !==0
         })
         .filter(filterItem => {
+          // if the filter has fields fields check them,
+          // otherwise check all article fields
           return ([].concat(filterItem.fields).length === 0) ?
           Object.keys(articleItem)
           .filter(articleField => articleField !== 'id')

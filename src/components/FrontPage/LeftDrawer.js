@@ -60,6 +60,10 @@ export const LeftDrawer = ({ leftDrawer, handleDrawerClose, blockstackUser }) =>
           <ListItemIcon><RssFeedIcon/></ListItemIcon>
           <ListItemText primary="Feeds" />
         </ListItem>
+        <ListItem onClick={() => handleDrawerClose()} button key='/filter-list' component={Link} to='/filter-list'>
+          <ListItemIcon><FilterListIcon/></ListItemIcon>
+          <ListItemText primary="Filters" />
+        </ListItem>
         <ListItem onClick={() => handleDrawerClose()} button key='/classifier-list' component={Link} to='/classifier-list'>
           <ListItemIcon><ThumbsUpDown/></ListItemIcon>
           <ListItemText primary="Classifiers" />
