@@ -63,9 +63,9 @@ export default (state = [], action) => {
         // merge article (which we just fetched) with manifest with same link
         // where fields overlap, manifest overwrites article
         return {
+          ...articleItem,
           ...[].concat(action.payload.manifests)
             .filter(manifestItem => articleItem.link === manifestItem.link)[0],
-          ...articleItem,
           feed: action.payload.feed
         }
       })
@@ -104,9 +104,10 @@ export default (state = [], action) => {
             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
           }).length !== 0
         })
+
         return ([].concat(blockReasons).length === 0) ? 
-        {...articleItem, feed: action.payload.feed} : 
-        {...articleItem, feed: action.payload.feed, blockReasons: blockReasons, muted: true}
+        articleItem : 
+        {...articleItem, blockReasons: blockReasons}
       })
 
     case ARTICLES_MARK_READ:

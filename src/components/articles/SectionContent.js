@@ -50,8 +50,17 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
         .filter(manifest => manifest.muted)
         .length === 0
       })
+      .filter(article => {
+        if ([].concat(manifests).length === 0) {
+          return true
+        }
+        return [].concat(manifests).filter(manifest => manifest.link === article.link)
+        .filter(manifest => manifest.muted)
+        .length === 0
+      })
       .filter(article => article.visible)
       .filter(article => !article.muted)
+      .filter(article => (article.blockReasons || []).length === 0)
       ,
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
