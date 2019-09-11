@@ -38,20 +38,20 @@ export default (state = [], action) => {
       })
     )
 
-    case FETCH_FEED_CONTENT_SUCCESS:
-      // remove items that no longer exist in payload feed
-      if (!action.payload.fetchedContent) {
-        return state
-      }
-      return [].concat(action.payload.fetchedContent.items).length === 0 ?
-      state :
-      state.filter(
-        stateItem => stateItem.feed.id !== action.payload.feed.id ?
-        true :
-        [].concat(action.payload.fetchedContent.items)
-        .filter(payloadItem => payloadItem.link === stateItem.link)
-        .length !== 0
-      )
+    // case FETCH_FEED_CONTENT_SUCCESS:
+      // // remove items that no longer exist in payload feed
+      // if (!action.payload.fetchedContent) {
+      //   return state
+      // }
+      // return [].concat(action.payload.fetchedContent.items).length === 0 ?
+      // state :
+      // state.filter(
+      //   stateItem => stateItem.feed.id !== action.payload.feed.id ?
+      //   true :
+      //   [].concat(action.payload.fetchedContent.items)
+      //   .filter(payloadItem => payloadItem.link === stateItem.link)
+      //   .length !== 0
+      // ) || []
 
     default:
       return state
