@@ -83,7 +83,10 @@ export default (state = [], action) => {
           return ([].concat(filterItem.sections).length === 0) ?
           true :
           [].concat(filterItem.sections).filter((filterItemSectionItem) => {
-            if (action.payload.feed.sections === undefined) {
+            if ([].concat(action.payload.feed).length === 0) {
+              return false
+            }
+            if ([].concat(action.payload.feed.sections).length === 0) {
               return false
             }
             return [].concat(action.payload.feed.sections).filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
