@@ -72,11 +72,13 @@ export default (state = [], action) => {
       })
       .map(articleItem => {
         // apply manual filters
-        if ([].concat(action.payload.filters).length === 0) {
+        if ([].concat(action.payload.filters
+          .filter(filterItem => filterItem.id !== 'placeholder')).length === 0) {
           return articleItem
         }
         const blockReasons = [].concat(action.payload.filters)
         .filter(filterItem => !filterItem.muted )
+        .filter(filterItem => filterItem.id !== 'placeholder')
         .filter(filterItem => {
           return ([].concat(filterItem.sections).length === 0) ?
           true :

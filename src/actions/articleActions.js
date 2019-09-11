@@ -131,7 +131,12 @@ export const fetchArticles = (feeds, filters, manifests) => {
           .then((fetchedContent) => {
             dispatch({
               type: 'FETCH_FEED_CONTENT_FETCHED',
-              payload: fetchedContent
+              payload: {
+                feed: feed,
+                filters: filters,
+                manifests: manifests,
+                fetchedContent: fetchedContent    
+              }  
             })
             if ([].concat(fetchedContent.items).length === 0) {
               dispatch({
