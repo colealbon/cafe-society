@@ -64,9 +64,10 @@ export default (state = [], action) => {
         // where fields overlap, manifest overwrites article
         return {
           ...articleItem,
+          feed: action.payload.feed,
           ...[].concat(action.payload.manifests)
             .filter(manifestItem => articleItem.link === manifestItem.link)[0],
-          feed: action.payload.feed
+          
         }
       })
       .map(articleItem => {
@@ -100,7 +101,7 @@ export default (state = [], action) => {
           .filter(articleField => {
             return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
           }).length !== 0 :
-          filterItem.fields.filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+          [].concat(filterItem.fields).filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
           }).length !== 0
         })
