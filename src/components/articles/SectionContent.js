@@ -51,7 +51,7 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
         .length === 0
       })
       .filter(article => article.visible)
-      .filter(article => (article.blockReasons || []).length === 0)
+      .filter(article => !article.muted)
       ,
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
@@ -120,11 +120,10 @@ export const SectionPage = ({ handleClickShadowBanDomain, handleClickAddFilter, 
         &nbsp;{<Link onClick={() => {handleClickToggleSection(selectedSection, sections)}}>{selectedSection.id !== '' ? `hide ${selectedSection.id} tab`: ''}</Link>}
       </Fragment> :
       [].concat(articles)
-      .filter(article => !!article.link)
       .map((article) => {
         const banDomainTitle = `add ${parse(article.link).domain} to filters`
         return (
-          <Grid item xs={12} key={article.articleId}>
+          <Grid item xs={12} key={article.link}>
             <Card>
               <CardContent>
                 <Typography variant="h6" >
