@@ -30,8 +30,8 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
     selectedSection: selectedSection,
     sections: sections,
     classifiers: classifiers,
-    articles: !!articles ? 
-      articles.filter((article) => {
+    articles: [].concat(articles)
+      .filter((article) => {
         return [].concat(article.bayesCategories)
         .filter(bayesCategory => !!bayesCategory)
         .filter(bayesCategory => !!bayesCategory.category)
@@ -42,18 +42,17 @@ const mapStateToProps = ({ selectedSection, articles, filters, blockstackUser, c
           .filter(likelihood => 0.0 + likelihood.proba > .98).length === 0
         ).length === 0
       })
-      .filter(article => !article.muted)
       .filter(article => {
-        if (!manifests) {
+        if ([].concat(manifests).length === 0) {
           return true
         }
-        return manifests.filter(manifest => manifest.articleId === article.articleId)
+        return [].concat(manifests).filter(manifest => manifest.link === article.link)
         .filter(manifest => manifest.muted)
         .length === 0
       })
       .filter(article => article.visible)
-      .filter((article) => (!!article.title))
-      .filter(article => (article.blockReasons || []).length < 1) : [],
+      .filter(article => (article.blockReasons || []).length === 0)
+      ,
     allArticles: !!articles ? articles : [],
     blockstackUser: blockstackUser, 
     filters: !!filters ? filters : [],

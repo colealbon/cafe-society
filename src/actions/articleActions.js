@@ -129,9 +129,13 @@ export const fetchArticles = (feeds, filters, manifests) => {
         dispatch(() => {
           fetchFeedContent(feed.url)
           .then((fetchedContent) => {
+            dispatch({
+              type: 'FETCH_FEED_CONTENT_FETCHED',
+              payload: fetchedContent
+            })
             if ([].concat(fetchedContent.items).length === 0) {
               dispatch({
-                type: FETCH_FEED_CONTENT_FAIL,
+                type: 'FETCH_FEED_CONTENT_FAIL_EMPTY_RESPONSE',
                 payload: fetchedContent
               })
               return

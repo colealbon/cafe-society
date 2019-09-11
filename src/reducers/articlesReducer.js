@@ -38,7 +38,6 @@ export default (state = [], action) => {
       return state.filter((stateItem) => stateItem.link !== action.payload.link).concat(action.payload)
 
     case FETCH_FEED_CONTENT_SUCCESS:
-
       if (!action.payload.fetchedContent) {
         return state
       }
@@ -46,7 +45,8 @@ export default (state = [], action) => {
       // add any new items from feed
       return [].concat(action.payload.fetchedContent.items).length === 0 ?
       state :
-      state.filter(
+      state
+      .filter(
         stateItem => stateItem.feed.id !== action.payload.feed.id ?
         true :
         [].concat(action.payload.fetchedContent.items)
@@ -58,34 +58,36 @@ export default (state = [], action) => {
           .filter(stateItem => payloadItem.link === stateItem.link).length === 0
         )
       )
+      .filter((article) => (!!article.title))
       .map(articleItem => {
         // merge article (which we just fetched) with manifest with same link
         // where fields overlap, manifest overwrites article
         return {
-          ...action.payload.manifests
+          ...[].concat(action.payload.manifests)
             .filter(manifestItem => articleItem.link === manifestItem.link)[0],
-          ...articleItem
+          ...articleItem,
+          feed: action.payload.feed
         }
       })
       .map(articleItem => {
         // apply manual filters
         if ([].concat(action.payload.filters).length === 0) {
-          return state
+          return articleItem
         }
         const blockReasons = [].concat(action.payload.filters)
         .filter(filterItem => !filterItem.muted )
         .filter(filterItem => {
           return ([].concat(filterItem.sections).length === 0) ?
           true :
-          filterItem.sections.filter((filterItemSectionItem) => {
-            if (articleItem.feed.sections === undefined) {
+          [].concat(filterItem.sections).filter((filterItemSectionItem) => {
+            if (action.payload.feed.sections === undefined) {
               return false
             }
-            return articleItem.feed.sections.filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+            return [].concat(action.payload.feed.sections).filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
           }).length !==0
         })
         .filter(filterItem => {
-          return (filterItem.fields === undefined || filterItem.fields.length === 0) ?
+          return ([].concat(filterItem.fields).length === 0) ?
           Object.keys(articleItem)
           .filter(articleField => articleField !== 'id')
           .filter(articleField => articleField !== 'feed')
@@ -100,7 +102,9 @@ export default (state = [], action) => {
             return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
           }).length !== 0
         })
-        return (blockReasons.length === 0) ? articleItem : {...articleItem, blockReasons: blockReasons, muted: true}
+        return ([].concat(blockReasons).length === 0) ? 
+        {...articleItem, feed: action.payload.feed} : 
+        {...articleItem, feed: action.payload.feed, blockReasons: blockReasons, muted: true}
       })
 
     case ARTICLES_MARK_READ:
@@ -115,8 +119,7 @@ export default (state = [], action) => {
 
     case ARTICLES_REMOVE_ARTICLE:
       return state.filter(stateItem => {
-        let payload = Array.isArray(action.payload) ? action.payload : [action.payload]
-        return payload.filter((payloadItem) => (payloadItem.link === stateItem.link)).length === 0
+        return [].concat(action.payload).filter((payloadItem) => (payloadItem.link === stateItem.link)).length === 0
       })
 
     case ARTICLES_TOGGLE_ARTICLE:
