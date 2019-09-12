@@ -58,58 +58,58 @@ export default (state = [], action) => {
           .filter(stateItem => payloadItem.link === stateItem.link).length === 0
         )
       )
-      .filter((article) => (!!article.title))
-      .map(articleItem => {
-        // merge article (which we just fetched) with manifest with same link
-        // where fields overlap, manifest overwrites article
-        return {
-          ...articleItem,
-          feed: action.payload.feed,
-          ...[].concat(action.payload.manifests)
-            .filter(manifestItem => articleItem.link === manifestItem.link)[0],
+      // .filter((article) => (!!article.title))
+      // .map(articleItem => {
+      //   // merge article (which we just fetched) with manifest with same link
+      //   // where fields overlap, manifest overwrites article
+      //   return {
+      //     ...articleItem,
+      //     feed: action.payload.feed,
+      //     ...[].concat(action.payload.manifests)
+      //       .filter(manifestItem => articleItem.link === manifestItem.link)[0],
           
-        }
-      })
-      .map(articleItem => {
-        // apply manual filters
-        if ([].concat(action.payload.filters
-          .filter(filterItem => filterItem.id !== 'placeholder')).length === 0) {
-          return articleItem
-        }
-        const blockReasons = [].concat(action.payload.filters)
-        .filter(filterItem => !filterItem.muted )
-        .filter(filterItem => filterItem.id !== 'placeholder')
-        .filter(filterItem => {
-          return ([].concat(filterItem.sections).length === 0) ?
-          true :
-          [].concat(filterItem.sections).filter((filterItemSectionItem) => {
-            if ([].concat(action.payload.feed).length === 0) {
-              return false
-            }
-            if ([].concat(action.payload.feed.sections).length === 0) {
-              return false
-            }
-            return [].concat(action.payload.feed.sections).filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
-          }).length !==0
-        })
-        .filter(filterItem => {
-          // if the filter has fields fields check them,
-          // otherwise check all article fields
-          return ([].concat(filterItem.fields).length === 0) ?
-          Object.keys(articleItem)
-          .filter(articleField => articleField !== 'id')
-          .filter(articleField => articleField !== 'feed')
-          .filter(articleField => articleField !== 'isoDate')
-          .filter(articleField => articleField !== 'guid')
-          .filter(articleField => articleField !== 'muted')
-          .filter(articleField => articleField !== 'pubDate')
-          .filter(articleField => {
-            return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
-          }).length !== 0 :
-          [].concat(filterItem.fields).filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
-            return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
-          }).length !== 0
-        })
+      //   }
+      // })
+      // .map(articleItem => {
+      //   // apply manual filters
+      //   if ([].concat(action.payload.filters
+      //     .filter(filterItem => filterItem.id !== 'placeholder')).length === 0) {
+      //     return articleItem
+      //   }
+      //   const blockReasons = [].concat(action.payload.filters)
+      //   .filter(filterItem => !filterItem.muted )
+      //   .filter(filterItem => filterItem.id !== 'placeholder')
+      //   .filter(filterItem => {
+      //     return ([].concat(filterItem.sections).length === 0) ?
+      //     true :
+      //     [].concat(filterItem.sections).filter((filterItemSectionItem) => {
+      //       if ([].concat(action.payload.feed).length === 0) {
+      //         return false
+      //       }
+      //       if ([].concat(action.payload.feed.sections).length === 0) {
+      //         return false
+      //       }
+      //       return [].concat(action.payload.feed.sections).filter((articleItemSectionItem) => articleItemSectionItem.id === filterItemSectionItem.id).length !== 0
+      //     }).length !==0
+      //   })
+      //   .filter(filterItem => {
+      //     // if the filter has fields fields check them,
+      //     // otherwise check all article fields
+      //     return ([].concat(filterItem.fields).length === 0) ?
+      //     Object.keys(articleItem)
+      //     .filter(articleField => articleField !== 'id')
+      //     .filter(articleField => articleField !== 'feed')
+      //     .filter(articleField => articleField !== 'isoDate')
+      //     .filter(articleField => articleField !== 'guid')
+      //     .filter(articleField => articleField !== 'muted')
+      //     .filter(articleField => articleField !== 'pubDate')
+      //     .filter(articleField => {
+      //       return articleItem[`${articleField}`].indexOf(filterItem.text) !== -1
+      //     }).length !== 0 :
+      //     [].concat(filterItem.fields).filter(filterItemFieldItem => filterItemFieldItem.name !== undefined).filter((filterItemFieldItem) => {
+      //       return articleItem[`${filterItemFieldItem.name}`].indexOf(filterItem.text) !== -1
+      //     }).length !== 0
+      //   })
 
         return ([].concat(blockReasons).length === 0) ? 
         articleItem : 
