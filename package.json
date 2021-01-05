@@ -7,7 +7,7 @@
     "@material-ui/icons": "^4.2.1",
     "@piotr-cz/redux-persist-idb-storage": "^1.0.0",
     "@webcomponents/webcomponentsjs": "^2.2.10",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bayes": "^0.0.7",
     "blockstack": "^19.2.1",
     "classificator": "^0.3.3",
